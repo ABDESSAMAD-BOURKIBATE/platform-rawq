@@ -20,11 +20,10 @@ export function AppLayout() {
     return (
         <div className="app-layout">
             <div className="pattern-bg" />
-            <main className="page container" style={{ paddingBottom: showPlayer ? 'calc(var(--bottom-nav-height) + 80px)' : undefined }}>
+            <main className="page container" style={{ paddingBottom: showPlayer ? 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px))' : undefined }}>
                 <Outlet />
             </main>
-            {showPlayer && <AudioPlayer />}
-            <BottomNav />
+            {showPlayer ? <AudioPlayer /> : <BottomNav />}
         </div>
     );
 }

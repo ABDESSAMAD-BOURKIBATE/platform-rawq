@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchAllSurahs } from '../api/alquran';
 import { useQuranStore } from '../store/useQuranStore';
 import type { Surah } from '../lib/types';
+import { SURAH_PAGES } from '../lib/surahData';
 
 export function SurahListPage() {
     const { t } = useTranslation();
@@ -24,8 +25,9 @@ export function SurahListPage() {
     const filteredSurahs = filter === 'all' ? surahs : surahs.filter((s) => s.revelationType === filter);
 
     const openSurah = (surah: Surah) => {
-        // Navigate to Mushaf (simple approach - go to page 1 for now)
-        setCurrentPage(1);
+        // Navigate to Mushaf at the starting page of the selected Surah
+        const startPage = SURAH_PAGES[surah.number] || 1;
+        setCurrentPage(startPage);
         navigate('/mushaf');
     };
 

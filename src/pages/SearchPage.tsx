@@ -3,11 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlass, BookOpenText } from '@phosphor-icons/react';
 import { searchQuran } from '../api/alquran';
+import { useQuranStore } from '../store/useQuranStore';
+import { SURAH_PAGES } from '../lib/surahData';
 import type { SearchMatch } from '../lib/types';
 
 export function SearchPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { setCurrentPage } = useQuranStore();
 
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchMatch[]>([]);
@@ -68,6 +71,8 @@ export function SearchPage() {
     };
 
     const goToAyah = (match: SearchMatch) => {
+        const startPage = SURAH_PAGES[match.surah.number] || 1;
+        setCurrentPage(startPage);
         navigate('/mushaf');
     };
 

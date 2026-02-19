@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, Pause, SkipForward, SkipBack, X, SpeakerHigh, DownloadSimple, Clock, Repeat, RepeatOnce } from '@phosphor-icons/react';
 import { useAudioStore } from '../../store/useAudioStore';
-import { toPng } from 'html-to-image';
 import { audioEngine } from '../../lib/audioEngine';
+import { getAyahAudioUrl, DEFAULT_RECITER_FOLDER } from '../../api/everyayah';
 
 // Surah names in Arabic (Duplicate from ReciterDetailPage - should be in a shared constant file)
 const SURAH_NAMES: Record<number, string> = {
@@ -29,7 +29,7 @@ const SURAH_NAMES: Record<number, string> = {
 export function AudioPlayer() {
     const { t } = useTranslation();
     const {
-        isPlaying, currentSurah, currentAyah, reciter, moshaf,
+        isPlaying, type, currentSurah, currentAyah, reciter, moshaf, radioStation,
         pause, resume, stop, next, prev,
         progress, duration, playbackRate, repeatMode,
         setPlaybackRate, setRepeatMode
@@ -63,133 +63,303 @@ export function AudioPlayer() {
         setRepeatMode(modes[nextIndex]);
     };
 
-    // Download Feature for Player Card
-    const handleDownloadCard = async () => {
-        const element = document.getElementById('audio-player-card');
-        if (element) {
+    // Download Feature for Audio File
+    const handleDownloadAudio = async () => {
+        if (!currentSurah || isRadio) return;
+
+        let url = '';
+        let filename = '';
+
+        if (currentAyah) {
+            const reciterFolder = reciter?.id || DEFAULT_RECITER_FOLDER;
+            url = getAyahAudioUrl(reciterFolder, currentSurah, currentAyah);
+            filename = `rawq-surah-${currentSurah}-ayah-${currentAyah}.mp3`;
+        } else if (moshaf) {
+            const paddedSurah = String(currentSurah).padStart(3, '0');
+            url = `${moshaf.server}${paddedSurah}.mp3`;
+            filename = `rawq-surah-${currentSurah}.mp3`;
+        }
+
+        if (url) {
             try {
-                const dataUrl = await toPng(element, { cacheBust: true, pixelRatio: 2 });
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.download = `rawq-player-${currentSurah}.png`;
-                link.href = dataUrl;
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
                 link.click();
-            } catch (e) {
-                console.error("Download failed", e);
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+            } catch (error) {
+                console.error("Download failed, opening in new tab:", error);
+                window.open(url, '_blank');
             }
         }
     };
 
-    // Show if there is a surah playing (either full surah or single ayah playback)
-    if (!currentSurah) return null;
+    // Show if there is a surah playing OR a radio station playing
+    if (!currentSurah && !radioStation) return null;
 
-    const surahName = SURAH_NAMES[currentSurah] || `سورة ${currentSurah}`;
-    const reciterName = reciter?.name || 'القارئ';
+    const isRadio = type === 'radio' && !!radioStation;
+
+    let title = '';
+    let subtitle = '';
+    let image = '';
+
+    if (isRadio) {
+        title = radioStation.name;
+        subtitle = 'إذاعة راديو';
+        image = ''; // Radios don't have images in current schema, use default icon
+    } else if (currentSurah) {
+        title = `${SURAH_NAMES[currentSurah] || `سورة ${currentSurah}`} ${currentAyah ? ` - آية ${currentAyah}` : ''}`;
+        subtitle = reciter?.name || 'القارئ';
+        image = reciter?.image || '';
+    }
+
     const progressPercent = duration && duration > 0 ? (progress / duration) * 100 : 0;
 
     return (
         <div
-            className="fixed bottom-[var(--bottom-nav-height)] left-0 right-0 z-50 p-sm"
             style={{
-                bottom: 'calc(var(--bottom-nav-height) + var(--space-xs))',
-                padding: '0 var(--space-md)'
+                position: 'fixed',
+                left: 0,
+                right: 0,
+                zIndex: 100,
+                bottom: 0,
+                padding: '0',
+                animation: 'slideUp var(--transition-base) ease'
             }}
         >
+            <style>{`
+                .player-container {
+                    display: grid;
+                    grid-template-columns: 1fr auto 1fr;
+                    align-items: center;
+                    gap: var(--space-md);
+                    width: 100%;
+                }
+                .player-info {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--space-sm);
+                    min-width: 0;
+                }
+                .player-controls-main {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--space-md);
+                    justify-content: center;
+                }
+                .player-controls-secondary {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--space-sm);
+                    justify-content: flex-end;
+                }
+                @media (max-width: 768px) {
+                    .player-container {
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                    .player-controls-secondary .hide-mobile {
+                        display: none !important;
+                    }
+                    .player-controls-main {
+                        gap: var(--space-sm);
+                    }
+                }
+            `}</style>
             <div
                 id="audio-player-card"
-                className="glass relative flex items-center justify-between p-sm md:p-md gap-md shadow-lg"
+                className="glass"
                 style={{
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid var(--border)',
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: 'var(--space-md) var(--space-lg)',
+                    paddingBottom: 'calc(var(--space-md) + env(safe-area-inset-bottom, 0px))',
+                    border: 'none',
+                    borderTop: '1px solid var(--border)',
+                    borderRadius: 0,
                     backdropFilter: 'blur(20px)',
-                    background: 'var(--bg-card)'
+                    background: 'var(--bg)',
+                    boxShadow: 'var(--shadow-lg)',
+                    minHeight: 'calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px))'
                 }}
             >
                 {/* Progress Bar (Top) */}
                 <div
-                    className="absolute top-0 left-0 right-0 h-1 bg-gray-700/30 overflow-hidden rounded-t-lg"
-                    style={{ height: '3px' }}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '3px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        overflow: 'hidden',
+                    }}
                 >
                     <div
-                        className="h-full bg-[var(--accent-gold)] transition-all duration-300 ease-linear"
-                        style={{ width: `${progressPercent}%` }}
+                        style={{
+                            height: '100%',
+                            backgroundColor: 'var(--accent-gold)',
+                            width: `${progressPercent}%`,
+                            transition: 'width 300ms linear'
+                        }}
                     />
                 </div>
 
-                {/* Reciter Info */}
-                <div className="flex items-center gap-sm flex-1 min-w-0">
-                    <div
-                        className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center shrink-0 border border-[var(--border)]"
-                        style={{
-                            backgroundImage: reciter?.image ? `url(${reciter.image})` : undefined,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
-                        }}
-                    >
-                        {!reciter?.image && <SpeakerHigh size={20} weight="fill" className="text-[var(--text-muted)]" />}
+                <div className="player-container">
+                    {/* 1. Reciter Info */}
+                    <div className="player-info">
+                        <div
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                backgroundColor: 'var(--bg-tertiary)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                border: '1px solid var(--border)',
+                                backgroundImage: image ? `url(${image})` : undefined,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            }}
+                        >
+                            {!image && <SpeakerHigh size={20} weight="fill" style={{ color: 'var(--text-muted)' }} />}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
+                            <span
+                                className="font-quran"
+                                style={{
+                                    fontSize: '0.9rem',
+                                    fontWeight: 'bold',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    color: 'var(--accent-gold)',
+                                    lineHeight: 1.2
+                                }}
+                            >
+                                {title}
+                            </span>
+                            <span
+                                className="font-ui"
+                                style={{
+                                    fontSize: '0.75rem',
+                                    color: 'var(--text-muted)',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}
+                            >
+                                {subtitle}
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-bold truncate text-[var(--accent-gold)] font-quran leading-tight">
-                            {surahName} {currentAyah ? ` - آية ${currentAyah}` : ''}
-                        </span>
-                        <span className="text-xs text-[var(--text-muted)] truncate font-ui">
-                            {reciterName}
-                        </span>
+
+                    {/* 2. Main Controls - LTR enforced for Next/Prev buttons */}
+                    <div className="player-controls-main" dir="ltr">
+                        {!isRadio && (
+                            <button onClick={prev} style={{ padding: '8px', color: 'var(--text-secondary)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                                <SkipBack size={24} weight="fill" />
+                            </button>
+                        )}
+
+                        <button
+                            onClick={togglePlay}
+                            style={{
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '50%',
+                                backgroundColor: 'var(--accent-gold)',
+                                color: '#0B1C1A',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: 'var(--shadow-gold)',
+                                flexShrink: 0,
+                                margin: '0 4px',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s'
+                            }}
+                        >
+                            {isPlaying ? <Pause size={22} weight="fill" /> : <Play size={22} weight="fill" />}
+                        </button>
+
+                        {!isRadio && (
+                            <button onClick={next} style={{ padding: '8px', color: 'var(--text-secondary)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                                <SkipForward size={24} weight="fill" />
+                            </button>
+                        )}
                     </div>
-                </div>
 
-                {/* Controls */}
-                <div className="flex items-center gap-xs md:gap-sm shrink-0">
+                    {/* 3. Secondary Controls */}
+                    <div className="player-controls-secondary">
+                        {!isRadio && (
+                            <button
+                                onClick={cyclePlaybackRate}
+                                className="hide-mobile"
+                                title="سرعة التشغيل"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    padding: '4px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: 600,
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: playbackRate !== 1 ? 'var(--accent-gold)' : 'var(--text-muted)',
+                                    backgroundColor: playbackRate !== 1 ? 'var(--accent-gold-soft)' : 'transparent'
+                                }}
+                            >
+                                <Clock size={16} />
+                                {playbackRate}x
+                            </button>
+                        )}
 
-                    {/* Speed Button */}
-                    <button
-                        onClick={cyclePlaybackRate}
-                        className={`p-1.5 md:p-2 rounded flex items-center gap-1 transition-colors ${playbackRate !== 1 ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-soft)]' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}`}
-                        title="سرعة التشغيل"
-                        style={{ fontSize: '0.8rem', fontWeight: 600 }}
-                    >
-                        <Clock size={16} />
-                        {playbackRate}x
-                    </button>
+                        {!isRadio && (
+                            <button
+                                onClick={cycleRepeatMode}
+                                className="hide-mobile"
+                                title={repeatMode === 'none' ? 'بدون تكرار' : repeatMode === 'ayah' ? 'تكرار الآية' : 'تكرار السورة'}
+                                style={{
+                                    padding: '4px 8px',
+                                    borderRadius: '4px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: repeatMode !== 'none' ? 'var(--accent-gold)' : 'var(--text-muted)',
+                                    backgroundColor: repeatMode !== 'none' ? 'var(--accent-gold-soft)' : 'transparent'
+                                }}
+                            >
+                                {repeatMode === 'ayah' ? <RepeatOnce size={20} /> : <Repeat size={20} />}
+                            </button>
+                        )}
 
-                    {/* Repeat Button */}
-                    <button
-                        onClick={cycleRepeatMode}
-                        className={`p-1.5 md:p-2 rounded transition-colors ${repeatMode !== 'none' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-soft)]' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}`}
-                        title={repeatMode === 'none' ? 'بدون تكرار' : repeatMode === 'ayah' ? 'تكرار الآية' : 'تكرار السورة'}
-                    >
-                        {repeatMode === 'ayah' ? <RepeatOnce size={20} /> : <Repeat size={20} />}
-                    </button>
+                        {!isRadio && (
+                            <button
+                                onClick={handleDownloadAudio}
+                                title="تحميل الصوت"
+                                style={{ padding: '8px', color: 'var(--text-muted)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                            >
+                                <DownloadSimple size={22} />
+                            </button>
+                        )}
 
-                    {/* Download Button */}
-                    <button
-                        onClick={handleDownloadCard}
-                        className="p-1.5 md:p-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors hidden sm:block"
-                        title="تحميل بطاقة المشغل"
-                    >
-                        <DownloadSimple size={20} />
-                    </button>
-
-                    <button onClick={prev} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text)]">
-                        <SkipBack size={20} weight="fill" />
-                    </button>
-
-                    <button
-                        onClick={togglePlay}
-                        className="w-10 h-10 rounded-full bg-[var(--accent-gold)] text-[#0B1C1A] flex items-center justify-center shadow-gold hover:scale-105 transition-transform"
-                    >
-                        {isPlaying ? <Pause size={20} weight="fill" /> : <Play size={20} weight="fill" />}
-                    </button>
-
-                    <button onClick={next} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text)]">
-                        <SkipForward size={20} weight="fill" />
-                    </button>
-
-                    <button
-                        onClick={() => audioEngine.stop()}
-                        className="p-1.5 md:p-2 text-[var(--text-muted)] hover:text-red-400 ml-sm"
-                    >
-                        <X size={18} />
-                    </button>
+                        <button
+                            onClick={() => audioEngine.stop()}
+                            style={{ padding: '8px', color: 'var(--text-muted)', marginRight: 'var(--space-sm)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        >
+                            <X size={20} weight="bold" />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

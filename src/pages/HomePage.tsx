@@ -40,6 +40,28 @@ function getTimeOfDay(): { key: string; gradient: string; emoji: string } {
     };
 }
 
+const dailyAdhkar = [
+    "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+    "لا حَوْلَ وَلا قُوَّةَ إِلا بِاللَّهِ",
+    "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+    "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لا إِلَهَ إِلا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ",
+    "لا إِلَهَ إِلا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+    "رَضِيتُ بِاللَّهِ رَبًّا ، وَبِالْإِسْلَامِ دِينًا ، وَبِمُحَمَّدٍ رَسُولًا",
+    "حَسْبِيَ اللَّهُ لا إِلَهَ إِلا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ ، أَصْلِحْ لِي شَأْنِي كُلَّهُ",
+    "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا ، وَرِزْقًا طَيِّبًا ، وَعَمَلًا مُتَقَبَّلًا",
+    "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ"
+];
+
+function getDailyDhikr(): string {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+    return dailyAdhkar[dayOfYear % dailyAdhkar.length];
+}
+
 const quickAccessItems = [
     { path: '/mushaf', icon: BookOpenText, labelKey: 'home.mushaf', color: '#D4AF37' },
     { path: '/reciters', icon: MicrophoneStage, labelKey: 'home.reciters', color: '#58A89B' },
@@ -76,6 +98,8 @@ export function HomePage() {
     const adhkarGradient = isMorning
         ? 'linear-gradient(135deg, rgba(246, 211, 101, 0.1) 0%, rgba(253, 160, 133, 0.1) 100%)'
         : 'linear-gradient(135deg, rgba(167, 216, 255, 0.1) 0%, rgba(137, 207, 240, 0.1) 100%)';
+
+    const currentDhikr = getDailyDhikr();
 
     return (
         <div className="flex flex-col gap-xl">
@@ -150,9 +174,7 @@ export function HomePage() {
                             <BookOpenText size={24} color="var(--accent-gold)" weight="duotone" />
                         </div>
                         <div>
-                            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                                أين تم التوقف
-                            </h3>
+                            {/* Removed text */}
                             <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1 }}>
                                 {lastReadSurah}
                             </p>
@@ -245,9 +267,18 @@ export function HomePage() {
                         {adhkarIcon}
                     </div>
                     <div>
-                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>{adhkarTitle}</h3>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                            حصن المسلم اليومي
+                        <div className="flex items-center gap-xs">
+                            <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{adhkarTitle}</h3>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• ذكر اليوم</span>
+                        </div>
+                        <p style={{
+                            fontSize: '1.2rem',
+                            fontFamily: 'var(--font-quran)',
+                            color: 'var(--accent-gold)',
+                            marginTop: 'var(--space-sm)',
+                            lineHeight: 1.8
+                        }}>
+                            {currentDhikr}
                         </p>
                     </div>
                 </div>
@@ -255,9 +286,6 @@ export function HomePage() {
 
             {/* Quick Access Grid */}
             <section className="animate-slide-up stagger-2">
-                <h3 style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)', fontWeight: 600 }}>
-                    {t('home.quickAccess')}
-                </h3>
                 <div className="grid grid-3 gap-md">
                     {quickAccessItems.map((item, i) => {
                         const Icon = item.icon;

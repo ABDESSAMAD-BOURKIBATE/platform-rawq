@@ -9,11 +9,15 @@ interface QuranState {
     lastLoginDate: string | null;
     dailyReadPages: number[];
     lastReadDate: string | null;
+    fontSize: number;
+    fontFamily: string;
     setCurrentPage: (page: number) => void;
     saveLastRead: (page: number, surahName: string) => void;
     toggleBookmark: (page: number) => void;
     isBookmarked: (page: number) => boolean;
     updateLastLogin: () => void;
+    setFontSize: (size: number) => void;
+    setFontFamily: (family: string) => void;
 }
 
 export const useQuranStore = create<QuranState>()(
@@ -26,6 +30,8 @@ export const useQuranStore = create<QuranState>()(
             lastLoginDate: null,
             dailyReadPages: [],
             lastReadDate: null,
+            fontSize: 28, // Default font size in px
+            fontFamily: 'Amiri', // Default font family
 
             setCurrentPage: (page) => set({ currentPage: page }),
 
@@ -60,6 +66,9 @@ export const useQuranStore = create<QuranState>()(
                 const now = new Date().toISOString();
                 set({ lastLoginDate: now });
             },
+
+            setFontSize: (size) => set({ fontSize: size }),
+            setFontFamily: (family) => set({ fontFamily: family }),
         }),
         { name: 'rawq-quran' }
     )

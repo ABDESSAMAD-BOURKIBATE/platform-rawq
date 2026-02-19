@@ -50,9 +50,9 @@ function computePrayerTimes(lat: number, lng: number, date: Date, tz: number) {
 
     const fajrHA = hourAngle(-18);
     const sunriseHA = hourAngle(-0.833);
-    const asrFactor = 1; // Shafi'i
-    const asrAngle = toDegrees(Math.atan(1 / (asrFactor + Math.tan(Math.abs(lr - dtr)))));
-    const asrHA = hourAngle(90 - asrAngle); // approximate
+    const asrFactor = 1; // Shafi'i / Standard
+    const asrAltitude = toDegrees(Math.atan(1 / (asrFactor + Math.tan(Math.abs(lr - dtr)))));
+    const asrHA = hourAngle(asrAltitude);
     const maghribHA = hourAngle(-0.833);
     const ishaHA = hourAngle(-17);
 
@@ -141,7 +141,9 @@ export function PrayerTimesPage() {
     }, []);
 
     const formatCurrentTime = () => {
-        return currentTime.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            .replace('AM', 'ص')
+            .replace('PM', 'م');
     };
 
     return (
