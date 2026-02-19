@@ -39,10 +39,7 @@ class AudioEngine {
         useAudioStore.getState().stop();
     };
 
-    setReciter(folder: string) {
-        this.currentReciterFolder = folder;
-        useAudioStore.getState().setReciterFolder(folder);
-    }
+
 
     playAyah(surahNumber: number, ayahNumber: number) {
         if (!this.audio) return;
