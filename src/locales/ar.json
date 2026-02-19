@@ -1,0 +1,91 @@
+{
+    "app": {
+        "name": "رَوْقٌ",
+        "tagline": "حيثُ يمتزجُ نورُ القرآنِ بعبقِ الأندلس"
+    },
+    "nav": {
+        "home": "الرئيسية",
+        "mushaf": "المصحف",
+        "reciters": "القرّاء",
+        "search": "البحث",
+        "settings": "الإعدادات",
+        "surahList": "الفهرس"
+    },
+    "home": {
+        "greeting": {
+            "morning": "صباح الخير",
+            "afternoon": "مساء النور",
+            "evening": "مساء الخير",
+            "night": "طاب مساؤك"
+        },
+        "continueReading": "أكمل القراءة",
+        "lastRead": "آخر قراءة",
+        "page": "صفحة",
+        "quickAccess": "الوصول السريع",
+        "mushaf": "المصحف الشريف",
+        "reciters": "القرّاء",
+        "search": "بحث في القرآن",
+        "radio": "إذاعات القرآن",
+        "surahIndex": "فهرس السور"
+    },
+    "mushaf": {
+        "title": "المصحف الشريف",
+        "pageOf": "صفحة {{current}} من {{total}}",
+        "surah": "سورة",
+        "juz": "الجزء",
+        "loading": "جاري تحميل الصفحة...",
+        "error": "حدث خطأ في تحميل الصفحة",
+        "retry": "إعادة المحاولة",
+        "tapToPlay": "اضغط على الآية للاستماع"
+    },
+    "reciters": {
+        "title": "القرّاء",
+        "searchPlaceholder": "ابحث عن قارئ...",
+        "allRiwayat": "جميع الروايات",
+        "allCountries": "جميع الدول",
+        "surahCount": "{{count}} سورة",
+        "noResults": "لا توجد نتائج",
+        "loading": "جاري تحميل القرّاء..."
+    },
+    "search": {
+        "title": "البحث في القرآن",
+        "placeholder": "ابحث في القرآن الكريم...",
+        "results": "{{count}} نتيجة",
+        "noResults": "لا توجد نتائج للبحث",
+        "searching": "جاري البحث...",
+        "hint": "ابحث بكلمة أو جزء من آية"
+    },
+    "surahList": {
+        "title": "فهرس السور",
+        "ayahs": "{{count}} آية",
+        "meccan": "مكية",
+        "medinan": "مدنية"
+    },
+    "settings": {
+        "title": "الإعدادات",
+        "language": "اللغة",
+        "theme": "المظهر",
+        "dark": "داكن",
+        "light": "فاتح",
+        "system": "تلقائي",
+        "about": "عن التطبيق",
+        "version": "الإصدار",
+        "waqf": "وقف"
+    },
+    "waqf": {
+        "text": "وقفٌ قرآنيٌّ على أسرةِ الشيخِ عبدِ الحفيظ بوركيبات رحمه الله تعالى"
+    },
+    "audio": {
+        "play": "تشغيل",
+        "pause": "إيقاف",
+        "stop": "إيقاف",
+        "loading": "جاري التحميل..."
+    },
+    "common": {
+        "loading": "جاري التحميل...",
+        "error": "حدث خطأ",
+        "retry": "إعادة المحاولة",
+        "close": "إغلاق",
+        "back": "رجوع"
+    }
+}

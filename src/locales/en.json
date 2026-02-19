@@ -1,0 +1,91 @@
+{
+    "app": {
+        "name": "RAWQ",
+        "tagline": "A Quranic Experience with Andalusian Serenity"
+    },
+    "nav": {
+        "home": "Home",
+        "mushaf": "Mushaf",
+        "reciters": "Reciters",
+        "search": "Search",
+        "settings": "Settings",
+        "surahList": "Index"
+    },
+    "home": {
+        "greeting": {
+            "morning": "Good Morning",
+            "afternoon": "Good Afternoon",
+            "evening": "Good Evening",
+            "night": "Good Night"
+        },
+        "continueReading": "Continue Reading",
+        "lastRead": "Last Read",
+        "page": "Page",
+        "quickAccess": "Quick Access",
+        "mushaf": "Holy Mushaf",
+        "reciters": "Reciters",
+        "search": "Search Quran",
+        "radio": "Quran Radio",
+        "surahIndex": "Surah Index"
+    },
+    "mushaf": {
+        "title": "Holy Mushaf",
+        "pageOf": "Page {{current}} of {{total}}",
+        "surah": "Surah",
+        "juz": "Juz",
+        "loading": "Loading page...",
+        "error": "Error loading page",
+        "retry": "Retry",
+        "tapToPlay": "Tap an ayah to listen"
+    },
+    "reciters": {
+        "title": "Reciters",
+        "searchPlaceholder": "Search for a reciter...",
+        "allRiwayat": "All Riwayat",
+        "allCountries": "All Countries",
+        "surahCount": "{{count}} Surahs",
+        "noResults": "No results found",
+        "loading": "Loading reciters..."
+    },
+    "search": {
+        "title": "Search the Quran",
+        "placeholder": "Search the Holy Quran...",
+        "results": "{{count}} results",
+        "noResults": "No results found",
+        "searching": "Searching...",
+        "hint": "Search by word or part of a verse"
+    },
+    "surahList": {
+        "title": "Surah Index",
+        "ayahs": "{{count}} Ayahs",
+        "meccan": "Meccan",
+        "medinan": "Medinan"
+    },
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "theme": "Theme",
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System",
+        "about": "About",
+        "version": "Version",
+        "waqf": "Waqf"
+    },
+    "waqf": {
+        "text": "A Quranic endowment in memory of Sheikh Abdelhafid Bourkibat, may Allah have mercy on him"
+    },
+    "audio": {
+        "play": "Play",
+        "pause": "Pause",
+        "stop": "Stop",
+        "loading": "Loading..."
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "retry": "Retry",
+        "close": "Close",
+        "back": "Back"
+    }
+}

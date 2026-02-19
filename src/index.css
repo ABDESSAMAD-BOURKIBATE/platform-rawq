@@ -1,0 +1,954 @@
+/* =============================================
+   RAWQ — Complete Design System
+   Andalusian-Moroccan Islamic Identity
+   ============================================= */
+
+/* ---------- CSS Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* ---------- Theme Variables ---------- */
+:root {
+  /* Dark mode (default) */
+  --bg: #0B1C1A;
+  --bg-secondary: #123D38;
+  --bg-tertiary: #1A4F48;
+  --bg-card: #0F2B27;
+  --bg-card-hover: #153E39;
+  --accent-gold: #D4AF37;
+  --accent-gold-soft: rgba(212, 175, 55, 0.15);
+  --accent-gold-glow: rgba(212, 175, 55, 0.3);
+  --text: #F5F3EA;
+  --text-secondary: #D8E0DE;
+  /* Lighter for better contrast against dark */
+  --text-muted: #A3B5B2;
+  /* Lighter grey, more visible */
+  --border: rgba(212, 175, 55, 0.12);
+  --border-strong: rgba(212, 175, 55, 0.25);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.15);
+
+  /* Typography */
+  --font-quran: 'Amiri', serif;
+  --font-ui: 'IBM Plex Sans Arabic', sans-serif;
+  --font-heading: 'Cairo', sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layout */
+  --nav-height: 64px;
+  --bottom-nav-height: 72px;
+  --max-width: 1200px;
+  --content-padding: var(--space-lg);
+}
+
+[data-theme="light"] {
+  --bg: #F8F5EE;
+  --bg-secondary: #EDE8DC;
+  --bg-tertiary: #E3DDCE;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F5F1E8;
+  --accent-gold: #B0892E;
+  --accent-gold-soft: rgba(176, 137, 46, 0.1);
+  --accent-gold-glow: rgba(176, 137, 46, 0.2);
+  --text: #1A332E;
+  /* Darker main text */
+  --text-secondary: #3A554E;
+  /* Much darker secondary */
+  --text-muted: #627D77;
+  /* Darker grey, no longer pale */
+  --border: rgba(30, 58, 52, 0.1);
+  --border-strong: rgba(30, 58, 52, 0.2);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+  --shadow-gold: 0 0 20px rgba(176, 137, 46, 0.1);
+}
+
+/* ---------- Base Styles ---------- */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
+
+/* ---------- Typography ---------- */
+.font-quran {
+  font-family: var(--font-quran);
+  line-height: 2.2;
+  letter-spacing: 0;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+.text-gold {
+  color: var(--accent-gold);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-gold {
+  background: var(--bg-card);
+  border: 1px solid var(--accent-gold-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-gold);
+}
+
+/* ---------- Glass ---------- */
+.glass {
+  background: rgba(15, 43, 39, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all var(--transition-base);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--accent-gold);
+  color: #0B1C1A;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: #E5C040;
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-strong);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-full);
+}
+
+/* ---------- Chips / Tags ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  user-select: none;
+}
+
+.chip:hover,
+.chip.active {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+/* ---------- Input ---------- */
+.input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px var(--accent-gold-soft);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ---------- Glow Effects ---------- */
+.glow {
+  box-shadow: var(--shadow-gold);
+}
+
+.glow-text {
+  text-shadow: 0 0 16px var(--accent-gold-glow);
+}
+
+/* ---------- Parchment (Mushaf) ---------- */
+.parchment {
+  background: linear-gradient(135deg, #1A2E2A 0%, #0F2B27 50%, #123D38 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+[data-theme="light"] .parchment {
+  background: linear-gradient(135deg, #FDFAF2 0%, #F8F0DC 50%, #F5EDD0 100%);
+}
+
+/* ---------- Andalusian Pattern Background ---------- */
+/* ---------- Andalusian Pattern Background (Animated) ---------- */
+/* ---------- Andalusian Pattern Background (Animated Night & Day) ---------- */
+.pattern-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* Base Layer: Deep Night Color (Default) */
+  background-color: #050d14;
+  transition: background-color 1.5s ease-in-out;
+}
+
+[data-theme="light"] .pattern-bg {
+  /* Base Layer: Warm Parchment Day Color */
+  background-color: #F9F6EF;
+}
+
+/* Layer 1: The Pattern */
+.pattern-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/andalusian_pattern_seamless.jpg');
+  background-repeat: repeat;
+  background-size: 400px;
+  opacity: 0.1;
+  /* Reduced from 0.15 for better text legibility */
+  mix-blend-mode: overlay;
+  animation: patternFloat 60s linear infinite;
+  transition: opacity 1.5s ease-in-out, background-image 1.5s ease-in-out;
+}
+
+[data-theme="light"] .pattern-bg::before {
+  background-image: url('/andalusian_day_graphic_.jpg');
+  opacity: 0.35;
+  /* Drastically reduced from 0.8 to make text clear */
+  mix-blend-mode: normal;
+  /* Normal blend for a graphic */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Layer 2: Lighting/Glow Overlay */
+.pattern-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 120%, rgba(20, 50, 80, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
+  mix-blend-mode: screen;
+  animation: nightPulse 8s ease-in-out infinite alternate;
+  transition: all 1.5s ease-in-out;
+}
+
+[data-theme="light"] .pattern-bg::after {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 241, 200, 0.4) 0%, transparent 60%),
+    /* Top sun warmth */
+    radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 40%);
+  /* Subtle gold reflection */
+  mix-blend-mode: soft-light;
+  animation: dayPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes patternFloat {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+@keyframes nightPulse {
+  0% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes dayPulse {
+  0% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0.7;
+  }
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-gold {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-gold-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 4px var(--accent-gold-glow);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-slow) ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--transition-slow) ease forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown var(--transition-slow) ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--transition-slow) ease forwards;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Staggered delays for lists */
+.stagger-1 {
+  animation-delay: 50ms;
+}
+
+.stagger-2 {
+  animation-delay: 100ms;
+}
+
+.stagger-3 {
+  animation-delay: 150ms;
+}
+
+.stagger-4 {
+  animation-delay: 200ms;
+}
+
+.stagger-5 {
+  animation-delay: 250ms;
+}
+
+.stagger-6 {
+  animation-delay: 300ms;
+}
+
+/* ---------- Layout Utilities ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+.page {
+  flex: 1;
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-lg));
+  padding-top: var(--space-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-xs {
+  gap: var(--space-xs);
+}
+
+.gap-sm {
+  gap: var(--space-sm);
+}
+
+.gap-md {
+  gap: var(--space-md);
+}
+
+.gap-lg {
+  gap: var(--space-lg);
+}
+
+.gap-xl {
+  gap: var(--space-xl);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 640px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.relative {
+  position: relative;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/* ---------- Bottom Navigation ---------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="light"] .bottom-nav {
+  background: rgba(248, 245, 238, 0.9);
+}
+
+.bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+  border-radius: var(--radius-md);
+  min-width: 56px;
+  position: relative;
+}
+
+.bottom-nav .nav-item:hover {
+  color: var(--text-secondary);
+}
+
+.bottom-nav .nav-item.active {
+  color: var(--accent-gold);
+}
+
+.bottom-nav .nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: var(--accent-gold);
+  border-radius: 0 0 var(--radius-full) var(--radius-full);
+}
+
+.bottom-nav .nav-item svg {
+  width: 22px;
+  height: 22px;
+  transition: transform var(--transition-spring);
+}
+
+.bottom-nav .nav-item.active svg {
+  transform: scale(1.1);
+}
+
+/* ---------- Audio Bar ---------- */
+.audio-bar {
+  position: fixed;
+  bottom: var(--bottom-nav-height);
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 0 var(--space-lg);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  z-index: 99;
+  animation: slideUp var(--transition-base) ease;
+}
+
+.audio-bar .progress-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--bg-tertiary);
+}
+
+.audio-bar .progress-fill {
+  height: 100%;
+  background: var(--accent-gold);
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  transition: width 100ms linear;
+}
+
+/* ---------- Waqf Banner ---------- */
+.waqf-banner {
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  font-family: var(--font-quran);
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  opacity: 0.7;
+  text-shadow: 0 0 16px var(--accent-gold-glow);
+  line-height: 1.8;
+  user-select: none;
+}
+
+/* ---------- Mushaf Specific ---------- */
+.mushaf-page {
+  font-family: var(--font-quran);
+  font-size: 1.4rem;
+  line-height: 2.4;
+  text-align: justify;
+  direction: rtl;
+  padding: var(--space-xl);
+  min-height: 60vh;
+}
+
+.ayah {
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.ayah:hover {
+  background: var(--accent-gold-soft);
+}
+
+.ayah.active {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+  box-shadow: 0 0 12px var(--accent-gold-glow);
+}
+
+.ayah-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--accent-gold);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  color: var(--accent-gold);
+  margin: 0 4px;
+  vertical-align: middle;
+  font-family: var(--font-ui);
+}
+
+/* ---------- Surah Header ---------- */
+.surah-header {
+  text-align: center;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-quran);
+}
+
+.bismillah {
+  font-family: var(--font-quran);
+  font-size: 1.6rem;
+  color: var(--accent-gold);
+  text-align: center;
+  padding: var(--space-md) 0;
+  text-shadow: 0 0 12px var(--accent-gold-glow);
+}
+
+/* ---------- Loading States ---------- */
+.skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: var(--radius-full);
+}
+
+/* ---------- Empty State ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+  color: var(--text-muted);
+  gap: var(--space-md);
+}
+
+.empty-state svg {
+  width: 64px;
+  height: 64px;
+  color: var(--accent-gold);
+  opacity: 0.5;
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 768px) {
+  :root {
+    --content-padding: var(--space-xl);
+  }
+
+  .mushaf-page {
+    font-size: 1.6rem;
+    padding: var(--space-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --content-padding: var(--space-2xl);
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .page {
+    padding-bottom: var(--space-lg);
+  }
+}

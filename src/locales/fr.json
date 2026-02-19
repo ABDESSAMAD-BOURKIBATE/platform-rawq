@@ -1,0 +1,91 @@
+{
+    "app": {
+        "name": "RAWQ",
+        "tagline": "Une expérience coranique à la sérénité andalouse"
+    },
+    "nav": {
+        "home": "Accueil",
+        "mushaf": "Mushaf",
+        "reciters": "Réciteurs",
+        "search": "Recherche",
+        "settings": "Paramètres",
+        "surahList": "Index"
+    },
+    "home": {
+        "greeting": {
+            "morning": "Bonjour",
+            "afternoon": "Bon après-midi",
+            "evening": "Bonsoir",
+            "night": "Bonne nuit"
+        },
+        "continueReading": "Continuer la lecture",
+        "lastRead": "Dernière lecture",
+        "page": "Page",
+        "quickAccess": "Accès rapide",
+        "mushaf": "Saint Mushaf",
+        "reciters": "Réciteurs",
+        "search": "Rechercher dans le Coran",
+        "radio": "Radio Coranique",
+        "surahIndex": "Index des sourates"
+    },
+    "mushaf": {
+        "title": "Saint Mushaf",
+        "pageOf": "Page {{current}} sur {{total}}",
+        "surah": "Sourate",
+        "juz": "Jouz",
+        "loading": "Chargement de la page...",
+        "error": "Erreur de chargement",
+        "retry": "Réessayer",
+        "tapToPlay": "Appuyez sur un verset pour écouter"
+    },
+    "reciters": {
+        "title": "Réciteurs",
+        "searchPlaceholder": "Rechercher un réciteur...",
+        "allRiwayat": "Toutes les Riwayat",
+        "allCountries": "Tous les pays",
+        "surahCount": "{{count}} sourates",
+        "noResults": "Aucun résultat",
+        "loading": "Chargement des réciteurs..."
+    },
+    "search": {
+        "title": "Recherche dans le Coran",
+        "placeholder": "Rechercher dans le Saint Coran...",
+        "results": "{{count}} résultats",
+        "noResults": "Aucun résultat",
+        "searching": "Recherche en cours...",
+        "hint": "Rechercher par mot ou partie de verset"
+    },
+    "surahList": {
+        "title": "Index des sourates",
+        "ayahs": "{{count}} versets",
+        "meccan": "Mecquoise",
+        "medinan": "Médinoise"
+    },
+    "settings": {
+        "title": "Paramètres",
+        "language": "Langue",
+        "theme": "Thème",
+        "dark": "Sombre",
+        "light": "Clair",
+        "system": "Système",
+        "about": "À propos",
+        "version": "Version",
+        "waqf": "Waqf"
+    },
+    "waqf": {
+        "text": "Dotation coranique en mémoire du Cheikh Abdelhafid Bourkibat, qu'Allah lui fasse miséricorde"
+    },
+    "audio": {
+        "play": "Lire",
+        "pause": "Pause",
+        "stop": "Arrêter",
+        "loading": "Chargement..."
+    },
+    "common": {
+        "loading": "Chargement...",
+        "error": "Une erreur est survenue",
+        "retry": "Réessayer",
+        "close": "Fermer",
+        "back": "Retour"
+    }
+}
