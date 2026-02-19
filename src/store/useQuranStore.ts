@@ -6,10 +6,14 @@ interface QuranState {
     lastReadPage: number;
     lastReadSurah: string;
     bookmarks: number[];
+    lastLoginDate: string | null;
+    dailyReadPages: number[];
+    lastReadDate: string | null;
     setCurrentPage: (page: number) => void;
     saveLastRead: (page: number, surahName: string) => void;
     toggleBookmark: (page: number) => void;
     isBookmarked: (page: number) => boolean;
+    updateLastLogin: () => void;
 }
 
 export const useQuranStore = create<QuranState>()(
@@ -19,11 +23,27 @@ export const useQuranStore = create<QuranState>()(
             lastReadPage: 1,
             lastReadSurah: 'الفاتحة',
             bookmarks: [],
+            lastLoginDate: null,
+            dailyReadPages: [],
+            lastReadDate: null,
 
             setCurrentPage: (page) => set({ currentPage: page }),
 
-            saveLastRead: (page, surahName) =>
-                set({ lastReadPage: page, lastReadSurah: surahName, currentPage: page }),
+            saveLastRead: (page, surahName) => {
+                const state = get();
+                const today = new Date().toDateString();
+                let newDailyReadPages = state.lastReadDate === today ? [...(state.dailyReadPages || [])] : [];
+                if (!newDailyReadPages.includes(page)) {
+                    newDailyReadPages.push(page);
+                }
+                set({
+                    lastReadPage: page,
+                    lastReadSurah: surahName,
+                    currentPage: page,
+                    lastReadDate: today,
+                    dailyReadPages: newDailyReadPages
+                });
+            },
 
             toggleBookmark: (page) => {
                 const { bookmarks } = get();
@@ -35,6 +55,11 @@ export const useQuranStore = create<QuranState>()(
             },
 
             isBookmarked: (page) => get().bookmarks.includes(page),
+
+            updateLastLogin: () => {
+                const now = new Date().toISOString();
+                set({ lastLoginDate: now });
+            },
         }),
         { name: 'rawq-quran' }
     )

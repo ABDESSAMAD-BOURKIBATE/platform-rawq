@@ -5,6 +5,7 @@ import { ArrowRight, Play, Pause, MusicNote, User } from '@phosphor-icons/react'
 import { fetchReciters } from '../api/mp3quran';
 import type { Reciter, Moshaf } from '../lib/types';
 import { useAudioStore } from '../store/useAudioStore';
+import { audioEngine } from '../lib/audioEngine';
 
 // Surah names in Arabic
 const SURAH_NAMES: Record<number, string> = {
@@ -37,7 +38,7 @@ export function ReciterDetailPage() {
     const [loading, setLoading] = useState(true);
 
     const {
-        play, pause, resume,
+        pause, resume,
         isPlaying, currentSurah,
         reciter: currentReciter,
     } = useAudioStore();
@@ -83,10 +84,9 @@ export function ReciterDetailPage() {
 
         // If same surah is clicked, toggle play/pause
         if (currentSurah === surahNum && currentReciter?.id === String(reciter.id)) {
-            if (isPlaying) pause();
-            else resume();
+            audioEngine.togglePlayPause();
         } else {
-            play(surahNum, 1, reciterInfo, moshafInfo);
+            audioEngine.playSurah(surahNum, moshafInfo, reciterInfo);
         }
     };
 

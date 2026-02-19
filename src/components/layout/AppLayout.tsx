@@ -2,14 +2,20 @@ import { Outlet } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 import { AudioPlayer } from '../audio/AudioPlayer';
 import { useAudioStore } from '../../store/useAudioStore';
+import { useQuranStore } from '../../store/useQuranStore';
+import { useEffect } from 'react';
 
 export function AppLayout() {
-    const isPlaying = useAudioStore((s) => s.isPlaying);
-    const currentAyah = useAudioStore((s) => s.currentAyah);
-    const reciter = useAudioStore((s) => s.reciter);
+    const currentSurah = useAudioStore((s) => s.currentSurah);
+    const radioStation = useAudioStore((s) => s.radioStation);
+    const updateLastLogin = useQuranStore((s) => s.updateLastLogin);
 
-    // Show player if playing or if we have an active track (even if paused)
-    const showPlayer = isPlaying || (currentAyah !== null && reciter !== null);
+    useEffect(() => {
+        updateLastLogin();
+    }, [updateLastLogin]);
+
+    // Show player if we have an active track (even if paused)
+    const showPlayer = currentSurah !== null || radioStation !== null;
 
     return (
         <div className="app-layout">

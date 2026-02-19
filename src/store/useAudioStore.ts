@@ -17,6 +17,8 @@ interface AudioState {
 
     progress: number;
     duration: number;
+    playbackRate: number;
+    repeatMode: 'none' | 'ayah' | 'surah';
 
     play: (surah: number, ayah: number, reciter?: AudioState['reciter'], moshaf?: AudioState['moshaf']) => void;
     playRadio: (station: RadioStation) => void;
@@ -29,6 +31,8 @@ interface AudioState {
     setMoshaf: (moshaf: AudioState['moshaf']) => void;
     setProgress: (progress: number) => void;
     setDuration: (duration: number) => void;
+    setPlaybackRate: (rate: number) => void;
+    setRepeatMode: (mode: 'none' | 'ayah' | 'surah') => void;
     addToPlaylist: (track: { surah: number; ayah: number }) => void;
     clearPlaylist: () => void;
 }
@@ -44,6 +48,8 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
     radioStation: null,
     progress: 0,
     duration: 0,
+    playbackRate: 1,
+    repeatMode: 'none',
 
     play: (surah, ayah, reciter, moshaf) => {
         set((state) => ({
@@ -96,6 +102,8 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
     setMoshaf: (moshaf) => set({ moshaf }),
     setProgress: (progress) => set({ progress }),
     setDuration: (duration) => set({ duration }),
+    setPlaybackRate: (rate) => set({ playbackRate: rate }),
+    setRepeatMode: (mode) => set({ repeatMode: mode }),
     addToPlaylist: (track) => set((state) => ({ playlist: [...state.playlist, track] })),
     clearPlaylist: () => set({ playlist: [] }),
 }));

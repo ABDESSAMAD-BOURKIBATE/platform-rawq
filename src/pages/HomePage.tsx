@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe } from '@phosphor-icons/react';
+import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise } from '@phosphor-icons/react';
 import { useQuranStore } from '../store/useQuranStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import { DynamicCard } from '../components/ui/DynamicCard';
+import { Sun, MoonStars } from '@phosphor-icons/react';
 
 function getTimeOfDay(): { key: string; gradient: string; emoji: string } {
     const hour = new Date().getHours();
@@ -53,8 +54,28 @@ const quickAccessItems = [
 export function HomePage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { lastReadPage, lastReadSurah } = useQuranStore();
+    const { lastReadPage, lastReadSurah, dailyReadPages, lastLoginDate } = useQuranStore();
     const timeInfo = getTimeOfDay();
+
+    const formatLastLogin = () => {
+        if (!lastLoginDate) return t('home.never') || 'الآن';
+        const date = new Date(lastLoginDate);
+        return new Intl.DateTimeFormat('ar-SA-u-nu-latn', {
+            hour: 'numeric', minute: '2-digit', day: 'numeric', month: 'short'
+        }).format(date);
+    };
+
+    const dailyWirdCount = dailyReadPages?.length || 0;
+
+    const totalPages = 604;
+    const khatmahProgress = Math.round((lastReadPage / totalPages) * 100);
+
+    const isMorning = new Date().getHours() < 12;
+    const adhkarTitle = isMorning ? 'أذكار الصباح' : 'أذكار المساء';
+    const adhkarIcon = isMorning ? <Sun size={24} weight="duotone" color="#F6D365" /> : <MoonStars size={24} weight="duotone" color="#A7D8FF" />;
+    const adhkarGradient = isMorning
+        ? 'linear-gradient(135deg, rgba(246, 211, 101, 0.1) 0%, rgba(253, 160, 133, 0.1) 100%)'
+        : 'linear-gradient(135deg, rgba(167, 216, 255, 0.1) 0%, rgba(137, 207, 240, 0.1) 100%)';
 
     return (
         <div className="flex flex-col gap-xl">
@@ -102,31 +123,132 @@ export function HomePage() {
             {/* Continue Reading Card */}
             <div
                 className="card-gold animate-slide-up"
-                style={{ cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+                style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'var(--space-md)'
+                }}
                 onClick={() => navigate('/mushaf')}
             >
                 <div style={{
-                    position: 'absolute', top: 0, right: 0, width: '120px', height: '120px',
+                    position: 'absolute', top: 0, right: 0, width: '150px', height: '150px',
                     background: 'radial-gradient(circle at top right, var(--accent-gold-soft), transparent 70%)',
                     borderRadius: '0 var(--radius-lg) 0 0',
+                    pointerEvents: 'none'
                 }} />
-                <div className="flex items-center justify-between" style={{ position: 'relative' }}>
-                    <div>
-                        <h3 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 'var(--space-xs)' }}>
-                            {t('home.continueReading')}
-                        </h3>
-                        <p style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '4px' }}>
-                            {lastReadSurah}
-                        </p>
-                        <p className="text-muted" style={{ fontSize: '0.8rem' }}>
-                            {t('home.page')} {lastReadPage}
-                        </p>
+
+                {/* Top Section: Where stopped */}
+                <div className="flex items-center justify-between" style={{ position: 'relative', zIndex: 1 }}>
+                    <div className="flex items-center gap-sm">
+                        <div style={{
+                            width: '48px', height: '48px', borderRadius: 'var(--radius-lg)',
+                            background: 'var(--accent-gold-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                            <BookOpenText size={24} color="var(--accent-gold)" weight="duotone" />
+                        </div>
+                        <div>
+                            <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                                أين تم التوقف
+                            </h3>
+                            <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1 }}>
+                                {lastReadSurah}
+                            </p>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--accent-gold)', marginTop: '4px' }}>
+                                صفحة {lastReadPage}
+                            </p>
+                        </div>
+                    </div>
+                    {/* Badge */}
+                    <div style={{
+                        padding: 'var(--space-xs) var(--space-sm)',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'rgba(212, 175, 55, 0.1)',
+                        color: 'var(--accent-gold)',
+                        fontSize: '0.75rem',
+                        fontWeight: 600
+                    }}>
+                        أكمل القراءة
+                    </div>
+                </div>
+
+                {/* Middle Section: Khatmah Progress */}
+                <div style={{ padding: 'var(--space-sm) 0', position: 'relative', zIndex: 1 }}>
+                    <div className="flex items-center justify-between mb-xs">
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>نسبة إنجاز الختمة</span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-gold)' }}>{khatmahProgress}%</span>
                     </div>
                     <div style={{
-                        width: '56px', height: '56px', borderRadius: 'var(--radius-full)',
-                        background: 'var(--accent-gold-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        height: '6px',
+                        background: 'rgba(255,255,255,0.1)',
+                        borderRadius: 'var(--radius-full)',
+                        overflow: 'hidden'
                     }}>
-                        <BookOpenText size={24} color="var(--accent-gold)" weight="duotone" />
+                        <div style={{
+                            height: '100%',
+                            width: `${khatmahProgress}%`,
+                            background: 'var(--accent-gold)',
+                            borderRadius: 'var(--radius-full)',
+                            transition: 'width 0.5s ease'
+                        }} />
+                    </div>
+                </div>
+
+                {/* Bottom Section: Stats */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: 'var(--space-sm)',
+                    paddingTop: 'var(--space-md)',
+                    borderTop: '1px solid rgba(255,255,255,0.05)',
+                    position: 'relative',
+                    zIndex: 1
+                }}>
+                    <div className="flex items-center gap-sm">
+                        <CalendarCheck size={20} color="var(--accent-gold)" weight="duotone" />
+                        <div>
+                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>ورد يومي</p>
+                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>{dailyWirdCount} صفحات</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-sm">
+                        <ClockClockwise size={20} color="var(--accent-gold)" weight="duotone" />
+                        <div>
+                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>آخر دخول</p>
+                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }} dir="ltr">{formatLastLogin()}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Daily Adhkar Card */}
+            <div
+                className="animate-slide-up stagger-1"
+                style={{
+                    background: adhkarGradient,
+                    borderRadius: 'var(--radius-xl)',
+                    padding: 'var(--space-md) var(--space-lg)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    cursor: 'pointer'
+                }}
+            >
+                <div className="flex items-center gap-md">
+                    <div style={{
+                        width: '48px', height: '48px', borderRadius: 'var(--radius-lg)',
+                        background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                        {adhkarIcon}
+                    </div>
+                    <div>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>{adhkarTitle}</h3>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                            حصن المسلم اليومي
+                        </p>
                     </div>
                 </div>
             </div>

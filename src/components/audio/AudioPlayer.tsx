@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Play, Pause, SkipForward, SkipBack, X, SpeakerHigh, DownloadSimple } from '@phosphor-icons/react';
+import { Play, Pause, SkipForward, SkipBack, X, SpeakerHigh, DownloadSimple, Clock, Repeat, RepeatOnce } from '@phosphor-icons/react';
 import { useAudioStore } from '../../store/useAudioStore';
 import { toPng } from 'html-to-image';
+import { audioEngine } from '../../lib/audioEngine';
 
 // Surah names in Arabic (Duplicate from ReciterDetailPage - should be in a shared constant file)
 const SURAH_NAMES: Record<number, string> = {
@@ -28,82 +29,38 @@ const SURAH_NAMES: Record<number, string> = {
 export function AudioPlayer() {
     const { t } = useTranslation();
     const {
-        isPlaying, currentSurah, reciter, moshaf,
+        isPlaying, currentSurah, currentAyah, reciter, moshaf,
         pause, resume, stop, next, prev,
-        progress, setProgress, duration, setDuration
+        progress, duration, playbackRate, repeatMode,
+        setPlaybackRate, setRepeatMode
     } = useAudioStore();
-
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [currentTime, setCurrentTime] = useState(0);
-
-    // Audio Playback Logic
-    useEffect(() => {
-        if (!currentSurah || !moshaf) return;
-
-        const paddedSurah = String(currentSurah).padStart(3, '0');
-        const url = `${moshaf.server}${paddedSurah}.mp3`;
-
-        if (audioRef.current) {
-            if (audioRef.current.src !== url) {
-                audioRef.current.src = url;
-                audioRef.current.load();
-            }
-        } else {
-            audioRef.current = new Audio(url);
-        }
-
-        const audio = audioRef.current;
-
-        const onTimeUpdate = () => {
-            setCurrentTime(audio.currentTime);
-            setProgress((audio.currentTime / audio.duration) * 100);
-        };
-
-        const onLoadedMetadata = () => {
-            setDuration(audio.duration);
-        };
-
-        const onEnded = () => {
-            next(); // Auto-play next surah
-        };
-
-        audio.addEventListener('timeupdate', onTimeUpdate);
-        audio.addEventListener('loadedmetadata', onLoadedMetadata);
-        audio.addEventListener('ended', onEnded);
-
-        if (isPlaying) {
-            audio.play().catch(e => console.error("Playback failed", e));
-        } else {
-            audio.pause();
-        }
-
-        return () => {
-            audio.removeEventListener('timeupdate', onTimeUpdate);
-            audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-            audio.removeEventListener('ended', onEnded);
-        };
-    }, [currentSurah, moshaf, isPlaying, next, setProgress, setDuration]);
-
 
     // Handle Play/Pause toggle
     const togglePlay = () => {
-        if (isPlaying) {
-            pause();
-            audioRef.current?.pause();
-        } else {
-            resume();
-            audioRef.current?.play();
-        }
+        audioEngine.togglePlayPause();
     };
 
     // Handle Progress Seek
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newProgress = Number(e.target.value);
-        if (audioRef.current && duration) {
+        if (duration) {
             const newTime = (newProgress / 100) * duration;
-            audioRef.current.currentTime = newTime;
-            setProgress(newProgress);
+            audioEngine.seek(newTime);
         }
+    };
+
+    const cyclePlaybackRate = () => {
+        const rates = [1, 1.25, 1.5, 2];
+        const currentIndex = rates.indexOf(playbackRate);
+        const nextIndex = (currentIndex + 1) % rates.length;
+        audioEngine.setPlaybackRate(rates[nextIndex]);
+    };
+
+    const cycleRepeatMode = () => {
+        const modes: ('none' | 'ayah' | 'surah')[] = ['none', 'ayah', 'surah'];
+        const currentIndex = modes.indexOf(repeatMode);
+        const nextIndex = (currentIndex + 1) % modes.length;
+        setRepeatMode(modes[nextIndex]);
     };
 
     // Download Feature for Player Card
@@ -122,10 +79,12 @@ export function AudioPlayer() {
         }
     };
 
-    if (!currentSurah || !moshaf) return null;
+    // Show if there is a surah playing (either full surah or single ayah playback)
+    if (!currentSurah) return null;
 
     const surahName = SURAH_NAMES[currentSurah] || `سورة ${currentSurah}`;
     const reciterName = reciter?.name || 'القارئ';
+    const progressPercent = duration && duration > 0 ? (progress / duration) * 100 : 0;
 
     return (
         <div
@@ -152,7 +111,7 @@ export function AudioPlayer() {
                 >
                     <div
                         className="h-full bg-[var(--accent-gold)] transition-all duration-300 ease-linear"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `${progressPercent}%` }}
                     />
                 </div>
 
@@ -170,7 +129,7 @@ export function AudioPlayer() {
                     </div>
                     <div className="flex flex-col min-w-0">
                         <span className="text-sm font-bold truncate text-[var(--accent-gold)] font-quran leading-tight">
-                            {surahName}
+                            {surahName} {currentAyah ? ` - آية ${currentAyah}` : ''}
                         </span>
                         <span className="text-xs text-[var(--text-muted)] truncate font-ui">
                             {reciterName}
@@ -180,10 +139,31 @@ export function AudioPlayer() {
 
                 {/* Controls */}
                 <div className="flex items-center gap-xs md:gap-sm shrink-0">
+
+                    {/* Speed Button */}
+                    <button
+                        onClick={cyclePlaybackRate}
+                        className={`p-1.5 md:p-2 rounded flex items-center gap-1 transition-colors ${playbackRate !== 1 ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-soft)]' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}`}
+                        title="سرعة التشغيل"
+                        style={{ fontSize: '0.8rem', fontWeight: 600 }}
+                    >
+                        <Clock size={16} />
+                        {playbackRate}x
+                    </button>
+
+                    {/* Repeat Button */}
+                    <button
+                        onClick={cycleRepeatMode}
+                        className={`p-1.5 md:p-2 rounded transition-colors ${repeatMode !== 'none' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-soft)]' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}`}
+                        title={repeatMode === 'none' ? 'بدون تكرار' : repeatMode === 'ayah' ? 'تكرار الآية' : 'تكرار السورة'}
+                    >
+                        {repeatMode === 'ayah' ? <RepeatOnce size={20} /> : <Repeat size={20} />}
+                    </button>
+
                     {/* Download Button */}
                     <button
                         onClick={handleDownloadCard}
-                        className="p-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+                        className="p-1.5 md:p-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors hidden sm:block"
                         title="تحميل بطاقة المشغل"
                     >
                         <DownloadSimple size={20} />
@@ -204,7 +184,10 @@ export function AudioPlayer() {
                         <SkipForward size={20} weight="fill" />
                     </button>
 
-                    <button onClick={stop} className="p-2 text-[var(--text-muted)] hover:text-red-400 ml-sm">
+                    <button
+                        onClick={() => audioEngine.stop()}
+                        className="p-1.5 md:p-2 text-[var(--text-muted)] hover:text-red-400 ml-sm"
+                    >
                         <X size={18} />
                     </button>
                 </div>
