@@ -1,7 +1,8 @@
 {
     "app": {
         "name": "RAWQ",
-        "tagline": "Une expérience coranique à la sérénité andalouse"
+        "tagline": "Une expérience coranique à la sérénité andalouse",
+        "developer": "Développé et conçu par l'ingénieur Abdessamad Bourkibat"
     },
     "nav": {
         "home": "Accueil",
@@ -57,7 +58,11 @@
         "allCountries": "Tous les pays",
         "surahCount": "{{count}} sourates",
         "noResults": "Aucun résultat",
-        "loading": "Chargement des réciteurs..."
+        "loading": "Chargement des réciteurs...",
+        "notFound": "Récitateur introuvable",
+        "backToList": "Retour aux récitateurs",
+        "availableRiwayat": "{{count}} riwayat disponibles",
+        "surahLabel": "Sourate"
     },
     "search": {
         "title": "Recherche dans le Coran",
@@ -86,7 +91,13 @@
         "readingPrefs": "Préférences de lecture",
         "fontSize": "Taille de police",
         "fontFamily": "Type de police",
-        "bismillah": "Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux."
+        "bismillah": "Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux.",
+        "fonts": {
+            "amiri": "Amiri",
+            "katibeh": "Katibeh",
+            "cairo": "Le Caire",
+            "tajawal": "Tajawal"
+        }
     },
     "waqf": {
         "text": "Dotation coranique en mémoire du Cheikh Abdelhafid Bourkibat, qu'Allah lui fasse miséricorde"
@@ -118,7 +129,10 @@
         "moveDevice": "Bougez votre appareil pour activer la boussole",
         "aligned": "✓ Vous faites face à la Qibla",
         "locationError": "Impossible d'accéder à votre position",
-        "browserNotSupported": "Position non supportée dans ce navigateur"
+        "browserNotSupported": "Position non supportée dans ce navigateur",
+        "compassPermissionDenied": "Permission de la boussole refusée",
+        "compassActivationError": "Impossible d'activer la boussole",
+        "activateCompass": "Activer la boussole"
     },
     "prayer": {
         "title": "Horaires de prière",
@@ -129,7 +143,8 @@
         "dhuhr": "Dhuhr",
         "asr": "Asr",
         "maghrib": "Maghrib",
-        "isha": "Isha"
+        "isha": "Isha",
+        "in": "à"
     },
     "adhkar": {
         "title": "Adhkar & Tasbeeh",
@@ -140,5 +155,37 @@
         "custom": "Personnalisé",
         "daily": "Adhkar quotidiens",
         "clickToCount": "Appuyez pour compter"
+    },
+    "worldClock": {
+        "title": "Horloges mondiales",
+        "description": "Heure actuelle dans divers pays du monde",
+        "searchPlaceholder": "Rechercher un pays...",
+        "continents": {
+            "all": "Tous",
+            "asia": "Asie",
+            "africa": "Afrique",
+            "europe": "Europe",
+            "americas": "Amériques",
+            "oceania": "Océanie"
+        },
+        "periods": {
+            "sunrise": "Aube",
+            "day": "Jour",
+            "sunset": "Crépuscule",
+            "night": "Nuit"
+        }
+    },
+    "about": {
+        "subtitle": "Le Saint Coran entre vos mains",
+        "waqfText1": "Cette œuvre est une aumône continue (Sadaqah Jariyah) et un Waqf pour l'âme de notre grand-père",
+        "sheikhName": "Cheikh Abdelkhalek Bourkibat",
+        "waqfText2": "qu'Allah lui fasse miséricorde, et à toute la famille Bourkibat.",
+        "description": "L'idée de cette plateforme a commencé comme un petit rêve pour rendre la pareille à ceux qui ont planté l'amour du Coran en nous, et d'être une miséricorde et une lumière pour nos ancêtres. Par la grâce d'Allah, l'idée s'est transformée en cet édifice numérique pour être un compagnon et un guide pour chaque musulman cherchant la tranquillité dans les paroles d'Allah, en tout temps et en tout lieu.",
+        "acknowledgementTitle": "Remerciements et notes de version",
+        "devText1": "Cette application a été développée et programmée avec grand soin, entourée de prières et d'amour, pour allier la beauté du design à la grandeur du contenu.",
+        "devLabel": "Fondé et développé par :",
+        "devName": "L'ingénieur Abdessamad Bourkibat (petit-fils du Cheikh).",
+        "prayer": "Nous demandons à Allah d'en faire une action pure pour Son visage noble.",
+        "copyright": "© 2026 Tous droits réservés"
     }
 }

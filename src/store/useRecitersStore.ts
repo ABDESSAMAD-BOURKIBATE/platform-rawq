@@ -3,12 +3,14 @@ import type { Reciter } from '../lib/types';
 
 interface RecitersState {
     reciters: Reciter[];
+    loadedLanguage: string | null;
     selectedReciter: Reciter | null;
     riwayahFilter: string;
     searchQuery: string;
     isLoading: boolean;
     error: string | null;
     setReciters: (reciters: Reciter[]) => void;
+    setLoadedLanguage: (lang: string) => void;
     setSelectedReciter: (reciter: Reciter) => void;
     setRiwayahFilter: (filter: string) => void;
     setSearchQuery: (query: string) => void;
@@ -19,6 +21,7 @@ interface RecitersState {
 
 export const useRecitersStore = create<RecitersState>()((set, get) => ({
     reciters: [],
+    loadedLanguage: null,
     selectedReciter: null,
     riwayahFilter: '',
     searchQuery: '',
@@ -26,6 +29,7 @@ export const useRecitersStore = create<RecitersState>()((set, get) => ({
     error: null,
 
     setReciters: (reciters) => set({ reciters, isLoading: false, error: null }),
+    setLoadedLanguage: (lang) => set({ loadedLanguage: lang }),
     setSelectedReciter: (reciter) => set({ selectedReciter: reciter }),
     setRiwayahFilter: (filter) => set({ riwayahFilter: filter }),
     setSearchQuery: (query) => set({ searchQuery: query }),

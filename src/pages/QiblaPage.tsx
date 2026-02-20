@@ -38,11 +38,11 @@ export function QiblaPage() {
                     const angle = calculateQibla(pos.coords.latitude, pos.coords.longitude);
                     setQiblaAngle(angle);
                 },
-                () => setLocationError('تعذر الوصول إلى موقعك'),
+                () => setLocationError(t('qibla.locationError')),
                 { enableHighAccuracy: true }
             );
         } else {
-            setLocationError('الموقع غير مدعوم في هذا المتصفح');
+            setLocationError(t('qibla.browserNotSupported'));
         }
     }, []);
 
@@ -79,12 +79,12 @@ export function QiblaPage() {
                         setPermissionNeeded(false);
                         window.addEventListener('deviceorientation', handleOrientation, true);
                     } else {
-                        setLocationError('تم رفض إذن البوصلة');
+                        setLocationError(t('qibla.compassPermissionDenied'));
                     }
                 })
                 .catch((err: any) => {
                     console.error('Error requesting orientation permission', err);
-                    setLocationError('تعذر تفعيل البوصلة');
+                    setLocationError(t('qibla.compassActivationError'));
                 });
         } else {
             // Android uses deviceorientationabsolute for actual compass directions if supported
@@ -120,10 +120,10 @@ export function QiblaPage() {
             <div className="text-center animate-fade-in">
                 <h1 style={{ fontSize: '1.5rem', marginBottom: 'var(--space-xs)' }}>
                     <Compass size={24} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 8 }} color="var(--accent-gold)" weight="duotone" />
-                    {' '}القبلة
+                    {' '}{t('qibla.title')}
                 </h1>
                 <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                    اتجاه القبلة من موقعك الحالي
+                    {t('qibla.description')}
                 </p>
             </div>
 
@@ -182,7 +182,7 @@ export function QiblaPage() {
                                     fontWeight: 700, marginTop: 2,
                                     transform: `rotate(${-qiblaAngle - dialRotation}deg)`
                                 }}>
-                                    القبلة
+                                    {t('qibla.title')}
                                 </span>
                             </div>
                         </div>
@@ -210,14 +210,14 @@ export function QiblaPage() {
                         onClick={() => window.location.reload()}
                     >
                         <ArrowCounterClockwise size={16} weight="bold" />
-                        إعادة المحاولة
+                        {t('common.retry')}
                     </button>
                 </div>
             ) : (
                 <div className="card-gold text-center animate-slide-up" style={{ padding: 'var(--space-lg)', width: '100%', maxWidth: 320 }}>
                     {qiblaAngle !== null && (
                         <p style={{ fontSize: '0.9rem' }}>
-                            الاتجاه: <span className="text-gold" style={{ fontWeight: 700 }}>{Math.round(qiblaAngle)}°</span>
+                            {t('qibla.direction')} <span className="text-gold" style={{ fontWeight: 700 }}>{Math.round(qiblaAngle)}°</span>
                         </p>
                     )}
 
@@ -227,19 +227,19 @@ export function QiblaPage() {
                             style={{ marginTop: 'var(--space-sm)' }}
                             onClick={startCompass}
                         >
-                            تفعيل البوصلة
+                            {t('qibla.activateCompass')}
                         </button>
                     )}
 
                     {!permissionNeeded && !hasCompass && (
                         <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: 'var(--space-xs)' }}>
-                            حرّك جهازك لتفعيل البوصلة
+                            {t('qibla.moveDevice')}
                         </p>
                     )}
 
                     {aligned && (
                         <p className="text-gold glow-text" style={{ fontWeight: 700, marginTop: 'var(--space-sm)', fontSize: '1.1rem' }}>
-                            ✓ أنت في اتجاه القبلة
+                            {t('qibla.aligned')}
                         </p>
                     )}
                 </div>

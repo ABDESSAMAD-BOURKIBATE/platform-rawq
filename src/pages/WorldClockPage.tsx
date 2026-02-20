@@ -205,12 +205,12 @@ const COUNTRIES: CountryTime[] = [
 ];
 
 const CONTINENTS = [
-    { key: 'all', labelAr: 'الكل', Icon: Globe },
-    { key: 'asia', labelAr: 'آسيا', Icon: GlobeHemisphereEast },
-    { key: 'africa', labelAr: 'أفريقيا', Icon: MapTrifold },
-    { key: 'europe', labelAr: 'أوروبا', Icon: MapPin },
-    { key: 'americas', labelAr: 'الأمريكتان', Icon: GlobeHemisphereWest },
-    { key: 'oceania', labelAr: 'أوقيانوسيا', Icon: Compass },
+    { key: 'all', labelKey: 'worldClock.continents.all', Icon: Globe },
+    { key: 'asia', labelKey: 'worldClock.continents.asia', Icon: GlobeHemisphereEast },
+    { key: 'africa', labelKey: 'worldClock.continents.africa', Icon: MapTrifold },
+    { key: 'europe', labelKey: 'worldClock.continents.europe', Icon: MapPin },
+    { key: 'americas', labelKey: 'worldClock.continents.americas', Icon: GlobeHemisphereWest },
+    { key: 'oceania', labelKey: 'worldClock.continents.oceania', Icon: Compass },
 ];
 
 function getTimeInfo(timezone: string) {
@@ -218,32 +218,31 @@ function getTimeInfo(timezone: string) {
     const timeStr = now.toLocaleTimeString('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false });
     const hour = parseInt(timeStr.split(':')[0]);
 
-    let periodAr: string;
-    let periodEn: string;
+    let periodKey: string;
     let gradient: string;
 
     // Day/Night logic for styling
     if (hour >= 5 && hour < 7) {
-        periodAr = 'شروق'; periodEn = 'Sunrise';
+        periodKey = 'worldClock.periods.sunrise';
         gradient = 'linear-gradient(135deg, #FF9966 0%, #FF5E62 100%)';
     } else if (hour >= 7 && hour < 16) {
-        periodAr = 'النهار'; periodEn = 'Day';
+        periodKey = 'worldClock.periods.day';
         gradient = 'linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%)';
     } else if (hour >= 16 && hour < 19) {
-        periodAr = 'غروب'; periodEn = 'Sunset';
+        periodKey = 'worldClock.periods.sunset';
         gradient = 'linear-gradient(135deg, #F2994A 0%, #F2C94C 100%)';
     } else {
-        periodAr = 'الليل'; periodEn = 'Night';
+        periodKey = 'worldClock.periods.night';
         gradient = 'linear-gradient(135deg, #141E30 0%, #243B55 100%)';
     }
 
     const isDay = hour >= 6 && hour < 18;
 
-    return { timeStr, hour, periodAr, periodEn, gradient, isDay };
+    return { timeStr, hour, periodKey, gradient, isDay };
 }
 
 export function WorldClockPage() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [currentTick, setCurrentTick] = useState(0);
     const [continent, setContinent] = useState('all');
     const [search, setSearch] = useState('');
@@ -256,9 +255,12 @@ export function WorldClockPage() {
 
     const filtered = COUNTRIES.filter(c => {
         const matchContinent = continent === 'all' || c.continent === continent;
-        const matchSearch = !search || c.nameAr.includes(search) || c.name.toLowerCase().includes(search.toLowerCase());
+        const matchSearch = !search || c.nameAr.includes(search) || c.name.toLowerCase().includes(search.toLowerCase()) || c.nameFr.toLowerCase().includes(search.toLowerCase());
         return matchContinent && matchSearch;
     });
+
+    const nameField = i18n.language === 'ar' ? 'nameAr' : i18n.language === 'fr' ? 'nameFr' : 'name';
+    const cityField = i18n.language === 'ar' ? 'cityAr' : i18n.language === 'fr' ? 'cityFr' : 'city';
 
     return (
         <div className="flex flex-col gap-lg">
@@ -266,10 +268,10 @@ export function WorldClockPage() {
             <div className="animate-fade-in">
                 <h1 style={{ fontSize: '1.5rem', marginBottom: 'var(--space-xs)' }}>
                     <Globe size={24} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 8 }} color="var(--accent-gold)" weight="duotone" />
-                    {' '}ساعات العالم
+                    {' '}{t('worldClock.title')}
                 </h1>
                 <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                    الوقت الحالي في مختلف دول العالم
+                    {t('worldClock.description')}
                 </p>
             </div>
 
@@ -286,7 +288,7 @@ export function WorldClockPage() {
                     <input
                         className="input"
                         style={{ paddingRight: 'calc(var(--space-md) + 26px)' }}
-                        placeholder="ابحث عن دولة..."
+                        placeholder={t('worldClock.searchPlaceholder')}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -304,7 +306,7 @@ export function WorldClockPage() {
                             display: none;
                         }
                     `}</style>
-                    {CONTINENTS.map(({ key, labelAr, Icon }) => {
+                    {CONTINENTS.map(({ key, labelKey, Icon }) => {
                         const isActive = continent === key;
                         return (
                             <button
@@ -326,7 +328,7 @@ export function WorldClockPage() {
                                     className={isActive ? "animate-float" : ""}
                                     style={{ transition: 'all 0.3s ease' }}
                                 />
-                                <span>{labelAr}</span>
+                                <span>{t(labelKey)}</span>
                             </button>
                         );
                     })}
@@ -415,7 +417,7 @@ export function WorldClockPage() {
                                 alignSelf: 'center',
                                 border: info.isDay ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.1)',
                             }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{info.periodAr}</span>
+                                <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{t(info.periodKey)}</span>
                                 <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{country.flag}</span>
                             </div>
 
@@ -428,7 +430,8 @@ export function WorldClockPage() {
                                     textShadow: '0 2px 4px rgba(0,0,0,0.1)',
                                     lineHeight: 1.2
                                 }}>
-                                    {country.nameAr}
+                                    {/* @ts-ignore */}
+                                    {country[nameField]}
                                 </h2>
                                 <span style={{
                                     fontSize: '0.65rem', // Reduced from 0.75rem
@@ -437,7 +440,8 @@ export function WorldClockPage() {
                                     opacity: 0.9,
                                     fontFamily: 'sans-serif'
                                 }}>
-                                    {country.city}
+                                    {/* @ts-ignore */}
+                                    {country[cityField]}
                                 </span>
                             </div>
 

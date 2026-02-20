@@ -43,20 +43,20 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
                             <Info size={40} color="var(--accent-gold)" weight="duotone" />
                         </div>
                         <h2 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-heading)', color: 'var(--accent-gold)' }}>
-                            منصة رَوْقٌ
+                            {t('app.name')}
                         </h2>
                         <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: 'var(--space-xs)' }}>
-                            القرآن الكريم بين يديك
+                            {t('about.subtitle')}
                         </p>
                     </div>
 
                     <div className="flex flex-col gap-md">
                         <div className="card-gold text-center" style={{ padding: 'var(--space-md)', borderRadius: 'var(--radius-lg)' }}>
                             <p style={{ fontSize: '1rem', lineHeight: 1.8, marginBottom: 'var(--space-sm)' }}>
-                                هذا العمل هو صدقة جارية، ووقف على روح جدنا <strong>الشيخ عبد الخالق بوركيبات</strong> رحمة الله تعالى عليه، وعلى كافة أسرة آل بوركيبات.
+                                {t('about.waqfText1')} <strong>{t('about.sheikhName')}</strong> {t('about.waqfText2')}
                             </p>
                             <p style={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                                بدأت فكرة هذه المنصة كحلم صغير لرد الجميل لمن زرعوا فينا حب القرآن، ولتكون رحمة ونوراً في صحيفة أجدادنا. بفضل الله، تحولت الفكرة إلى هذا الصرح الرقمي ليكون رفيقاً ودليلاً لكل مسلم يبحث عن السكينة في كلام الله، في أي زمان ومكان. نسأل الله أن يتقبل هذا العمل ويجعله شفيعاً لنا ولكم يوم القيامة.
+                                {t('about.description')}
                             </p>
                             <div className="flex items-center justify-center gap-sm mt-md text-gold">
                                 <HandHeart size={24} />
@@ -66,23 +66,23 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
                         <div style={{ padding: 'var(--space-md)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)' }}>
                             <h3 className="flex items-center gap-sm mb-sm text-gold" style={{ fontSize: '1.1rem' }}>
                                 <ShieldCheck size={20} />
-                                بطاقة شكر وعن الإصدار
+                                {t('about.acknowledgementTitle')}
                             </h3>
                             <p style={{ fontSize: '0.9rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                                تم تطوير وبرمجة هذا التطبيق بعناية فائقة، محفوفاً بالدعاء والمحبة، ليجمع بين جمال التصميم وعظمة المحتوى.
+                                {t('about.devText1')}
                                 <br /><br />
                                 <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                                    تم التأسيس والتطوير بواسطة: <br />المهندس عبد الصمد بوركيبات (حفيد الشيخ).
+                                    {t('about.devLabel')} <br />{t('about.devName')}
                                 </span>
                             </p>
                         </div>
 
                         <div className="text-center mt-md">
                             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                نسأل الله أن يجعله عملاً خالصاً لوجهه الكريم.
+                                {t('about.prayer')}
                             </p>
                             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                © 2026 جميع الحقوق محفوظة
+                                {t('about.copyright')}
                             </p>
                         </div>
                     </div>

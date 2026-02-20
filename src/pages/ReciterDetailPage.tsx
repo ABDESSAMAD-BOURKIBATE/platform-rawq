@@ -5,6 +5,7 @@ import { ArrowRight, Play, Pause, MusicNote, User } from '@phosphor-icons/react'
 import { fetchReciters } from '../api/mp3quran';
 import type { Reciter, Moshaf } from '../lib/types';
 import { useAudioStore } from '../store/useAudioStore';
+import { useRecitersStore } from '../store/useRecitersStore';
 import { audioEngine } from '../lib/audioEngine';
 
 // Surah names in Arabic
@@ -44,23 +45,44 @@ export function ReciterDetailPage() {
     } = useAudioStore();
 
     useEffect(() => {
-        fetchReciters(i18n.language).then((reciters) => {
-            const found = reciters.find((r) => r.id === Number(id));
+        let isMounted = true;
+        const loadReciter = async () => {
+            let currentList = useRecitersStore.getState().reciters;
+            const currentLang = useRecitersStore.getState().loadedLanguage;
+
+            if (currentList.length === 0 || currentLang !== i18n.language) {
+                try {
+                    currentList = await fetchReciters(i18n.language);
+                    useRecitersStore.getState().setReciters(currentList);
+                    useRecitersStore.getState().setLoadedLanguage(i18n.language);
+                } catch {
+                    if (isMounted) setLoading(false);
+                    return;
+                }
+            }
+
+            const found = currentList.find((r) => r.id === Number(id));
             if (found) {
-                setReciter(found);
-                // If we are already playing this reciter, sync the selected moshaf
+                if (isMounted) setReciter(found);
+
                 if (currentReciter?.id === String(found.id) && useAudioStore.getState().moshaf) {
                     const activeMoshaf = useAudioStore.getState().moshaf;
                     const matchingMoshaf = found.moshaf.find(m => m.server === activeMoshaf?.server);
-                    if (matchingMoshaf) setSelectedMoshaf(matchingMoshaf);
-                    else if (found.moshaf.length > 0) setSelectedMoshaf(found.moshaf[0]);
-                } else {
-                    if (found.moshaf.length > 0) setSelectedMoshaf(found.moshaf[0]);
+                    if (matchingMoshaf) {
+                        if (isMounted) setSelectedMoshaf(matchingMoshaf);
+                    } else if (found.moshaf.length > 0) {
+                        if (isMounted) setSelectedMoshaf(found.moshaf[0]);
+                    }
+                } else if (found.moshaf.length > 0) {
+                    if (isMounted) setSelectedMoshaf(found.moshaf[0]);
                 }
             }
-            setLoading(false);
-        }).catch(() => setLoading(false));
-    }, [id, i18n.language, currentReciter]);
+            if (isMounted) setLoading(false);
+        };
+
+        loadReciter();
+        return () => { isMounted = false; };
+    }, [id, i18n.language, currentReciter?.id]);
 
     const surahList = selectedMoshaf
         ? selectedMoshaf.surah_list.split(',').map(Number).filter(Boolean)
@@ -105,9 +127,9 @@ export function ReciterDetailPage() {
         return (
             <div className="empty-state">
                 <User size={48} />
-                <p>القارئ غير موجود</p>
+                <p>{t('reciters.notFound')}</p>
                 <button className="btn btn-primary" onClick={() => navigate('/reciters')}>
-                    العودة للقرّاء
+                    {t('reciters.backToList')}
                 </button>
             </div>
         );
@@ -139,7 +161,7 @@ export function ReciterDetailPage() {
                     {reciter.name}
                 </h1>
                 <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                    {reciter.moshaf.length} رواية متاحة
+                    {t('reciters.availableRiwayat', { count: reciter.moshaf.length })}
                 </p>
             </div>
 
@@ -174,7 +196,7 @@ export function ReciterDetailPage() {
             {selectedMoshaf && (
                 <p className="text-muted animate-fade-in" style={{ fontSize: '0.85rem' }}>
                     <MusicNote size={18} style={{ display: 'inline', verticalAlign: 'middle' }} weight="duotone" />
-                    {' '}{selectedMoshaf.name} — {surahList.length} سورة
+                    {' '}{selectedMoshaf.name} — {t('reciters.surahCount', { count: surahList.length })}
                 </p>
             )}
 
@@ -209,7 +231,7 @@ export function ReciterDetailPage() {
                                     fontFamily: 'var(--font-quran)', fontSize: '1rem', fontWeight: 600,
                                     color: isCurrentPlaying ? 'var(--accent-gold)' : 'var(--text)',
                                 }}>
-                                    {SURAH_NAMES[surahNum] || `سورة ${surahNum}`}
+                                    {SURAH_NAMES[surahNum] || `${t('reciters.surahLabel')} ${surahNum}`}
                                 </p>
                             </div>
 

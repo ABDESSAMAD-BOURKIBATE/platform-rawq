@@ -42,19 +42,22 @@ export function RecitersPage() {
     const {
         reciters, setReciters, searchQuery, setSearchQuery,
         riwayahFilter, setRiwayahFilter, isLoading, setLoading, error, setError,
-        filteredReciters,
+        filteredReciters, loadedLanguage, setLoadedLanguage,
     } = useRecitersStore();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (reciters.length === 0) {
+        if (reciters.length === 0 || loadedLanguage !== i18n.language) {
             setLoading(true);
             fetchReciters(i18n.language)
-                .then((data) => setReciters(data))
+                .then((data) => {
+                    setReciters(data);
+                    setLoadedLanguage(i18n.language);
+                })
                 .catch((err) => setError(err.message));
         }
-    }, [i18n.language]);
+    }, [i18n.language, loadedLanguage]);
 
     const displayedReciters = filteredReciters();
 
@@ -148,7 +151,10 @@ export function RecitersPage() {
                         onClick={() => {
                             setLoading(true);
                             fetchReciters(i18n.language)
-                                .then((data) => setReciters(data))
+                                .then((data) => {
+                                    setReciters(data);
+                                    setLoadedLanguage(i18n.language);
+                                })
                                 .catch((err) => setError(err.message));
                         }}
                     >

@@ -69,10 +69,10 @@ const quickAccessItems = [
     { path: '/reciters', icon: MicrophoneStage, labelKey: 'home.reciters', color: '#58A89B' },
     { path: '/search', icon: MagnifyingGlass, labelKey: 'home.search', color: '#7B9EBD' },
     { path: '/surah-list', icon: List, labelKey: 'home.surahIndex', color: '#B07D3A' },
-    { path: '/prayer-times', icon: Clock, labelKey: 'مواقيت الصلاة', color: '#E8A55A', isRaw: true },
-    { path: '/qibla', icon: Compass, labelKey: 'القبلة', color: '#6B7DB3', isRaw: true },
-    { path: '/radio', icon: Radio, labelKey: 'الراديو', color: '#C66B3D', isRaw: true },
-    { path: '/world-clock', icon: Globe, labelKey: 'ساعات العالم', color: '#58A89B', isRaw: true },
+    { path: '/prayer-times', icon: Clock, labelKey: 'home.prayerTimes', color: '#E8A55A' },
+    { path: '/qibla', icon: Compass, labelKey: 'home.qibla', color: '#6B7DB3' },
+    { path: '/radio', icon: Radio, labelKey: 'home.radios', color: '#C66B3D' },
+    { path: '/world-clock', icon: Globe, labelKey: 'home.worldClocks', color: '#58A89B' },
 ];
 
 export function HomePage() {
@@ -95,7 +95,7 @@ export function HomePage() {
     const khatmahProgress = Math.round((lastReadPage / totalPages) * 100);
 
     const isMorning = new Date().getHours() < 12;
-    const adhkarTitle = isMorning ? 'أذكار الصباح' : 'أذكار المساء';
+    const adhkarTitle = isMorning ? t('home.adhkarMorning') : t('home.adhkarEvening');
     const adhkarIcon = isMorning ? <Sun size={24} weight="duotone" color="#F6D365" /> : <MoonStars size={24} weight="duotone" color="#A7D8FF" />;
     const adhkarGradient = isMorning
         ? 'linear-gradient(135deg, rgba(246, 211, 101, 0.1) 0%, rgba(253, 160, 133, 0.1) 100%)'
@@ -206,7 +206,7 @@ export function HomePage() {
                                 {lastReadSurah}
                             </p>
                             <p style={{ fontSize: '0.8rem', color: 'var(--accent-gold)', marginTop: '4px' }}>
-                                صفحة {lastReadPage}
+                                {t('home.page')} {lastReadPage}
                             </p>
                         </div>
                     </div>
@@ -219,14 +219,14 @@ export function HomePage() {
                         fontSize: '0.75rem',
                         fontWeight: 600
                     }}>
-                        أكمل القراءة
+                        {t('home.continueReading')}
                     </div>
                 </div>
 
                 {/* Middle Section: Khatmah Progress */}
                 <div style={{ padding: 'var(--space-sm) 0', position: 'relative', zIndex: 1 }}>
                     <div className="flex items-center justify-between mb-xs">
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>نسبة إنجاز الختمة</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('home.khatmahProgress')}</span>
                         <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-gold)' }}>{khatmahProgress}%</span>
                     </div>
                     <div style={{
@@ -258,14 +258,14 @@ export function HomePage() {
                     <div className="flex items-center gap-sm">
                         <CalendarCheck size={20} color="var(--accent-gold)" weight="duotone" />
                         <div>
-                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>ورد يومي</p>
-                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>{dailyWirdCount} صفحات</p>
+                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('home.dailyWird')}</p>
+                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>{t('home.pagesCount', { count: dailyWirdCount })}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-sm">
                         <ClockClockwise size={20} color="var(--accent-gold)" weight="duotone" />
                         <div>
-                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>آخر دخول</p>
+                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('home.lastLogin')}</p>
                             <p style={{ fontSize: '0.9rem', fontWeight: 600 }} dir="ltr">{formatLastLogin()}</p>
                         </div>
                     </div>
@@ -296,7 +296,7 @@ export function HomePage() {
                     <div>
                         <div className="flex items-center gap-xs">
                             <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>{adhkarTitle}</h3>
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• ذكر اليوم</span>
+                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>• {t('home.dhikrToday')}</span>
                         </div>
                         <p style={{
                             fontSize: '1.2rem',
@@ -331,9 +331,7 @@ export function HomePage() {
                                 }}>
                                     <Icon size={24} color={item.color} weight="duotone" />
                                 </div>
-                                <span style={{ fontSize: '0.78rem', fontWeight: 500, lineHeight: 1.3, display: 'block' }}>
-                                    {'isRaw' in item ? item.labelKey : t(item.labelKey)}
-                                </span>
+                                {t(item.labelKey)}
                             </DynamicCard>
                         );
                     })}
@@ -367,11 +365,11 @@ export function HomePage() {
                     }}
                 >
                     <Info size={16} weight="bold" />
-                    عن التطبيق
+                    {t('settings.about')}
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        تطوير وتصميم م. عبد الصمد بوركيبات
+                        {t('app.developer')}
                     </p>
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }} dir="ltr">
                         © 2026 RAWQ Platform.

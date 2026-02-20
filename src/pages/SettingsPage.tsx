@@ -7,8 +7,8 @@ import type { ThemeMode } from '../lib/types';
 
 const languages = [
     { code: 'ar', name: 'العربية', dir: 'rtl' },
-    { code: 'en', name: 'English', dir: 'ltr' },
-    { code: 'fr', name: 'Français', dir: 'ltr' },
+    { code: 'en', name: 'English', dir: 'rtl' },
+    { code: 'fr', name: 'Français', dir: 'rtl' },
 ];
 
 const themeOptions: { mode: ThemeMode; icon: typeof Moon; labelKey: string }[] = [
@@ -18,10 +18,10 @@ const themeOptions: { mode: ThemeMode; icon: typeof Moon; labelKey: string }[] =
 ];
 
 const fontFamilies = [
-    { id: 'Amiri', name: 'الأميري', style: 'Amiri, serif' },
-    { id: 'Katibeh', name: 'الكاتبة', style: 'Katibeh, serif' },
-    { id: 'Cairo', name: 'القاهرة', style: 'Cairo, sans-serif' },
-    { id: 'Tajawal', name: 'تجوال', style: 'Tajawal, sans-serif' },
+    { id: 'Amiri', nameKey: 'settings.fonts.amiri', style: 'Amiri, serif' },
+    { id: 'Katibeh', nameKey: 'settings.fonts.katibeh', style: 'Katibeh, serif' },
+    { id: 'Cairo', nameKey: 'settings.fonts.cairo', style: 'Cairo, sans-serif' },
+    { id: 'Tajawal', nameKey: 'settings.fonts.tajawal', style: 'Tajawal, sans-serif' },
 ];
 
 export function SettingsPage() {
@@ -114,13 +114,13 @@ export function SettingsPage() {
             <section className="animate-slide-up stagger-2">
                 <h3 className="flex items-center gap-sm" style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)' }}>
                     <TextAa size={24} color="var(--accent-gold)" weight="duotone" />
-                    إعدادات القراءة
+                    {t('settings.readingPrefs')}
                 </h3>
 
                 <div className="card flex flex-col gap-lg" style={{ padding: 'var(--space-md)' }}>
                     {/* Font Size */}
                     <div>
-                        <p style={{ fontSize: '0.85rem', marginBottom: 'var(--space-sm)' }}>حجم الخط ({fontSize}px)</p>
+                        <p style={{ fontSize: '0.85rem', marginBottom: 'var(--space-sm)' }}>{t('settings.fontSize')} ({fontSize}px)</p>
                         <div className="flex items-center gap-md">
                             <button
                                 className="btn btn-secondary btn-icon"
@@ -151,7 +151,7 @@ export function SettingsPage() {
                             marginTop: 'var(--space-md)',
                             color: 'var(--accent-gold)'
                         }}>
-                            بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+                            {t('settings.bismillah')}
                         </p>
                     </div>
 
@@ -159,7 +159,7 @@ export function SettingsPage() {
 
                     {/* Font Family */}
                     <div>
-                        <p style={{ fontSize: '0.85rem', marginBottom: 'var(--space-sm)' }}>نوع الخط</p>
+                        <p style={{ fontSize: '0.85rem', marginBottom: 'var(--space-sm)' }}>{t('settings.fontFamily')}</p>
                         <div className="flex flex-col gap-xs">
                             {fontFamilies.map((font) => (
                                 <button
@@ -177,7 +177,7 @@ export function SettingsPage() {
                                         fontSize: '1.2rem',
                                         color: fontFamily === font.id ? 'var(--accent-gold)' : 'var(--text)',
                                     }}>
-                                        {font.name}
+                                        {t(font.nameKey)}
                                     </span>
                                     {fontFamily === font.id && (
                                         <div style={{
@@ -201,9 +201,9 @@ export function SettingsPage() {
                 <div className="card" style={{ padding: 'var(--space-lg)' }}>
                     <div className="text-center" style={{ marginBottom: 'var(--space-lg)' }}>
                         <h2 className="text-gold glow-text" style={{
-                            fontFamily: 'var(--font-quran)', fontSize: '2rem', marginBottom: 'var(--space-xs)',
+                            fontFamily: 'var(--font-quran)', fontSize: '2rem', marginBottom: 'var(--space-xs)'
                         }}>
-                            رَوْقٌ
+                            {t('app.name')}
                         </h2>
                         <p className="text-muted" style={{ fontSize: '0.85rem' }}>
                             {t('app.tagline')}

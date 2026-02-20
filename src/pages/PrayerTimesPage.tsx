@@ -81,7 +81,7 @@ function computePrayerTimes(lat: number, lng: number, date: Date, tz: number) {
 
 interface PrayerTime {
     name: string;
-    nameAr: string;
+    nameKey: string;
     time: string;
     icon: typeof Sun;
     color: string;
@@ -108,12 +108,12 @@ export function PrayerTimesPage() {
                     const times = computePrayerTimes(pos.coords.latitude, pos.coords.longitude, new Date(), tz);
 
                     const prayerList: PrayerTime[] = [
-                        { name: 'Fajr', nameAr: 'الفجر', time: times.fajr, icon: Moon, color: '#6B7DB3' },
-                        { name: 'Sunrise', nameAr: 'الشروق', time: times.sunrise, icon: SunHorizon, color: '#E8A55A' },
-                        { name: 'Dhuhr', nameAr: 'الظهر', time: times.dhuhr, icon: Sun, color: '#D4AF37' },
-                        { name: 'Asr', nameAr: 'العصر', time: times.asr, icon: CloudSun, color: '#E88B5A' },
-                        { name: 'Maghrib', nameAr: 'المغرب', time: times.maghrib, icon: SunHorizon, color: '#C66B3D' },
-                        { name: 'Isha', nameAr: 'العشاء', time: times.isha, icon: Moon, color: '#4A5A8A' },
+                        { name: 'Fajr', nameKey: 'prayer.fajr', time: times.fajr, icon: Moon, color: '#6B7DB3' },
+                        { name: 'Sunrise', nameKey: 'prayer.sunrise', time: times.sunrise, icon: SunHorizon, color: '#E8A55A' },
+                        { name: 'Dhuhr', nameKey: 'prayer.dhuhr', time: times.dhuhr, icon: Sun, color: '#D4AF37' },
+                        { name: 'Asr', nameKey: 'prayer.asr', time: times.asr, icon: CloudSun, color: '#E88B5A' },
+                        { name: 'Maghrib', nameKey: 'prayer.maghrib', time: times.maghrib, icon: SunHorizon, color: '#C66B3D' },
+                        { name: 'Isha', nameKey: 'prayer.isha', time: times.isha, icon: Moon, color: '#4A5A8A' },
                     ];
 
                     setPrayers(prayerList);
@@ -122,7 +122,7 @@ export function PrayerTimesPage() {
                     // Determine next prayer
                     const now = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
                     const next = prayerList.find(p => p.time > now && p.name !== 'Sunrise');
-                    setNextPrayer(next?.nameAr || prayerList[0].nameAr);
+                    setNextPrayer(next?.nameKey || prayerList[0].nameKey);
 
                     // Reverse geocode city name
                     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&accept-language=ar`)
@@ -152,17 +152,17 @@ export function PrayerTimesPage() {
             <div className="animate-fade-in">
                 <h1 style={{ fontSize: '1.5rem', marginBottom: 'var(--space-xs)' }}>
                     <Clock size={24} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 8 }} color="var(--accent-gold)" weight="duotone" />
-                    {' '}مواقيت الصلاة
+                    {' '}{t('prayer.title')}
                 </h1>
             </div>
 
             {/* Current Time */}
             <div className="card-gold text-center animate-scale-in" style={{ padding: 'var(--space-lg)' }}>
                 <div className="text-muted flex items-center justify-center gap-xs" style={{ fontSize: '0.85rem', marginBottom: 4 }}>
-                    <p>الوقت الحالي</p>
+                    <p>{t('prayer.currentTime')}</p>
                     {city && (
                         <>
-                            <span>في</span>
+                            <span>{t('prayer.in')}</span>
                             <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{city}</span>
                             <MapPin size={14} weight="fill" color="var(--accent-gold)" />
                         </>
@@ -173,7 +173,7 @@ export function PrayerTimesPage() {
                 </p>
                 {nextPrayer && (
                     <p style={{ fontSize: '0.85rem', marginTop: 'var(--space-sm)' }}>
-                        الصلاة القادمة: <span className="text-gold" style={{ fontWeight: 600 }}>{nextPrayer}</span>
+                        {t('prayer.nextPrayer')} <span className="text-gold" style={{ fontWeight: 600 }}>{t(nextPrayer)}</span>
                     </p>
                 )}
             </div>
@@ -195,7 +195,7 @@ export function PrayerTimesPage() {
                 <div className="flex flex-col gap-sm">
                     {prayers.map((prayer, i) => {
                         const Icon = prayer.icon;
-                        const isNext = prayer.nameAr === nextPrayer;
+                        const isNext = prayer.nameKey === nextPrayer;
                         return (
                             <div
                                 key={prayer.name}
@@ -217,7 +217,7 @@ export function PrayerTimesPage() {
 
                                 {/* Name */}
                                 <div style={{ flex: 1 }}>
-                                    <p style={{ fontWeight: 600, fontSize: '1rem' }}>{prayer.nameAr}</p>
+                                    <p style={{ fontWeight: 600, fontSize: '1rem' }}>{t(prayer.nameKey)}</p>
                                     <p className="text-muted" style={{ fontSize: '0.75rem' }}>{prayer.name}</p>
                                 </div>
 

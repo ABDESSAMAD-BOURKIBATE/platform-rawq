@@ -1,7 +1,8 @@
 {
     "app": {
         "name": "RAWQ",
-        "tagline": "A Quranic Experience with Andalusian Serenity"
+        "tagline": "A Quranic Experience with Andalusian Serenity",
+        "developer": "Developed & Designed by Eng. Abdessamad Bourkibat"
     },
     "nav": {
         "home": "Home",
@@ -57,7 +58,11 @@
         "allCountries": "All Countries",
         "surahCount": "{{count}} Surahs",
         "noResults": "No results found",
-        "loading": "Loading reciters..."
+        "loading": "Loading reciters...",
+        "notFound": "Reciter not found",
+        "backToList": "Back to Reciters",
+        "availableRiwayat": "{{count}} available riwayat",
+        "surahLabel": "Surah"
     },
     "search": {
         "title": "Search the Quran",
@@ -86,7 +91,13 @@
         "readingPrefs": "Reading Preferences",
         "fontSize": "Font Size",
         "fontFamily": "Font Family",
-        "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful."
+        "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful.",
+        "fonts": {
+            "amiri": "Amiri",
+            "katibeh": "Katibeh",
+            "cairo": "Cairo",
+            "tajawal": "Tajawal"
+        }
     },
     "waqf": {
         "text": "A Quranic endowment in memory of Sheikh Abdelhafid Bourkibat, may Allah have mercy on him"
@@ -118,7 +129,10 @@
         "moveDevice": "Move your device to activate compass",
         "aligned": "✓ You are facing the Qibla",
         "locationError": "Could not access your location",
-        "browserNotSupported": "Location not supported in this browser"
+        "browserNotSupported": "Location not supported in this browser",
+        "compassPermissionDenied": "Compass permission denied",
+        "compassActivationError": "Could not activate compass",
+        "activateCompass": "Activate Compass"
     },
     "prayer": {
         "title": "Prayer Times",
@@ -129,7 +143,8 @@
         "dhuhr": "Dhuhr",
         "asr": "Asr",
         "maghrib": "Maghrib",
-        "isha": "Isha"
+        "isha": "Isha",
+        "in": "in"
     },
     "adhkar": {
         "title": "Adhkar & Tasbeeh",
@@ -140,5 +155,37 @@
         "custom": "Custom",
         "daily": "Daily Adhkar",
         "clickToCount": "Tap to Count"
+    },
+    "worldClock": {
+        "title": "World Clocks",
+        "description": "Current time in various countries worldwide",
+        "searchPlaceholder": "Search for a country...",
+        "continents": {
+            "all": "All",
+            "asia": "Asia",
+            "africa": "Africa",
+            "europe": "Europe",
+            "americas": "Americas",
+            "oceania": "Oceania"
+        },
+        "periods": {
+            "sunrise": "Sunrise",
+            "day": "Day",
+            "sunset": "Sunset",
+            "night": "Night"
+        }
+    },
+    "about": {
+        "subtitle": "The Holy Quran in your hands",
+        "waqfText1": "This work is a continuing charity (Sadaqah Jariyah) and Waqf for the soul of our grandfather",
+        "sheikhName": "Sheikh Abdelkhalek Bourkibat",
+        "waqfText2": "may Allah have mercy on him, and on the entire Bourkibat family.",
+        "description": "The idea of this platform started as a small dream to return the favor to those who planted the love of the Quran in us, and to be a mercy and light for our ancestors. By the grace of Allah, the idea turned into this digital edifice to be a companion and guide for every Muslim seeking tranquility in the words of Allah, at any time and place. We ask Allah to accept this work and make it an intercessor for us and you on the Day of Resurrection.",
+        "acknowledgementTitle": "Acknowledgement and Release Notes",
+        "devText1": "This application was developed and programmed with great care, surrounded by prayers and love, to combine beauty of design with greatness of content.",
+        "devLabel": "Founded and developed by:",
+        "devName": "Engineer Abdessamad Bourkibat (the Sheikh's grandson).",
+        "prayer": "We ask Allah to make it a pure deed for His honorable face.",
+        "copyright": "© 2026 All rights reserved"
     }
 }
