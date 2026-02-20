@@ -130,5 +130,15 @@
         "asr": "Asr",
         "maghrib": "Maghrib",
         "isha": "Isha"
+    },
+    "adhkar": {
+        "title": "Adhkar & Tasbeeh",
+        "target": "Target",
+        "count": "Current Count",
+        "reset": "Reset",
+        "reached": "Target Reached!",
+        "custom": "Custom",
+        "daily": "Daily Adhkar",
+        "clickToCount": "Tap to Count"
     }
 }

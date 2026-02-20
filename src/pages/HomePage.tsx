@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise } from '@phosphor-icons/react';
+import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise, HandHeart } from '@phosphor-icons/react';
 import { useQuranStore } from '../store/useQuranStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import { DynamicCard } from '../components/ui/DynamicCard';

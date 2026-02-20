@@ -28,6 +28,7 @@ export function QiblaPage() {
     const [locationError, setLocationError] = useState<string | null>(null);
     const [hasCompass, setHasCompass] = useState(false);
     const [aligned, setAligned] = useState(false);
+    const [permissionNeeded, setPermissionNeeded] = useState(false);
 
     // Get user location
     useEffect(() => {
@@ -45,34 +46,73 @@ export function QiblaPage() {
         }
     }, []);
 
-    // Device orientation (compass)
-    useEffect(() => {
-        const handler = (e: DeviceOrientationEvent) => {
-            const alpha = (e as any).webkitCompassHeading ?? e.alpha;
-            if (alpha !== null && alpha !== undefined) {
-                setHasCompass(true);
-                setHeading(alpha);
-                if (qiblaAngle !== null) {
-                    const diff = Math.abs(((alpha - qiblaAngle) + 360) % 360);
-                    setAligned(diff < 5 || diff > 355);
-                }
+    const handleOrientation = useCallback((e: DeviceOrientationEvent | any) => {
+        let alpha = e.webkitCompassHeading;
+        if (alpha === undefined || alpha === null) {
+            if (e.alpha !== null) {
+                // Approximate heading for Android using alpha (may not be absolute true north without deviceorientationabsolute)
+                // e.alpha is usually [0, 360) counter-clockwise from N or arbitrary
+                // To display an angle that acts like a compass, we just use 360 - alpha.
+                alpha = 360 - e.alpha;
             }
-        };
-
-        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-            (DeviceOrientationEvent as any).requestPermission().then((permission: string) => {
-                if (permission === 'granted') {
-                    window.addEventListener('deviceorientation', handler, true);
-                }
-            });
-        } else {
-            window.addEventListener('deviceorientation', handler, true);
         }
 
-        return () => window.removeEventListener('deviceorientation', handler, true);
-    }, [qiblaAngle]);
+        if (alpha !== undefined && alpha !== null && !isNaN(alpha)) {
+            setHasCompass(true);
+            setHeading(alpha);
+        }
+    }, []);
 
-    const needleRotation = qiblaAngle !== null ? qiblaAngle - heading : 0;
+    // Check alignment
+    useEffect(() => {
+        if (qiblaAngle !== null && hasCompass) {
+            const diff = Math.abs(((heading - qiblaAngle) + 360) % 360);
+            setAligned(diff < 5 || diff > 355);
+        }
+    }, [heading, qiblaAngle, hasCompass]);
+
+    const startCompass = useCallback(() => {
+        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+            (DeviceOrientationEvent as any).requestPermission()
+                .then((permissionState: string) => {
+                    if (permissionState === 'granted') {
+                        setPermissionNeeded(false);
+                        window.addEventListener('deviceorientation', handleOrientation, true);
+                    } else {
+                        setLocationError('تم رفض إذن البوصلة');
+                    }
+                })
+                .catch((err: any) => {
+                    console.error('Error requesting orientation permission', err);
+                    setLocationError('تعذر تفعيل البوصلة');
+                });
+        } else {
+            // Android uses deviceorientationabsolute for actual compass directions if supported
+            window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+            // Fallback for browsers that don't support absolute
+            window.addEventListener('deviceorientation', handleOrientation, true);
+        }
+    }, [handleOrientation]);
+
+    useEffect(() => {
+        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+            // iOS 13+ requires user interaction to call requestPermission
+            setPermissionNeeded(true);
+        } else {
+            startCompass();
+        }
+
+        return () => {
+            window.removeEventListener('deviceorientationabsolute', handleOrientation, true);
+            window.removeEventListener('deviceorientation', handleOrientation, true);
+        };
+    }, [startCompass, handleOrientation]);
+
+    // Dial rotates so that true north stays at the top relative to screen?
+    // Actually, if heading is N (0), dial rotation is 0.
+    // If device points East (90), heading is 90. The top of the device is East.
+    // So the dial should rotate -90 degrees, so N is on the left, E is on the top.
+    const dialRotation = -heading;
 
     return (
         <div className="flex flex-col items-center gap-xl" style={{ paddingTop: 'var(--space-xl)' }}>
@@ -95,43 +135,61 @@ export function QiblaPage() {
                     background: 'var(--bg-card)', border: `3px solid ${aligned ? 'var(--accent-gold)' : 'var(--border-strong)'}`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     position: 'relative', boxShadow: aligned ? '0 0 40px var(--accent-gold-glow)' : 'var(--shadow-lg)',
-                    transition: 'all 0.5s ease',
+                    transition: 'border 0.5s ease',
+                    overflow: 'hidden'
                 }}
             >
-                {/* Compass ring markers */}
-                {['N', 'E', 'S', 'W'].map((dir, i) => (
-                    <span
-                        key={dir}
-                        style={{
-                            position: 'absolute', fontSize: '0.75rem', fontWeight: 700,
-                            color: dir === 'N' ? 'var(--accent-gold)' : 'var(--text-muted)',
-                            ...(i === 0 ? { top: 12 } : i === 1 ? { right: 12 } : i === 2 ? { bottom: 12 } : { left: 12 }),
-                        }}
-                    >
-                        {dir}
-                    </span>
-                ))}
-
-                {/* Qibla needle */}
-                <div
-                    style={{
-                        position: 'absolute', width: '100%', height: '100%',
-                        transition: 'transform 0.3s ease',
-                        transform: `rotate(${needleRotation}deg)`,
-                    }}
-                >
-                    <div style={{
-                        position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)',
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    }}>
-                        <NavigationArrow size={28} color="var(--accent-gold)" weight="fill" />
-                        <span style={{ fontSize: '0.65rem', color: 'var(--accent-gold)', fontWeight: 700, marginTop: 2 }}>
-                            القبلة
+                {/* Rotating Dial Container */}
+                <div style={{
+                    position: 'absolute', width: '100%', height: '100%',
+                    transition: 'transform 0.1s linear',
+                    transform: `rotate(${dialRotation}deg)`,
+                }}>
+                    {/* Compass ring markers */}
+                    {['N', 'E', 'S', 'W'].map((dir, i) => (
+                        <span
+                            key={dir}
+                            style={{
+                                position: 'absolute', fontSize: '1rem', fontWeight: 700,
+                                color: dir === 'N' ? 'var(--accent-gold)' : 'var(--text-muted)',
+                                transform: `rotate(${heading}deg)`, // Keep letters upright
+                                transition: 'transform 0.1s linear',
+                                ...(i === 0 ? { top: 12, left: '50%', marginLeft: '-0.5rem' }
+                                    : i === 1 ? { right: 12, top: '50%', marginTop: '-0.5rem' }
+                                        : i === 2 ? { bottom: 12, left: '50%', marginLeft: '-0.5rem' }
+                                            : { left: 12, top: '50%', marginTop: '-0.5rem' }),
+                            }}
+                        >
+                            {dir}
                         </span>
-                    </div>
+                    ))}
+
+                    {/* Qibla needle relative to North on the dial */}
+                    {qiblaAngle !== null && (
+                        <div
+                            style={{
+                                position: 'absolute', width: '100%', height: '100%',
+                                transform: `rotate(${qiblaAngle}deg)`,
+                            }}
+                        >
+                            <div style={{
+                                position: 'absolute', top: 35, left: '50%', transform: 'translateX(-50%)',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                            }}>
+                                <NavigationArrow size={28} color="var(--accent-gold)" weight="fill" style={{ transform: 'rotate(45deg)' }} />
+                                <span style={{
+                                    fontSize: '0.65rem', color: 'var(--accent-gold)',
+                                    fontWeight: 700, marginTop: 2,
+                                    transform: `rotate(${-qiblaAngle - dialRotation}deg)`
+                                }}>
+                                    القبلة
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* Center Kaaba icon */}
+                {/* Center Kaaba icon - Doesn't rotate */}
                 <div style={{
                     width: 48, height: 48, borderRadius: 'var(--radius-md)',
                     background: 'var(--accent-gold-soft)', display: 'flex',
@@ -162,11 +220,23 @@ export function QiblaPage() {
                             الاتجاه: <span className="text-gold" style={{ fontWeight: 700 }}>{Math.round(qiblaAngle)}°</span>
                         </p>
                     )}
-                    {!hasCompass && (
+
+                    {permissionNeeded && !hasCompass && (
+                        <button
+                            className="btn btn-primary w-full"
+                            style={{ marginTop: 'var(--space-sm)' }}
+                            onClick={startCompass}
+                        >
+                            تفعيل البوصلة
+                        </button>
+                    )}
+
+                    {!permissionNeeded && !hasCompass && (
                         <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: 'var(--space-xs)' }}>
                             حرّك جهازك لتفعيل البوصلة
                         </p>
                     )}
+
                     {aligned && (
                         <p className="text-gold glow-text" style={{ fontWeight: 700, marginTop: 'var(--space-sm)', fontSize: '1.1rem' }}>
                             ✓ أنت في اتجاه القبلة
