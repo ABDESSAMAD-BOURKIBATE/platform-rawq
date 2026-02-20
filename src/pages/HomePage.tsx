@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise, HandHeart } from '@phosphor-icons/react';
+import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise, HandHeart, Brain } from '@phosphor-icons/react';
 import { useQuranStore } from '../store/useQuranStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import { DynamicCard } from '../components/ui/DynamicCard';
@@ -66,6 +66,7 @@ function getDailyDhikr(): string {
 
 const quickAccessItems = [
     { path: '/mushaf', icon: BookOpenText, labelKey: 'home.mushaf', color: '#D4AF37' },
+    { path: '/quran-culture', icon: Brain, labelKey: 'culture.title', color: '#8A2BE2' },
     { path: '/reciters', icon: MicrophoneStage, labelKey: 'home.reciters', color: '#58A89B' },
     { path: '/search', icon: MagnifyingGlass, labelKey: 'home.search', color: '#7B9EBD' },
     { path: '/surah-list', icon: List, labelKey: 'home.surahIndex', color: '#B07D3A' },
