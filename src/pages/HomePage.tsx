@@ -4,7 +4,9 @@ import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, C
 import { useQuranStore } from '../store/useQuranStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import { DynamicCard } from '../components/ui/DynamicCard';
-import { Sun, MoonStars } from '@phosphor-icons/react';
+import { Sun, MoonStars, Info } from '@phosphor-icons/react';
+import { AboutModal } from '../components/layout/AboutModal';
+import { useState } from 'react';
 
 function getTimeOfDay(): { key: string; gradient: string; emoji: string } {
     const hour = new Date().getHours();
@@ -100,6 +102,7 @@ export function HomePage() {
         : 'linear-gradient(135deg, rgba(167, 216, 255, 0.1) 0%, rgba(137, 207, 240, 0.1) 100%)';
 
     const currentDhikr = getDailyDhikr();
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
 
     return (
         <div className="flex flex-col gap-xl">
@@ -129,15 +132,39 @@ export function HomePage() {
                     }}>
                         {t(timeInfo.key)}
                     </h2>
+                    {/* Modern Typographic Logo */}
                     <h1 style={{
-                        color: '#fff', fontSize: '2.4rem', fontFamily: 'var(--font-heading)',
-                        fontWeight: 800, textShadow: '0 2px 12px rgba(0,0,0,0.4)',
+                        marginTop: 'var(--space-md)',
+                        fontSize: '3.5rem',
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 900,
+                        background: 'linear-gradient(to right, #F6D365, #FFB03B)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        textShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                        letterSpacing: '-1.5px',
+                        lineHeight: 1.1,
+                        position: 'relative',
+                        display: 'inline-block'
                     }}>
                         {t('app.name')}
+                        <span style={{
+                            position: 'absolute',
+                            bottom: '8px',
+                            right: '-16px',
+                            width: '8px',
+                            height: '8px',
+                            background: '#FFB03B',
+                            borderRadius: '50%',
+                            boxShadow: '0 0 10px rgba(255, 176, 59, 0.8)'
+                        }} />
                     </h1>
                     <p style={{
-                        color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem',
-                        marginTop: 'var(--space-xs)',
+                        color: 'rgba(255,255,255,0.9)',
+                        fontSize: '0.95rem',
+                        marginTop: 'var(--space-sm)',
+                        fontWeight: 300,
+                        letterSpacing: '0.5px'
                     }}>
                         {t('app.tagline')}
                     </p>
@@ -313,8 +340,46 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* Waqf Banner */}
-            <WaqfBanner />
+            {/* Footer with Copyright and About */}
+            <div style={{
+                textAlign: 'center',
+                padding: 'var(--space-lg) 0',
+                marginTop: 'var(--space-sm)',
+                borderTop: '1px solid rgba(255,255,255,0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--space-sm)'
+            }}>
+                <button
+                    onClick={() => setIsAboutOpen(true)}
+                    className="flex items-center justify-center gap-xs"
+                    style={{
+                        background: 'rgba(212, 175, 55, 0.1)',
+                        color: 'var(--accent-gold)',
+                        border: '1px solid rgba(212, 175, 55, 0.2)',
+                        padding: '6px 16px',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                    }}
+                >
+                    <Info size={16} weight="bold" />
+                    عن التطبيق
+                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        تطوير وتصميم م. عبد الصمد بوركيبات
+                    </p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }} dir="ltr">
+                        © 2026 RAWQ Platform.
+                    </p>
+                </div>
+            </div>
+
+            <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
         </div>
     );
 }

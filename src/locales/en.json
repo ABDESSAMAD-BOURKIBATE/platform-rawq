@@ -26,7 +26,19 @@
         "reciters": "Reciters",
         "search": "Search Quran",
         "radio": "Quran Radio",
-        "surahIndex": "Surah Index"
+        "surahIndex": "Surah Index",
+        "adhkarMorning": "Morning Adhkar",
+        "adhkarEvening": "Evening Adhkar",
+        "dhikrToday": "Today's Dhikr",
+        "prayerTimes": "Prayer Times",
+        "qibla": "Qibla",
+        "radios": "Radio",
+        "worldClocks": "World Clocks",
+        "khatmahProgress": "Khatmah Progress",
+        "dailyWird": "Daily Wird",
+        "pagesCount": "{{count}} pages",
+        "lastLogin": "Last login",
+        "never": "Never"
     },
     "mushaf": {
         "title": "Holy Mushaf",
@@ -70,7 +82,11 @@
         "system": "System",
         "about": "About",
         "version": "Version",
-        "waqf": "Waqf"
+        "waqf": "Waqf",
+        "readingPrefs": "Reading Preferences",
+        "fontSize": "Font Size",
+        "fontFamily": "Font Family",
+        "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful."
     },
     "waqf": {
         "text": "A Quranic endowment in memory of Sheikh Abdelhafid Bourkibat, may Allah have mercy on him"
@@ -87,5 +103,32 @@
         "retry": "Retry",
         "close": "Close",
         "back": "Back"
+    },
+    "radio": {
+        "title": "Quran Radios",
+        "description": "Listen live to Quran radios from around the world",
+        "nowPlaying": "Now Playing",
+        "availableCount": "{{count}} available stations",
+        "live": "LIVE"
+    },
+    "qibla": {
+        "title": "Qibla",
+        "description": "Qibla direction from your current location",
+        "direction": "Direction:",
+        "moveDevice": "Move your device to activate compass",
+        "aligned": "✓ You are facing the Qibla",
+        "locationError": "Could not access your location",
+        "browserNotSupported": "Location not supported in this browser"
+    },
+    "prayer": {
+        "title": "Prayer Times",
+        "currentTime": "Current Time",
+        "nextPrayer": "Next Prayer:",
+        "fajr": "Fajr",
+        "sunrise": "Sunrise",
+        "dhuhr": "Dhuhr",
+        "asr": "Asr",
+        "maghrib": "Maghrib",
+        "isha": "Isha"
     }
 }

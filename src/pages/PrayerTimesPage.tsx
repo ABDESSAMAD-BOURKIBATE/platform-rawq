@@ -154,17 +154,20 @@ export function PrayerTimesPage() {
                     <Clock size={24} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: 8 }} color="var(--accent-gold)" weight="duotone" />
                     {' '}مواقيت الصلاة
                 </h1>
-                {city && (
-                    <p className="text-muted flex items-center gap-xs" style={{ fontSize: '0.85rem' }}>
-                        <MapPin size={14} weight="fill" />
-                        {city}
-                    </p>
-                )}
             </div>
 
             {/* Current Time */}
             <div className="card-gold text-center animate-scale-in" style={{ padding: 'var(--space-lg)' }}>
-                <p className="text-muted" style={{ fontSize: '0.8rem', marginBottom: 4 }}>الوقت الحالي</p>
+                <div className="text-muted flex items-center justify-center gap-xs" style={{ fontSize: '0.85rem', marginBottom: 4 }}>
+                    <p>الوقت الحالي</p>
+                    {city && (
+                        <>
+                            <span>في</span>
+                            <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{city}</span>
+                            <MapPin size={14} weight="fill" color="var(--accent-gold)" />
+                        </>
+                    )}
+                </div>
                 <p className="text-gold glow-text" style={{ fontSize: '2rem', fontWeight: 700, fontFamily: 'var(--font-heading)', letterSpacing: 2 }}>
                     {formatCurrentTime()}
                 </p>

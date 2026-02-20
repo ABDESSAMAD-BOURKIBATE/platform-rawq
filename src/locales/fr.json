@@ -26,7 +26,19 @@
         "reciters": "Réciteurs",
         "search": "Rechercher dans le Coran",
         "radio": "Radio Coranique",
-        "surahIndex": "Index des sourates"
+        "surahIndex": "Index des sourates",
+        "adhkarMorning": "Adhkar du matin",
+        "adhkarEvening": "Adhkar du soir",
+        "dhikrToday": "Dhikr d'aujourd'hui",
+        "prayerTimes": "Horaires de prière",
+        "qibla": "Qibla",
+        "radios": "Radio",
+        "worldClocks": "Horloges mondiales",
+        "khatmahProgress": "Progression Khatmah",
+        "dailyWird": "Wird quotidien",
+        "pagesCount": "{{count}} pages",
+        "lastLogin": "Dernière connexion",
+        "never": "Jamais"
     },
     "mushaf": {
         "title": "Saint Mushaf",
@@ -70,7 +82,11 @@
         "system": "Système",
         "about": "À propos",
         "version": "Version",
-        "waqf": "Waqf"
+        "waqf": "Waqf",
+        "readingPrefs": "Préférences de lecture",
+        "fontSize": "Taille de police",
+        "fontFamily": "Type de police",
+        "bismillah": "Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux."
     },
     "waqf": {
         "text": "Dotation coranique en mémoire du Cheikh Abdelhafid Bourkibat, qu'Allah lui fasse miséricorde"
@@ -87,5 +103,32 @@
         "retry": "Réessayer",
         "close": "Fermer",
         "back": "Retour"
+    },
+    "radio": {
+        "title": "Radios du Coran",
+        "description": "Écoutez en direct les radios du Coran du monde entier",
+        "nowPlaying": "En cours de lecture",
+        "availableCount": "{{count}} stations disponibles",
+        "live": "EN DIRECT"
+    },
+    "qibla": {
+        "title": "Qibla",
+        "description": "Direction de la Qibla depuis votre position actuelle",
+        "direction": "Direction:",
+        "moveDevice": "Bougez votre appareil pour activer la boussole",
+        "aligned": "✓ Vous faites face à la Qibla",
+        "locationError": "Impossible d'accéder à votre position",
+        "browserNotSupported": "Position non supportée dans ce navigateur"
+    },
+    "prayer": {
+        "title": "Horaires de prière",
+        "currentTime": "Heure actuelle",
+        "nextPrayer": "Prochaine prière:",
+        "fajr": "Fajr",
+        "sunrise": "Lever du soleil",
+        "dhuhr": "Dhuhr",
+        "asr": "Asr",
+        "maghrib": "Maghrib",
+        "isha": "Isha"
     }
 }

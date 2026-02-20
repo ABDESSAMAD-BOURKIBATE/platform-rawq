@@ -1,5 +1,6 @@
 import { getAyahAudioUrl, DEFAULT_RECITER_FOLDER } from '../api/everyayah';
 import { useAudioStore } from '../store/useAudioStore';
+import type { RadioStation } from '../lib/types';
 
 class AudioEngine {
     private audio: HTMLAudioElement | null = null;
@@ -118,6 +119,18 @@ class AudioEngine {
         });
     }
 
+    playRadio(station: RadioStation) {
+        if (!this.audio) return;
+
+        this.audio.src = station.url;
+        this.audio.playbackRate = 1;
+        this.audio.play().catch((e) => {
+            console.error("playRadio: Playback failed", e);
+        });
+
+        useAudioStore.getState().playRadio(station);
+    }
+
     pause() {
         this.audio?.pause();
         useAudioStore.getState().pause();
@@ -125,10 +138,7 @@ class AudioEngine {
 
     resume() {
         this.audio?.play();
-        const state = useAudioStore.getState();
-        if (state.currentSurah && state.currentAyah) {
-            useAudioStore.setState({ isPlaying: true });
-        }
+        useAudioStore.getState().resume();
     }
 
     stop() {
@@ -150,7 +160,7 @@ class AudioEngine {
         const state = useAudioStore.getState();
         if (state.isPlaying) {
             this.pause();
-        } else if (state.currentSurah) {
+        } else if (state.currentSurah || state.radioStation) {
             this.resume();
         }
     }

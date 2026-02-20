@@ -4,6 +4,7 @@ import { Radio, Play, Pause, SpeakerHigh, Spinner } from '@phosphor-icons/react'
 import { fetchRadios } from '../api/mp3quran';
 import type { RadioStation } from '../lib/types';
 import { useAudioStore } from '../store/useAudioStore';
+import { audioEngine } from '../lib/audioEngine';
 
 export function RadioPage() {
     const { t, i18n } = useTranslation();
@@ -29,11 +30,12 @@ export function RadioPage() {
     }, [i18n.language]);
 
     const handlePlay = (station: RadioStation) => {
+        console.log("Playing station:", station.name, station.url);
         if (radioStation?.id === station.id && type === 'radio') {
-            if (isPlaying) pause();
-            else resume();
+            if (isPlaying) audioEngine.pause();
+            else audioEngine.resume();
         } else {
-            playRadio(station);
+            audioEngine.playRadio(station);
         }
     };
 
@@ -72,7 +74,7 @@ export function RadioPage() {
                     <button
                         className="btn btn-icon"
                         style={{ background: 'var(--accent-gold)', color: '#0B1C1A' }}
-                        onClick={() => pause()}
+                        onClick={() => audioEngine.pause()}
                     >
                         <Pause size={18} weight="fill" />
                     </button>
