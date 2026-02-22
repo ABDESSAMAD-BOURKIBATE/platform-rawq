@@ -1088,3 +1088,49 @@ h3 {
     padding-bottom: var(--space-lg);
   }
 }
+
+/* ---------- Responsive Grid & Layout Utilities ---------- */
+@media (max-width: 1024px) {
+  .lg-grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .lg-grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .lg-grid-1 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .md-grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .md-grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .md-grid-1 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .sm-grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .sm-grid-1 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Culture Page Card Override */
+  .culture-mode-card {
+    min-height: auto !important;
+    padding: var(--space-xl) !important;
+    gap: var(--space-md) !important;
+  }
+}

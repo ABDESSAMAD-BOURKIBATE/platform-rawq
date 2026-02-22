@@ -66,7 +66,7 @@ export function InstallPWA() {
                     </div>
                     <div>
                         <h3 className="text-text-primary font-semibold text-sm">تثبيت التطبيق</h3>
-                        <p className="text-text-secondary text-xs mt-0.5">ثبّت منصة رَوْقٌ للوصول السريع</p>
+                        <p className="text-text-secondary text-xs mt-0.5">ثبّت مجمع رَوْقٌ للوصول السريع</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">

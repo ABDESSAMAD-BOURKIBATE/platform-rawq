@@ -36,8 +36,8 @@ export function GameLevels({ mode, levels, onSelectLevel, onBack }: GameLevelsPr
                         <div
                             key={level.id}
                             className={`animate-scale-in stagger-${Math.min((idx % 10) + 1, 10)} p-lg rounded-xl flex flex-col items-center justify-center text-center transition-all ${isUnlocked
-                                    ? 'card-glass hover:scale-105 cursor-pointer border-opacity-30 hover:border-gold'
-                                    : 'bg-black/30 border border-white/5 opacity-60'
+                                ? 'card-glass hover:scale-105 cursor-pointer border-opacity-30 hover:border-gold'
+                                : 'bg-black/30 border border-white/5 opacity-60'
                                 }`}
                             onClick={() => isUnlocked && onSelectLevel(level)}
                             style={{

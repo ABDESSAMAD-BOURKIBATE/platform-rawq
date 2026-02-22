@@ -7,6 +7,7 @@ import { DynamicCard } from '../components/ui/DynamicCard';
 import { Sun, MoonStars, Info } from '@phosphor-icons/react';
 import { AboutModal } from '../components/layout/AboutModal';
 import { useState } from 'react';
+import rawqLogo from '../assets/rawq_logo.jpg';
 
 function getTimeOfDay(): { key: string; gradient: string; emoji: string } {
     const hour = new Date().getHours();
@@ -113,59 +114,125 @@ export function HomePage() {
                 style={{
                     background: timeInfo.gradient,
                     borderRadius: 'var(--radius-xl)',
-                    padding: 'var(--space-2xl) var(--space-xl)',
+                    padding: 'var(--space-3xl) var(--space-xl)',
                     position: 'relative',
                     overflow: 'hidden',
                     marginTop: 'var(--space-sm)',
+                    boxShadow: 'var(--shadow-lg)',
+                    textAlign: 'center'
                 }}
             >
-                {/* Decorative overlay */}
+                {/* Refined subtle overlay */}
                 <div style={{
-                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(0,0,0,0.15)',
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4))',
                     pointerEvents: 'none',
                 }} />
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                    <span style={{ fontSize: '2.5rem' }}>{timeInfo.emoji}</span>
-                    <h2 style={{
-                        color: '#fff', fontSize: '1.3rem', fontWeight: 400,
-                        marginTop: 'var(--space-sm)', textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+
+                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+                    {/* Dynamic Greeting Capsule */}
+                    <div style={{
+                        background: 'rgba(255,255,255,0.1)',
+                        backdropFilter: 'blur(8px)',
+                        padding: '4px 16px',
+                        borderRadius: 'var(--radius-full)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        marginBottom: 'var(--space-lg)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                     }}>
-                        {t(timeInfo.key)}
-                    </h2>
-                    {/* Modern Typographic Logo */}
-                    <h1 style={{
-                        marginTop: 'var(--space-md)',
-                        fontSize: '3.5rem',
-                        fontFamily: 'var(--font-heading)',
-                        fontWeight: 900,
-                        background: 'linear-gradient(to right, #F6D365, #FFB03B)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        textShadow: '0 4px 16px rgba(0,0,0,0.4)',
-                        letterSpacing: '-1.5px',
-                        lineHeight: 1.1,
-                        position: 'relative',
-                        display: 'inline-block'
+                        <span style={{ fontSize: '0.85rem', color: '#fff', fontWeight: 500 }}>
+                            {t(timeInfo.key)}
+                        </span>
+                        <span>{timeInfo.emoji}</span>
+                    </div>
+
+                    {/* Official Logo Integration */}
+                    <div style={{
+                        width: '90px',
+                        height: '90px',
+                        marginBottom: 'var(--space-xl)',
+                        borderRadius: 'var(--radius-lg)',
+                        background: '#fff',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                        overflow: 'hidden'
                     }}>
-                        {t('app.name')}
+                        <img
+                            src={rawqLogo}
+                            alt="RAWQ Logo"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 'var(--space-md)', width: '100%' }}>
                         <span style={{
-                            position: 'absolute',
-                            bottom: '8px',
-                            right: '-16px',
-                            width: '8px',
-                            height: '8px',
-                            background: '#FFB03B',
-                            borderRadius: '50%',
-                            boxShadow: '0 0 10px rgba(255, 176, 59, 0.8)'
-                        }} />
-                    </h1>
+                            color: '#fff',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            textTransform: 'uppercase',
+                            letterSpacing: '2px',
+                            display: 'block',
+                            marginBottom: '4px',
+                            textShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            الْمَجْمَعُ الْقُرْآنِيُّ لِلشَّيْخِ
+                        </span>
+
+                        <h1 style={{
+                            fontSize: '1.4rem',
+                            fontFamily: 'var(--font-heading)',
+                            fontWeight: 800,
+                            color: '#fff',
+                            lineHeight: 1.2,
+                            letterSpacing: '0.5px',
+                            textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            عَبْدِ الْحَفِيظِ بُورْكِيبَات
+                        </h1>
+                    </div>
+
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px',
+                        margin: 'var(--space-md) 0 var(--space-xl)'
+                    }}>
+                        <div style={{ width: '50px', height: '2px', background: 'linear-gradient(to left, transparent, #D4AF37)' }} />
+                        <span style={{
+                            fontSize: '3.5rem',
+                            color: '#D4AF37',
+                            fontWeight: 900,
+                            fontFamily: 'var(--font-quran)',
+                            lineHeight: 1,
+                            textShadow: '0 0 25px rgba(212, 175, 55, 0.6)'
+                        }}>
+                            رَوْقٌ
+                        </span>
+                        <div style={{ width: '50px', height: '2px', background: 'linear-gradient(to right, transparent, #D4AF37)' }} />
+                    </div>
+
                     <p style={{
-                        color: 'rgba(255,255,255,0.9)',
-                        fontSize: '0.95rem',
-                        marginTop: 'var(--space-sm)',
-                        fontWeight: 300,
-                        letterSpacing: '0.5px'
+                        color: '#fff',
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        lineHeight: 1.6,
+                        maxWidth: '350px',
+                        fontFamily: 'var(--font-ui)',
+                        letterSpacing: '0.2px',
+                        textShadow: '0 2px 8px rgba(0,0,0,0.5)'
                     }}>
                         {t('app.tagline')}
                     </p>

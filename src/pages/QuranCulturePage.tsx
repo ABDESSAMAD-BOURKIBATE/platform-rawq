@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BookOpenText, Target, Users } from '@phosphor-icons/react';
+import { Scroll, Brain, UsersThree } from '@phosphor-icons/react';
 import { GameMode, LevelData } from '../types/culture';
 import { gameData } from '../data/cultureQuestions';
 import { GameLevels } from '../components/culture/GameLevels';
@@ -20,21 +20,21 @@ export function QuranCulturePage() {
     const modes = [
         {
             id: 'completeVerse' as GameMode,
-            icon: <BookOpenText size={48} weight="duotone" color="#D4AF37" />,
+            icon: <Scroll size={48} weight="duotone" color="#D4AF37" />,
             title: t('culture.modes.completeVerse'),
             desc: t('culture.modes.completeVerseDesc'),
             gradient: '#D4AF37'
         },
         {
             id: 'multipleChoice' as GameMode,
-            icon: <Target size={48} weight="duotone" color="#58A89B" />,
+            icon: <Brain size={48} weight="duotone" color="#58A89B" />,
             title: t('culture.modes.multipleChoice'),
             desc: t('culture.modes.multipleChoiceDesc'),
             gradient: '#58A89B'
         },
         {
             id: 'stories' as GameMode,
-            icon: <Users size={48} weight="duotone" color="#E8A55A" />,
+            icon: <UsersThree size={48} weight="duotone" color="#E8A55A" />,
             title: t('culture.modes.stories'),
             desc: t('culture.modes.storiesDesc'),
             gradient: '#E8A55A'
@@ -90,7 +90,7 @@ export function QuranCulturePage() {
                     {modes.map((mode, idx) => (
                         <DynamicCard
                             key={mode.id}
-                            className={`animate-scale-in flex flex-col items-center text-center p-2xl cursor-pointer stagger-${idx + 1}`}
+                            className={`animate-scale-in flex flex-col items-center text-center p-2xl cursor-pointer stagger-${idx + 1} culture-mode-card`}
                             onClick={() => setSelectedMode(mode.id)}
                             gradientColor={mode.gradient}
                             style={{ minHeight: '320px', gap: 'var(--space-lg)' }}

@@ -9,9 +9,9 @@ export default defineConfig({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
             manifest: {
-                name: 'منصة رَوْقٌ',
+                name: 'المجمع القرآني للشيخ عبد الحفيظ بوركيبات رحمه الله تعالى عليه – “رَوْقٌ”',
                 short_name: 'رَوْقٌ',
-                description: 'المنصة القرآنية الأندلسية، للراحة النفسية والإيمانية',
+                description: 'صدقة جارية، ومنارة لتلاوة كتاب الله، وأثير سكينةٍ لا ينقطع.',
                 theme_color: '#0f172a',
                 background_color: '#0f172a',
                 display: 'standalone',
