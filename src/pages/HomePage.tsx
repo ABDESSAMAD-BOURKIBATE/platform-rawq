@@ -387,7 +387,6 @@ export function HomePage() {
                         return (
                             <DynamicCard
                                 key={item.path}
-                                className={`animate-scale-in stagger-${Math.min(i + 1, 6)}`}
                                 onClick={() => navigate(item.path)}
                                 gradientColor={item.color}
                                 style={{ textAlign: 'center', padding: 'var(--space-md) var(--space-sm)' }}

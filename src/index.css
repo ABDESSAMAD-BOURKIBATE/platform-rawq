@@ -1134,3 +1134,101 @@ h3 {
     gap: var(--space-md) !important;
   }
 }
+
+/* ---------- Desktop Navigation Sidebar ---------- */
+.desktop-nav {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xl);
+  z-index: 100;
+  border-radius: var(--radius-xl);
+  visibility: hidden;
+  opacity: 0;
+  transition: all var(--transition-base);
+}
+
+@media (min-width: 1024px) {
+  .desktop-nav {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+  cursor: pointer;
+}
+
+.nav-logo img {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+}
+
+.nav-logo span {
+  font-family: var(--font-quran);
+  font-size: 1.8rem;
+  color: var(--accent-gold);
+  font-weight: 900;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+  width: 100%;
+  text-align: right;
+  font-weight: 500;
+}
+
+.nav-btn:hover {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+}
+
+.nav-btn.active {
+  background: var(--accent-gold);
+  color: #0B1C1A;
+  font-weight: 700;
+  box-shadow: var(--shadow-gold);
+}
+
+.nav-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Adjust page layout for desktop nav */
+@media (min-width: 1024px) {
+  .app-layout {
+    display: flex;
+    flex-direction: row-reverse;
+    /* For RTL support */
+  }
+
+  .page.container {
+    margin-right: 320px;
+    /* Space for sidebar */
+    margin-left: auto;
+    max-width: calc(100% - 340px);
+  }
+}

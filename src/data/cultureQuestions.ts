@@ -1,4 +1,5 @@
 import { GameMode, LevelData, Question } from '../types/culture';
+import { level1CompleteVerseBank } from './level1/completeVerse';
 
 export const completeVerseBank: Question[] = [
     { id: 'cv_1', text: 'أكمل: (الْحَمْدُ لِلَّهِ رَبِّ ...)', options: ['الْعَالَمِينَ', 'السَّمَاوَاتِ', 'الْأَرْضِ', 'النَّاسِ'], correctAnswerIndex: 0 },
@@ -61,12 +62,6 @@ export const completeVerseBank: Question[] = [
     { id: 'cv_58', text: 'أكمل: (مِن شَرِّ الْوَسْوَاسِ ...)', options: ['الْخَنَّاسِ', 'الْجِنَّاسِ', 'الْمُكَابِرِ', 'الْغَادِرِ'], correctAnswerIndex: 0 },
     { id: 'cv_59', text: 'أكمل: (فَيَوْمَئِذٍ لَّا يُسْأَلُ عَن ذَنبِهِ إِنسٌ وَلَا ...)', options: ['جَانٌّ', 'مَلَكٌ', 'شَيْطَانٌ', 'حَيَوَانٌ'], correctAnswerIndex: 0 },
     { id: 'cv_60', text: 'أكمل: (يُرْسَلُ عَلَيْكُمَا شُوَاظٌ مِّن نَّارٍ وَنُحَاسٌ فَلَا ...)', options: ['تَنتَصِرَانِ', 'تَهْرُبَانِ', 'تَفِرَّانِ', 'تُفْلِحَانِ'], correctAnswerIndex: 0 },
-    ...Array.from({ length: 25 }).map((_, i) => ({
-        id: `cv_auto_${i + 61}`,
-        text: `أكمل الآية (وَهُوَ الْغَفُورُ الرَّحِيمُ) - سؤال رقم ${i + 61} ...`,
-        options: ['الْوَدُودُ', 'الْمَجِيدُ', 'الْحَمِيدُ', 'الْحَكِيمُ'],
-        correctAnswerIndex: 0
-    }))
 ];
 
 export const multipleChoiceBank: Question[] = [
@@ -95,12 +90,6 @@ export const multipleChoiceBank: Question[] = [
     { id: 'mc_23', text: 'المعركة التي سميت باسمها سورة من القرآن؟', options: ['الأحزاب', 'بدر', 'أحد', 'اليرموك'], correctAnswerIndex: 0 },
     { id: 'mc_24', text: 'ما السورة التي تسمى قتالية؟', options: ['محمد', 'الأنفال', 'التوبة', 'الفتح'], correctAnswerIndex: 0 },
     { id: 'mc_25', text: 'كم مرة ذكر اسم خاتم الأنبياء (محمد) صراحة في القرآن؟', options: ['4', '5', '3', '2'], correctAnswerIndex: 0 },
-    ...Array.from({ length: 60 }).map((_, i) => ({
-        id: `mc_auto_${i + 26}`,
-        text: `سؤال خيارات إضافي رقم ${i + 26}`,
-        options: ['الخيار الصحيح', 'خاطئ 1', 'خاطئ 2', 'خاطئ 3'],
-        correctAnswerIndex: 0
-    }))
 ];
 
 export const storiesBank: Question[] = [
@@ -129,12 +118,6 @@ export const storiesBank: Question[] = [
     { id: 'st_23', text: 'ما هو الحيوان الذي أرسله الله ليضرب به المثل في الصغر وضعف الخلقة؟', options: ['البعوضة', 'الذبابة', 'العنكبوت', 'النملة'], correctAnswerIndex: 0 },
     { id: 'st_24', text: 'من هي ذات النطاقين؟', options: ['أسماء بنت أبي بكر', 'عائشة بنت أبي بكر', 'خديجة بنت خويلد', 'هند بنت عتبة'], correctAnswerIndex: 0 },
     { id: 'st_25', text: 'من هو قائد الجيوش الإسلامية في معركة القادسية؟', options: ['سعد بن أبي وقاص', 'خالد بن الوليد', 'أبو عبيدة بن الجراح', 'عمرو بن العاص'], correctAnswerIndex: 0 },
-    ...Array.from({ length: 60 }).map((_, i) => ({
-        id: `st_auto_${i + 26}`,
-        text: `سؤال قصصي إضافي رقم ${i + 26}`,
-        options: ['الإجابة الصحيحة', 'اجابة خاطئة 1', 'اجابة خاطئة 2', 'اجابة خاطئة 3'],
-        correctAnswerIndex: 0
-    }))
 ];
 
 // Helper to generate levels 
@@ -149,7 +132,14 @@ const generateLevels = (mode: GameMode, bank: Question[]): LevelData[] => {
 };
 
 export const gameData: Record<GameMode, LevelData[]> = {
-    completeVerse: generateLevels('completeVerse', completeVerseBank),
+    completeVerse: [
+        {
+            id: 1,
+            mode: 'completeVerse',
+            questions: level1CompleteVerseBank,
+        },
+        ...generateLevels('completeVerse', completeVerseBank).slice(1)
+    ],
     multipleChoice: generateLevels('multipleChoice', multipleChoiceBank),
     stories: generateLevels('stories', storiesBank),
 };
