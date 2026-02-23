@@ -29,12 +29,14 @@ export function GameResult({
     const isPassed = percentage >= 50;
 
     // Intelligence: Based on accuracy
-    const intelligence = percentage;
+    const intelligence = isNaN(percentage) ? 0 : percentage;
     // Insight (Basirah): Based on speed factor (approx 10s per question avg)
-    const avgTime = totalTime / totalQuestions;
-    const insight = Math.max(0, Math.min(100, 100 - (avgTime - 5) * 5));
+    const avgTime = totalQuestions > 0 ? totalTime / totalQuestions : 0;
+    const insightScale = Math.max(0, Math.min(100, 100 - (avgTime - 5) * 5));
+    const insight = isNaN(insightScale) ? 0 : insightScale;
     // Concentration: Based on longest streak relative to total
-    const concentration = Math.min(100, (longestStreak / (totalQuestions / 4)) * 100);
+    const streakFactor = totalQuestions > 0 ? (longestStreak / (totalQuestions / 4)) * 100 : 0;
+    const concentration = isNaN(streakFactor) ? 0 : Math.min(100, streakFactor);
 
     const metrics = [
         { label: 'الذكاء', value: intelligence, icon: Brain, color: '#facc15' },

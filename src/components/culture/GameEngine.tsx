@@ -130,15 +130,8 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
 
     const handleGameOver = () => {
         setIsGameOver(true);
-        const percentage = Math.round((score / questions.length) * 100);
+        const percentage = questions.length > 0 ? Math.round((score / questions.length) * 100) : 0;
         saveScore(levelData.mode as GameMode, levelData.id, percentage);
-        if (percentage >= 50) {
-            if (levelData.id < 30) {
-                setTimeout(() => {
-                    onNextLevel();
-                }, 2500);
-            }
-        }
     };
 
     if (questions.length === 0) {
@@ -180,6 +173,8 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
     }
 
     const currentQ = questions[currentQuestionIndex];
+
+    if (!currentQ && !isGameOver) return null; // Safety guard during transitions
     const timerStrokeOffset = ((30 - timeLeft) / 30) * 100;
 
     return (

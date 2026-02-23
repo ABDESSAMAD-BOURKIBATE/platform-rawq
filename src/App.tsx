@@ -12,6 +12,7 @@ import { PrayerTimesPage } from './pages/PrayerTimesPage';
 import { RadioPage } from './pages/RadioPage';
 import { WorldClockPage } from './pages/WorldClockPage';
 import { QuranCulturePage } from './pages/QuranCulturePage';
+import { AzkarPage } from './pages/AzkarPage';
 
 export default function App() {
     return (
@@ -30,6 +31,7 @@ export default function App() {
                     <Route path="/radio" element={<RadioPage />} />
                     <Route path="/world-clock" element={<WorldClockPage />} />
                     <Route path="/quran-culture" element={<QuranCulturePage />} />
+                    <Route path="/azkar" element={<AzkarPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Play, Pause, SkipForward, SkipBack, X, SpeakerHigh, DownloadSimple, Clock, Repeat, RepeatOnce } from '@phosphor-icons/react';
+import { Play, Pause, SkipForward, SkipBack, X, SpeakerHigh, DownloadSimple, Clock, Repeat, RepeatOnce, CaretDown } from '@phosphor-icons/react';
 import { useAudioStore } from '../../store/useAudioStore';
 import { audioEngine } from '../../lib/audioEngine';
 import { getAyahAudioUrl, DEFAULT_RECITER_FOLDER } from '../../api/everyayah';
@@ -32,7 +32,7 @@ export function AudioPlayer() {
         isPlaying, type, currentSurah, currentAyah, reciter, moshaf, radioStation,
         pause, resume, stop, next, prev,
         progress, duration, playbackRate, repeatMode,
-        setPlaybackRate, setRepeatMode
+        setPlaybackRate, setRepeatMode, setIsPlayerMinimized, isPlayerMinimized
     } = useAudioStore();
 
     // Handle Play/Pause toggle
@@ -354,7 +354,16 @@ export function AudioPlayer() {
                         )}
 
                         <button
+                            onClick={() => setIsPlayerMinimized(true)}
+                            title="تصغير المشغل"
+                            style={{ padding: '8px', color: 'var(--text-muted)', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                        >
+                            <CaretDown size={24} weight="bold" />
+                        </button>
+
+                        <button
                             onClick={() => audioEngine.stop()}
+                            title="إيقاف"
                             style={{ padding: '8px', color: 'var(--text-muted)', marginRight: 'var(--space-sm)', background: 'transparent', border: 'none', cursor: 'pointer' }}
                         >
                             <X size={20} weight="bold" />

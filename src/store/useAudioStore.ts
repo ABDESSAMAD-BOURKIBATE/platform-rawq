@@ -19,6 +19,7 @@ interface AudioState {
     duration: number;
     playbackRate: number;
     repeatMode: 'none' | 'ayah' | 'surah';
+    isPlayerMinimized: boolean;
 
     play: (surah: number, ayah: number, reciter?: AudioState['reciter'], moshaf?: AudioState['moshaf']) => void;
     playRadio: (station: RadioStation) => void;
@@ -33,6 +34,7 @@ interface AudioState {
     setDuration: (duration: number) => void;
     setPlaybackRate: (rate: number) => void;
     setRepeatMode: (mode: 'none' | 'ayah' | 'surah') => void;
+    setIsPlayerMinimized: (minimized: boolean) => void;
     addToPlaylist: (track: { surah: number; ayah: number }) => void;
     clearPlaylist: () => void;
 }
@@ -50,6 +52,7 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
     duration: 0,
     playbackRate: 1,
     repeatMode: 'none',
+    isPlayerMinimized: false,
 
     play: (surah, ayah, reciter, moshaf) => {
         set((state) => ({
@@ -61,6 +64,7 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
             reciter: reciter || state.reciter,
             moshaf: moshaf || state.moshaf,
             radioStation: null, // Clear radio
+            isPlayerMinimized: false,
         }));
     },
 
@@ -73,6 +77,7 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
             currentAyah: null,
             progress: 0,
             duration: 0,
+            isPlayerMinimized: false,
         });
     },
 
@@ -80,7 +85,7 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
     resume: () => set({ isPlaying: true }),
 
     stop: () =>
-        set({ isPlaying: false, currentAyah: null, currentSurah: null, radioStation: null, progress: 0, duration: 0 }),
+        set({ isPlaying: false, currentAyah: null, currentSurah: null, radioStation: null, progress: 0, duration: 0, isPlayerMinimized: false }),
 
     next: () => {
         // Implement next logic based on playlist or auto-advance
@@ -104,6 +109,7 @@ export const useAudioStore = create<AudioState>()((set, get) => ({
     setDuration: (duration) => set({ duration }),
     setPlaybackRate: (rate) => set({ playbackRate: rate }),
     setRepeatMode: (mode) => set({ repeatMode: mode }),
+    setIsPlayerMinimized: (minimized) => set({ isPlayerMinimized: minimized }),
     addToPlaylist: (track) => set((state) => ({ playlist: [...state.playlist, track] })),
     clearPlaylist: () => set({ playlist: [] }),
 }));

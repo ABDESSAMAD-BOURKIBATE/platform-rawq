@@ -75,6 +75,7 @@ const quickAccessItems = [
     { path: '/qibla', icon: Compass, labelKey: 'home.qibla', color: '#6B7DB3' },
     { path: '/radio', icon: Radio, labelKey: 'home.radios', color: '#C66B3D' },
     { path: '/world-clock', icon: Globe, labelKey: 'home.worldClocks', color: '#58A89B' },
+    { path: '/azkar', icon: HandHeart, labelKey: 'adhkar.title', color: '#E94560' },
 ];
 
 export function HomePage() {
