@@ -173,6 +173,21 @@
             "day": "Day",
             "sunset": "Sunset",
             "night": "Night"
+        },
+        "timeDiff": "Time Difference",
+        "noDiff": "Same Time",
+        "hours": "hours",
+        "location": "Geographical Location",
+        "modal": {
+            "community": "Muslim Community",
+            "approxPopulation": "Approx. Population:",
+            "safetyLevel": "Safety for Muslims",
+            "governance": "Governance & Leadership",
+            "governanceType": "Governance Type:",
+            "ruler": "Ruler or King:",
+            "majorCities": "Major Cities",
+            "noData": "No data",
+            "close": "Close"
         }
     },
     "about": {

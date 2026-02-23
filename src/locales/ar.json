@@ -173,6 +173,21 @@
             "day": "النهار",
             "sunset": "غروب",
             "night": "الليل"
+        },
+        "timeDiff": "فرق التوقيت",
+        "noDiff": "نفس التوقيت",
+        "hours": "ساعة",
+        "location": "الموقع الجغرافي",
+        "modal": {
+            "community": "المجتمع المسلم",
+            "approxPopulation": "عدد المسلمين تقريبا:",
+            "safetyLevel": "مستوى الأمان للمسلمين",
+            "governance": "نظام الحكم والقيادة",
+            "governanceType": "قسم الحكم:",
+            "ruler": "الحاكم أو الملك:",
+            "majorCities": "أهم المدن",
+            "noData": "لا توجد بيانات",
+            "close": "إغلاق"
         }
     },
     "about": {

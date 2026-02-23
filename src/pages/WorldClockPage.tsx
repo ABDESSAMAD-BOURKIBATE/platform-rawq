@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Globe, MagnifyingGlass, GlobeHemisphereWest, GlobeHemisphereEast, MapTrifold, MapPin, Compass } from '@phosphor-icons/react';
+import { CountryDetailModal } from '../components/ui/CountryDetailModal';
+import { COUNTRY_DETAILS } from '../data/worldTimesData';
 
 interface CountryTime {
     name: string;
@@ -246,6 +248,7 @@ export function WorldClockPage() {
     const [currentTick, setCurrentTick] = useState(0);
     const [continent, setContinent] = useState('all');
     const [search, setSearch] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState<any>(null);
 
     // Tick every second
     useEffect(() => {
@@ -360,6 +363,17 @@ export function WorldClockPage() {
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
                                 padding: 'var(--space-md)',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                            }}
+                            onClick={() => setSelectedCountry(country)}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                                e.currentTarget.style.boxShadow = '0 15px 30px rgba(0,0,0,0.25)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'none';
+                                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
                             }}
                         >
                             {/* Decorative Elements */}
@@ -461,6 +475,13 @@ export function WorldClockPage() {
                     );
                 })}
             </div>
+
+            {/* Country Detail Modal */}
+            <CountryDetailModal
+                country={selectedCountry}
+                detail={selectedCountry ? COUNTRY_DETAILS[selectedCountry.name] : undefined}
+                onClose={() => setSelectedCountry(null)}
+            />
         </div>
     );
 }

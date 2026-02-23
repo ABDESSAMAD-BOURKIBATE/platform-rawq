@@ -173,6 +173,21 @@
             "day": "Jour",
             "sunset": "Crépuscule",
             "night": "Nuit"
+        },
+        "timeDiff": "Décalage Horaire",
+        "noDiff": "Même heure",
+        "hours": "heures",
+        "location": "Localisation Géographique",
+        "modal": {
+            "community": "Communauté Musulmane",
+            "approxPopulation": "Population approx.:",
+            "safetyLevel": "Sécurité pour les Musulmans",
+            "governance": "Gouvernance & Leadership",
+            "governanceType": "Type de Gouvernance:",
+            "ruler": "Dirigeant ou Roi:",
+            "majorCities": "Villes Majeures",
+            "noData": "Pas de données",
+            "close": "Fermer"
         }
     },
     "about": {

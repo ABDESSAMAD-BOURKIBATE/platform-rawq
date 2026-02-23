@@ -65,6 +65,7 @@ ol {
   --bg-card: #0F2B27;
   --bg-card-hover: #153E39;
   --accent-gold: #D4AF37;
+  --accent-gold-rgb: 212, 175, 55;
   --accent-gold-soft: rgba(212, 175, 55, 0.15);
   --accent-gold-glow: rgba(212, 175, 55, 0.3);
   --text: #F5F3EA;
@@ -119,6 +120,7 @@ ol {
   --bg-card: #FFFFFF;
   --bg-card-hover: #F5F1E8;
   --accent-gold: #B0892E;
+  --accent-gold-rgb: 176, 137, 46;
   --accent-gold-soft: rgba(176, 137, 46, 0.1);
   --accent-gold-glow: rgba(176, 137, 46, 0.2);
   --text: #1A332E;
@@ -634,10 +636,13 @@ h3 {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.5;
     transform: scale(0.8);
