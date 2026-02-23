@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GameMode, LevelData, Question } from '../../types/culture';
 import { useCultureStore } from '../../store/useCultureStore';
 import { CheckCircle, XCircle, ClockClockwise, ArrowRight, Trophy } from '@phosphor-icons/react';
+import { GameResult } from './GameResult';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -33,6 +34,13 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
     const [isGameOver, setIsGameOver] = useState(false);
     const [shuffledOptions, setShuffledOptions] = useState<{ text: string; isCorrect: boolean }[]>([]);
 
+    // Stats for final result
+    const [totalTimeSpent, setTotalTimeSpent] = useState(0);
+    const [incorrectCount, setIncorrectCount] = useState(0);
+    const [longestStreak, setLongestStreak] = useState(0);
+    const [currentStreak, setCurrentStreak] = useState(0);
+    const [startTime, setStartTime] = useState<number>(0);
+
     // Initialize level logic
     useEffect(() => {
         // We received a bank of 80+ questions in levelData.questions
@@ -48,6 +56,10 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
         setCurrentQuestionIndex(0);
         setScore(0);
         setIsGameOver(false);
+        setTotalTimeSpent(0);
+        setIncorrectCount(0);
+        setLongestStreak(0);
+        setCurrentStreak(0);
     }, [levelData]);
 
     // Setup current question
@@ -64,6 +76,7 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
             setSelectedAnswer(null);
             setIsAnswered(false);
             setTimeLeft(30);
+            setStartTime(Date.now());
         } else if (questions.length > 0 && currentQuestionIndex >= questions.length) {
             handleGameOver();
         }
@@ -96,11 +109,18 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
         if (isAnswered) return;
         setSelectedAnswer(index);
         setIsAnswered(true);
+
+        const timeSpentOnQuestion = Math.round((Date.now() - startTime) / 1000);
+        setTotalTimeSpent(prev => prev + timeSpentOnQuestion);
+
         if (isCorrect) {
             setScore((prev) => prev + 1);
-            // Play success sound
+            const newStreak = currentStreak + 1;
+            setCurrentStreak(newStreak);
+            if (newStreak > longestStreak) setLongestStreak(newStreak);
         } else {
-            // Play fail sound
+            setIncorrectCount(prev => prev + 1);
+            setCurrentStreak(0);
         }
     };
 
@@ -113,7 +133,6 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
         const percentage = Math.round((score / questions.length) * 100);
         saveScore(levelData.mode as GameMode, levelData.id, percentage);
         if (percentage >= 50) {
-            unlockLevel(levelData.mode as GameMode, levelData.id + 1);
             if (levelData.id < 30) {
                 setTimeout(() => {
                     onNextLevel();
@@ -134,47 +153,29 @@ export function GameEngine({ levelData, onBack, onNextLevel }: GameEngineProps) 
 
     if (isGameOver) {
         const percentage = Math.round((score / questions.length) * 100);
-        const isPassed = percentage >= 50;
 
         return (
-            <div className="animate-fade-in flex flex-col items-center justify-center p-xl card-glass" style={{ minHeight: '60vh' }}>
-                <div style={{
-                    width: '100px', height: '100px', borderRadius: '50%',
-                    background: isPassed ? 'rgba(88, 168, 155, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                    display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center',
-                    marginBottom: 'var(--space-md)'
-                }}>
-                    <Trophy size={48} color={isPassed ? "var(--accent-gold)" : "#ef4444"} weight="duotone" />
-                </div>
-                <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>
-                    {isPassed ? t('culture.levelCompleted') : t('culture.levelFailed')}
-                </h2>
-                <p style={{ fontSize: '1.2rem', marginBottom: 'var(--space-xl)', color: 'var(--text-muted)' }}>
-                    {t('culture.score')}: {percentage}%
-                </p>
-
-                <div className="flex items-center gap-md">
-                    <button className="btn-outline flex items-center gap-sm" onClick={() => {
-                        setCurrentQuestionIndex(0);
-                        setScore(0);
-                        setIsGameOver(false);
-                        const shuffledQuestions = shuffleArray(levelData.questions);
-                        setQuestions(shuffledQuestions);
-                    }}>
-                        <ClockClockwise size={20} />
-                        {t('culture.retry')}
-                    </button>
-                    {isPassed && levelData.id < 30 && (
-                        <button className="btn-primary flex items-center gap-sm" onClick={onNextLevel}>
-                            {t('culture.nextLevel')}
-                            <ArrowRight size={20} />
-                        </button>
-                    )}
-                    <button className="btn-outline" onClick={onBack}>
-                        {t('culture.backToModes')}
-                    </button>
-                </div>
-            </div>
+            <GameResult
+                percentage={percentage}
+                score={score}
+                totalQuestions={questions.length}
+                totalTime={totalTimeSpent}
+                incorrectCount={incorrectCount}
+                longestStreak={longestStreak}
+                onRetry={() => {
+                    setCurrentQuestionIndex(0);
+                    setScore(0);
+                    setIsGameOver(false);
+                    setTotalTimeSpent(0);
+                    setIncorrectCount(0);
+                    setLongestStreak(0);
+                    setCurrentStreak(0);
+                    const shuffledQuestions = shuffleArray(levelData.questions);
+                    setQuestions(shuffledQuestions);
+                }}
+                onNextLevel={levelData.id < 30 ? onNextLevel : undefined}
+                onBack={onBack}
+            />
         );
     }
 

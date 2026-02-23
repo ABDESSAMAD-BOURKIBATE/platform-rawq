@@ -52,7 +52,8 @@ export const useCultureStore = create<CultureStore>()(
                     return state;
                 }),
             isLevelUnlocked: (mode, levelId) => {
-                return get().unlockedLevels[mode].includes(levelId);
+                // Return true to unlock all levels by default as requested
+                return true;
             },
             getHighScore: (mode, levelId) => {
                 return get().scores[mode][levelId] || 0;

@@ -1,5 +1,63 @@
 import { GameMode, LevelData, Question } from '../types/culture';
 import { level1CompleteVerseBank } from './level1/completeVerse';
+import { level2CompleteVerseBank } from './level2/completeVerse';
+import { level3CompleteVerseBank } from './level3/completeVerse';
+import { level4CompleteVerseBank } from './level4/completeVerse';
+import { level5CompleteVerseBank } from './level5/completeVerse';
+import { level6CompleteVerseBank } from './level6/completeVerse';
+import { level7CompleteVerseBank } from './level7/completeVerse';
+import { level8CompleteVerseBank } from './level8/completeVerse';
+import { level9CompleteVerseBank } from './level9/completeVerse';
+import { level10CompleteVerseBank } from './level10/completeVerse';
+import { level11CompleteVerseBank } from './level11/completeVerse';
+import { level12CompleteVerseBank } from './level12/completeVerse';
+import { level13CompleteVerseBank } from './level13/completeVerse';
+import { level14CompleteVerseBank } from './level14/completeVerse';
+import { level15CompleteVerseBank } from './level15/completeVerse';
+import { level16CompleteVerseBank } from './level16/completeVerse';
+import { level17CompleteVerseBank } from './level17/completeVerse';
+import { level18CompleteVerseBank } from './level18/completeVerse';
+import { level19CompleteVerseBank } from './level19/completeVerse';
+import { level20CompleteVerseBank } from './level20/completeVerse';
+import { level21CompleteVerseBank } from './level21/completeVerse';
+import { level22CompleteVerseBank } from './level22/completeVerse';
+import { level23CompleteVerseBank } from './level23/completeVerse';
+import { level24CompleteVerseBank } from './level24/completeVerse';
+import { level25CompleteVerseBank } from './level25/completeVerse';
+import { level26CompleteVerseBank } from './level26/completeVerse';
+import { level27CompleteVerseBank } from './level27/completeVerse';
+import { level28CompleteVerseBank } from './level28/completeVerse';
+import { level29CompleteVerseBank } from './level29/completeVerse';
+import { level30CompleteVerseBank } from './level30/completeVerse';
+import { level2MultipleChoiceBank, level2StoriesBank } from './level2/otherModes';
+import { level3MultipleChoiceBank, level3StoriesBank } from './level3/otherModes';
+import { level4MultipleChoiceBank, level4StoriesBank } from './level4/otherModes';
+import { level5MultipleChoiceBank, level5StoriesBank } from './level5/otherModes';
+import { level6MultipleChoiceBank, level6StoriesBank } from './level6/otherModes';
+import { level7MultipleChoiceBank, level7StoriesBank } from './level7/otherModes';
+import { level8MultipleChoiceBank, level8StoriesBank } from './level8/otherModes';
+import { level9MultipleChoiceBank, level9StoriesBank } from './level9/otherModes';
+import { level10MultipleChoiceBank, level10StoriesBank } from './level10/otherModes';
+import { level11MultipleChoiceBank, level11StoriesBank } from './level11/otherModes';
+import { level12MultipleChoiceBank, level12StoriesBank } from './level12/otherModes';
+import { level13MultipleChoiceBank, level13StoriesBank } from './level13/otherModes';
+import { level14MultipleChoiceBank, level14StoriesBank } from './level14/otherModes';
+import { level15MultipleChoiceBank, level15StoriesBank } from './level15/otherModes';
+import { level16MultipleChoiceBank, level16StoriesBank } from './level16/otherModes';
+import { level17MultipleChoiceBank, level17StoriesBank } from './level17/otherModes';
+import { level18MultipleChoiceBank, level18StoriesBank } from './level18/otherModes';
+import { level19MultipleChoiceBank, level19StoriesBank } from './level19/otherModes';
+import { level20MultipleChoiceBank, level20StoriesBank } from './level20/otherModes';
+import { level21MultipleChoiceBank, level21StoriesBank } from './level21/otherModes';
+import { level22MultipleChoiceBank, level22StoriesBank } from './level22/otherModes';
+import { level23MultipleChoiceBank, level23StoriesBank } from './level23/otherModes';
+import { level24MultipleChoiceBank, level24StoriesBank } from './level24/otherModes';
+import { level25MultipleChoiceBank, level25StoriesBank } from './level25/otherModes';
+import { level26MultipleChoiceBank, level26StoriesBank } from './level26/otherModes';
+import { level27MultipleChoiceBank, level27StoriesBank } from './level27/otherModes';
+import { level28MultipleChoiceBank, level28StoriesBank } from './level28/otherModes';
+import { level29MultipleChoiceBank, level29StoriesBank } from './level29/otherModes';
+import { level30MultipleChoiceBank, level30StoriesBank } from './level30/otherModes';
 
 export const completeVerseBank: Question[] = [
     { id: 'cv_1', text: 'أكمل: (الْحَمْدُ لِلَّهِ رَبِّ ...)', options: ['الْعَالَمِينَ', 'السَّمَاوَاتِ', 'الْأَرْضِ', 'النَّاسِ'], correctAnswerIndex: 0 },
@@ -120,7 +178,7 @@ export const storiesBank: Question[] = [
     { id: 'st_25', text: 'من هو قائد الجيوش الإسلامية في معركة القادسية؟', options: ['سعد بن أبي وقاص', 'خالد بن الوليد', 'أبو عبيدة بن الجراح', 'عمرو بن العاص'], correctAnswerIndex: 0 },
 ];
 
-// Helper to generate levels 
+// Helper to generate levels
 // Here, we don't bind specific questions to specific levels statically.
 // We will assign the entire mode's bank to each level. The GameEngine will pick randomly.
 const generateLevels = (mode: GameMode, bank: Question[]): LevelData[] => {
@@ -138,8 +196,457 @@ export const gameData: Record<GameMode, LevelData[]> = {
             mode: 'completeVerse',
             questions: level1CompleteVerseBank,
         },
-        ...generateLevels('completeVerse', completeVerseBank).slice(1)
+        {
+            id: 2,
+            mode: 'completeVerse',
+            questions: level2CompleteVerseBank,
+        },
+        {
+            id: 3,
+            mode: 'completeVerse',
+            questions: level3CompleteVerseBank,
+        },
+        {
+            id: 4,
+            mode: 'completeVerse',
+            questions: level4CompleteVerseBank,
+        },
+        {
+            id: 5,
+            mode: 'completeVerse',
+            questions: level5CompleteVerseBank,
+        },
+        {
+            id: 6,
+            mode: 'completeVerse',
+            questions: level6CompleteVerseBank,
+        },
+        {
+            id: 7,
+            mode: 'completeVerse',
+            questions: level7CompleteVerseBank,
+        },
+        {
+            id: 8,
+            mode: 'completeVerse',
+            questions: level8CompleteVerseBank,
+        },
+        {
+            id: 9,
+            mode: 'completeVerse',
+            questions: level9CompleteVerseBank,
+        },
+        {
+            id: 10,
+            mode: 'completeVerse',
+            questions: level10CompleteVerseBank,
+        },
+        {
+            id: 11,
+            mode: 'completeVerse',
+            questions: level11CompleteVerseBank,
+        },
+        {
+            id: 12,
+            mode: 'completeVerse',
+            questions: level12CompleteVerseBank,
+        },
+        {
+            id: 13,
+            mode: 'completeVerse',
+            questions: level13CompleteVerseBank,
+        },
+        {
+            id: 14,
+            mode: 'completeVerse',
+            questions: level14CompleteVerseBank,
+        },
+        {
+            id: 15,
+            mode: 'completeVerse',
+            questions: level15CompleteVerseBank,
+        },
+        {
+            id: 16,
+            mode: 'completeVerse',
+            questions: level16CompleteVerseBank,
+        },
+        {
+            id: 17,
+            mode: 'completeVerse',
+            questions: level17CompleteVerseBank,
+        },
+        {
+            id: 18,
+            mode: 'completeVerse',
+            questions: level18CompleteVerseBank,
+        },
+        {
+            id: 19,
+            mode: 'completeVerse',
+            questions: level19CompleteVerseBank,
+        },
+        {
+            id: 20,
+            mode: 'completeVerse',
+            questions: level20CompleteVerseBank,
+        },
+        {
+            id: 21,
+            mode: 'completeVerse',
+            questions: level21CompleteVerseBank,
+        },
+        {
+            id: 22,
+            mode: 'completeVerse',
+            questions: level22CompleteVerseBank,
+        },
+        {
+            id: 23,
+            mode: 'completeVerse',
+            questions: level23CompleteVerseBank,
+        },
+        {
+            id: 24,
+            mode: 'completeVerse',
+            questions: level24CompleteVerseBank,
+        },
+        {
+            id: 25,
+            mode: 'completeVerse',
+            questions: level25CompleteVerseBank,
+        },
+        {
+            id: 26,
+            mode: 'completeVerse',
+            questions: level26CompleteVerseBank,
+        },
+        {
+            id: 27,
+            mode: 'completeVerse',
+            questions: level27CompleteVerseBank,
+        },
+        {
+            id: 28,
+            mode: 'completeVerse',
+            questions: level28CompleteVerseBank,
+        },
+        {
+            id: 29,
+            mode: 'completeVerse',
+            questions: level29CompleteVerseBank,
+        },
+        {
+            id: 30,
+            mode: 'completeVerse',
+            questions: level30CompleteVerseBank,
+        },
+        ...generateLevels('completeVerse', completeVerseBank).slice(30)
     ],
-    multipleChoice: generateLevels('multipleChoice', multipleChoiceBank),
-    stories: generateLevels('stories', storiesBank),
+    multipleChoice: [
+        {
+            id: 1,
+            mode: 'multipleChoice',
+            questions: multipleChoiceBank,
+        },
+        {
+            id: 2,
+            mode: 'multipleChoice',
+            questions: level2MultipleChoiceBank,
+        },
+        {
+            id: 3,
+            mode: 'multipleChoice',
+            questions: level3MultipleChoiceBank,
+        },
+        {
+            id: 4,
+            mode: 'multipleChoice',
+            questions: level4MultipleChoiceBank,
+        },
+        {
+            id: 5,
+            mode: 'multipleChoice',
+            questions: level5MultipleChoiceBank,
+        },
+        {
+            id: 6,
+            mode: 'multipleChoice',
+            questions: level6MultipleChoiceBank,
+        },
+        {
+            id: 7,
+            mode: 'multipleChoice',
+            questions: level7MultipleChoiceBank,
+        },
+        {
+            id: 8,
+            mode: 'multipleChoice',
+            questions: level8MultipleChoiceBank,
+        },
+        {
+            id: 9,
+            mode: 'multipleChoice',
+            questions: level9MultipleChoiceBank,
+        },
+        {
+            id: 10,
+            mode: 'multipleChoice',
+            questions: level10MultipleChoiceBank,
+        },
+        {
+            id: 11,
+            mode: 'multipleChoice',
+            questions: level11MultipleChoiceBank,
+        },
+        {
+            id: 12,
+            mode: 'multipleChoice',
+            questions: level12MultipleChoiceBank,
+        },
+        {
+            id: 13,
+            mode: 'multipleChoice',
+            questions: level13MultipleChoiceBank,
+        },
+        {
+            id: 14,
+            mode: 'multipleChoice',
+            questions: level14MultipleChoiceBank,
+        },
+        {
+            id: 15,
+            mode: 'multipleChoice',
+            questions: level15MultipleChoiceBank,
+        },
+        {
+            id: 16,
+            mode: 'multipleChoice',
+            questions: level16MultipleChoiceBank,
+        },
+        {
+            id: 17,
+            mode: 'multipleChoice',
+            questions: level17MultipleChoiceBank,
+        },
+        {
+            id: 18,
+            mode: 'multipleChoice',
+            questions: level18MultipleChoiceBank,
+        },
+        {
+            id: 19,
+            mode: 'multipleChoice',
+            questions: level19MultipleChoiceBank,
+        },
+        {
+            id: 20,
+            mode: 'multipleChoice',
+            questions: level20MultipleChoiceBank,
+        },
+        {
+            id: 21,
+            mode: 'multipleChoice',
+            questions: level21MultipleChoiceBank,
+        },
+        {
+            id: 22,
+            mode: 'multipleChoice',
+            questions: level22MultipleChoiceBank,
+        },
+        {
+            id: 23,
+            mode: 'multipleChoice',
+            questions: level23MultipleChoiceBank,
+        },
+        {
+            id: 24,
+            mode: 'multipleChoice',
+            questions: level24MultipleChoiceBank,
+        },
+        {
+            id: 25,
+            mode: 'multipleChoice',
+            questions: level25MultipleChoiceBank,
+        },
+        {
+            id: 26,
+            mode: 'multipleChoice',
+            questions: level26MultipleChoiceBank,
+        },
+        {
+            id: 27,
+            mode: 'multipleChoice',
+            questions: level27MultipleChoiceBank,
+        },
+        {
+            id: 28,
+            mode: 'multipleChoice',
+            questions: level28MultipleChoiceBank,
+        },
+        {
+            id: 29,
+            mode: 'multipleChoice',
+            questions: level29MultipleChoiceBank,
+        },
+        {
+            id: 30,
+            mode: 'multipleChoice',
+            questions: level30MultipleChoiceBank,
+        },
+        ...generateLevels('multipleChoice', multipleChoiceBank).slice(30)
+    ],
+    stories: [
+        {
+            id: 1,
+            mode: 'stories',
+            questions: storiesBank,
+        },
+        {
+            id: 2,
+            mode: 'stories',
+            questions: level2StoriesBank,
+        },
+        {
+            id: 3,
+            mode: 'stories',
+            questions: level3StoriesBank,
+        },
+        {
+            id: 4,
+            mode: 'stories',
+            questions: level4StoriesBank,
+        },
+        {
+            id: 5,
+            mode: 'stories',
+            questions: level5StoriesBank,
+        },
+        {
+            id: 6,
+            mode: 'stories',
+            questions: level6StoriesBank,
+        },
+        {
+            id: 7,
+            mode: 'stories',
+            questions: level7StoriesBank,
+        },
+        {
+            id: 8,
+            mode: 'stories',
+            questions: level8StoriesBank,
+        },
+        {
+            id: 9,
+            mode: 'stories',
+            questions: level9StoriesBank,
+        },
+        {
+            id: 10,
+            mode: 'stories',
+            questions: level10StoriesBank,
+        },
+        {
+            id: 11,
+            mode: 'stories',
+            questions: level11StoriesBank,
+        },
+        {
+            id: 12,
+            mode: 'stories',
+            questions: level12StoriesBank,
+        },
+        {
+            id: 13,
+            mode: 'stories',
+            questions: level13StoriesBank,
+        },
+        {
+            id: 14,
+            mode: 'stories',
+            questions: level14StoriesBank,
+        },
+        {
+            id: 15,
+            mode: 'stories',
+            questions: level15StoriesBank,
+        },
+        {
+            id: 16,
+            mode: 'stories',
+            questions: level16StoriesBank,
+        },
+        {
+            id: 17,
+            mode: 'stories',
+            questions: level17StoriesBank,
+        },
+        {
+            id: 18,
+            mode: 'stories',
+            questions: level18StoriesBank,
+        },
+        {
+            id: 19,
+            mode: 'stories',
+            questions: level19StoriesBank,
+        },
+        {
+            id: 20,
+            mode: 'stories',
+            questions: level20StoriesBank,
+        },
+        {
+            id: 21,
+            mode: 'stories',
+            questions: level21StoriesBank,
+        },
+        {
+            id: 22,
+            mode: 'stories',
+            questions: level22StoriesBank,
+        },
+        {
+            id: 23,
+            mode: 'stories',
+            questions: level23StoriesBank,
+        },
+        {
+            id: 24,
+            mode: 'stories',
+            questions: level24StoriesBank,
+        },
+        {
+            id: 25,
+            mode: 'stories',
+            questions: level25StoriesBank,
+        },
+        {
+            id: 26,
+            mode: 'stories',
+            questions: level26StoriesBank,
+        },
+        {
+            id: 27,
+            mode: 'stories',
+            questions: level27StoriesBank,
+        },
+        {
+            id: 28,
+            mode: 'stories',
+            questions: level28StoriesBank,
+        },
+        {
+            id: 29,
+            mode: 'stories',
+            questions: level29StoriesBank,
+        },
+        {
+            id: 30,
+            mode: 'stories',
+            questions: level30StoriesBank,
+        },
+        ...generateLevels('stories', storiesBank).slice(30)
+    ],
 };
