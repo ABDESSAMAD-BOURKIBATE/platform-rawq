@@ -1,10 +1,8 @@
-import { CountryDetail } from '../worldTimesData';
+import { CountryDetail } from '../../worldTimesData';
 
 export const guineaBissau: CountryDetail = {
     "id": "Guinea-Bissau",
-    "city": "",
-    "cityAr": "",
-    "governance": "---",
+"governance": "---",
     "governanceAr": "---",
     "ruler": "---",
     "rulerAr": "---",

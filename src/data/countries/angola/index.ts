@@ -1,10 +1,8 @@
-import { CountryDetail } from '../worldTimesData';
+import { CountryDetail } from '../../worldTimesData';
 
 export const angola: CountryDetail = {
     "id": "Angola",
-    "city": "",
-    "cityAr": "",
-    "governance": "---",
+"governance": "---",
     "governanceAr": "---",
     "ruler": "---",
     "rulerAr": "---",

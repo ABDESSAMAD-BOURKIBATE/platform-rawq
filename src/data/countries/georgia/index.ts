@@ -1,10 +1,8 @@
-import { CountryDetail } from '../worldTimesData';
+import { CountryDetail } from '../../worldTimesData';
 
 export const georgia: CountryDetail = {
     "id": "Georgia",
-    "city": "",
-    "cityAr": "",
-    "governance": "---",
+"governance": "---",
     "governanceAr": "---",
     "ruler": "---",
     "rulerAr": "---",

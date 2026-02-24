@@ -1,10 +1,8 @@
-import { CountryDetail } from '../worldTimesData';
+import { CountryDetail } from '../../worldTimesData';
 
 export const portugal: CountryDetail = {
     "id": "Portugal",
-    "city": "",
-    "cityAr": "",
-    "governance": "---",
+"governance": "---",
     "governanceAr": "---",
     "ruler": "---",
     "rulerAr": "---",

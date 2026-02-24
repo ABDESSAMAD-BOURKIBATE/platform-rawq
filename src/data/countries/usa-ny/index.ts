@@ -1,4 +1,4 @@
-import { CountryDetail } from '../worldTimesData';
+import { CountryDetail } from '../../worldTimesData';
 
 export const usaNy: CountryDetail = {
     "id": "USA (NY)",
