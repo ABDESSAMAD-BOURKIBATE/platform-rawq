@@ -11,6 +11,8 @@ export interface CountryDetail {
     muslimSafetyPercentage: number;
     location: string;
     locationAr: string;
+    features: string[];
+    featuresAr: string[];
 }
 
 export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
@@ -26,7 +28,9 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 32 مليون (93%)",
         muslimSafetyPercentage: 100,
         location: "Middle East, Western Asia",
-        locationAr: "الشرق الأوسط، غرب آسيا"
+        locationAr: "الشرق الأوسط، غرب آسيا",
+        features: ["Two Holy Mosques", "Oil Resources", "Vision 2030", "Ancient Nabataean Sites"],
+        featuresAr: ["الحرمين الشريفين", "الموارد النفطية", "رؤية 2030", "المواقع النبطية القديمة"]
     },
     "Morocco": {
         id: "Morocco",
@@ -40,7 +44,9 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 37 مليون (99%)",
         muslimSafetyPercentage: 100,
         location: "North Africa, Maghreb",
-        locationAr: "شمال أفريقيا، المغرب العربي"
+        locationAr: "شمال أفريقيا، المغرب العربي",
+        features: ["Andalusian Architecture", "Atlas Mountains", "Sahara Desert", "Traditional Tea & Cuisine"],
+        featuresAr: ["العمارة الأندلسية", "جبال الأطلس", "الصحراء الكبرى", "الشاي والمطبخ المغربي"]
     },
     "UAE": {
         id: "UAE",
@@ -48,13 +54,15 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         citiesAr: ["أبوظبي", "دبي", "الشارقة", "عجمان", "العين"],
         governance: "Federal Elective Monarchy",
         governanceAr: "ملكية اتحادية وراثية",
-        ruler: "Sheikh Mohamed bin Zayed Al Nahyan",
+        ruler: "Sheikh Mohamed bin Zayed Al Nanhyan",
         rulerAr: "الشيخ محمد بن زايد آل نهيان",
         muslimPopulation: "approx. 7.5 million (76%)",
         muslimPopulationAr: "حوالي 7.5 مليون (76%)",
         muslimSafetyPercentage: 100,
         location: "Middle East, Arabian Peninsula",
-        locationAr: "الشرق الأوسط، الجزيرة العربية"
+        locationAr: "الشرق الأوسط، الجزيرة العربية",
+        features: ["Burj Khalifa", "Global Trade Hub", "Space Program", "Palm Jumeirah"],
+        featuresAr: ["برج خليفة", "مركز تجارة عالمي", "برنامج الفضاء", "نخلة الجميرة"]
     },
     "Egypt": {
         id: "Egypt",
@@ -68,7 +76,9 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 95 مليون (90%)",
         muslimSafetyPercentage: 98,
         location: "North Africa",
-        locationAr: "شمال أفريقيا"
+        locationAr: "شمال أفريقيا",
+        features: ["Pyramids of Giza", "Nile River", "Al-Azhar University", "Ancient History"],
+        featuresAr: ["أهرامات الجيزة", "نهر النيل", "جامعة الأزهر", "التاريخ والآثار القديمة"]
     },
     "Turkey": {
         id: "Turkey",
@@ -82,49 +92,9 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 83 مليون (99%)",
         muslimSafetyPercentage: 99,
         location: "Western Asia & Southeast Europe",
-        locationAr: "غرب آسيا وجنوب شرق أوروبا"
-    },
-    "Qatar": {
-        id: "Qatar",
-        cities: ["Doha", "Al Wakrah", "Al Khor", "Al Rayyan", "Madinat ash Shamal"],
-        citiesAr: ["الدوحة", "الوكرة", "الخور", "الريان", "مدينة الشمال"],
-        governance: "Semi-constitutional Monarchy",
-        governanceAr: "ملكية شبه دستورية",
-        ruler: "Sheikh Tamim bin Hamad Al Thani",
-        rulerAr: "الشيخ تميم بن حمد آل ثاني",
-        muslimPopulation: "approx. 2.1 million (67%)",
-        muslimPopulationAr: "حوالي 2.1 مليون (67%)",
-        muslimSafetyPercentage: 100,
-        location: "Middle East, Arabian Peninsula",
-        locationAr: "الشرق الأوسط، الجزيرة العربية"
-    },
-    "Indonesia": {
-        id: "Indonesia",
-        cities: ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang"],
-        citiesAr: ["جاكرتا", "سورابايا", "باندونج", "ميدان", "سمارانج"],
-        governance: "Republic",
-        governanceAr: "جمهورية",
-        ruler: "Prabowo Subianto",
-        rulerAr: "برابوو سوبيانتو",
-        muslimPopulation: "approx. 231 million (87%)",
-        muslimPopulationAr: "حوالي 231 مليون (87%)",
-        muslimSafetyPercentage: 97,
-        location: "Southeast Asia",
-        locationAr: "جنوب شرق آسيا"
-    },
-    "Malaysia": {
-        id: "Malaysia",
-        cities: ["Kuala Lumpur", "George Town", "Ipoh", "Shah Alam", "Johor Bahru"],
-        citiesAr: ["كوالالمبور", "جورج تاون", "إيبوه", "شاه علم", "جوهر بهرو"],
-        governance: "Federal Constitutional Monarchy",
-        governanceAr: "ملكية دستورية اتحادية",
-        ruler: "Sultan Ibrahim ibni Sultan Iskandar",
-        rulerAr: "السلطان إبراهيم بن السلطان إسكندر",
-        muslimPopulation: "approx. 20 million (63%)",
-        muslimPopulationAr: "حوالي 20 مليون (63%)",
-        muslimSafetyPercentage: 100,
-        location: "Southeast Asia",
-        locationAr: "جنوب شرق آسيا"
+        locationAr: "غرب آسيا وجنوب شرق أوروبا",
+        features: ["Hagia Sophia", "Bridge between East & West", "Turkish Textile Industry", "Diverse Landscapes"],
+        featuresAr: ["آيا صوفيا", "جسر بين الشرق والغرب", "صناعة المنسوجات", "تنوع التضاريس"]
     },
     "Palestine": {
         id: "Palestine",
@@ -138,7 +108,9 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 5 مليون (93%)",
         muslimSafetyPercentage: 20,
         location: "Middle East, Levant",
-        locationAr: "الشرق الأوسط، بلاد الشام"
+        locationAr: "الشرق الأوسط، بلاد الشام",
+        features: ["Al-Aqsa Mosque", "Church of the Holy Sepulchre", "Old City of Jerusalem", "Olive Groves"],
+        featuresAr: ["المسجد الأقصى", "كنيسة القيامة", "البلدة القديمة بالقدس", "بساتين الزيتون"]
     },
     "Algeria": {
         id: "Algeria",
@@ -152,21 +124,41 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 44 مليون (99%)",
         muslimSafetyPercentage: 100,
         location: "North Africa, Maghreb",
-        locationAr: "شمال أفريقيا، المغرب العربي"
+        locationAr: "شمال أفريقيا، المغرب العربي",
+        features: ["Largest country in Africa", "Saharan Heritage", "Mediterranean Coastline", "Rich History"],
+        featuresAr: ["أكبر دولة في أفريقيا", "التراث الصحراوي", "الساحل المتوسطي", "تاريخ نضالي عريق"]
     },
-    "Tunisia": {
-        id: "Tunisia",
-        cities: ["Tunis", "Sfax", "Sousse", "Kairouan", "Bizerte"],
-        citiesAr: ["تونس العاصمة", "صفاقس", "سوسة", "القيروان", "بنزرت"],
-        governance: "Unitary Presidential Republic",
-        governanceAr: "جمهورية رئاسية موحدة",
-        ruler: "Kais Saied",
-        rulerAr: "قيس سعيد",
-        muslimPopulation: "approx. 11.5 million (99%)",
-        muslimPopulationAr: "حوالي 11.5 مليون (99%)",
+    "Indonesia": {
+        id: "Indonesia",
+        cities: ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang"],
+        citiesAr: ["جاكرتا", "سورابايا", "باندونج", "ميدان", "سمارانج"],
+        governance: "Republic",
+        governanceAr: "جمهورية",
+        ruler: "Prabowo Subianto",
+        rulerAr: "برابوو سوبيانتو",
+        muslimPopulation: "approx. 231 million (87%)",
+        muslimPopulationAr: "حوالي 231 مليون (87%)",
+        muslimSafetyPercentage: 97,
+        location: "Southeast Asia",
+        locationAr: "جنوب شرق آسيا",
+        features: ["Largest Muslim-majority country", "Archipelago (17k+ islands)", "Tropical Biodiversity", "Borobudur Temple"],
+        featuresAr: ["أكبر بلد إسلامي ديموغرافياً", "أرخبيل شاسع", "تنوع بيولوجي استوائي", "معبد بوروبودور التاريخي"]
+    },
+    "Malaysia": {
+        id: "Malaysia",
+        cities: ["Kuala Lumpur", "George Town", "Ipoh", "Shah Alam", "Johor Bahru"],
+        citiesAr: ["كوالالمبور", "جورج تاون", "إيبوه", "شاه علم", "جوهر بهرو"],
+        governance: "Federal Constitutional Monarchy",
+        governanceAr: "ملكية دستورية اتحادية",
+        ruler: "Sultan Ibrahim ibni Sultan Iskandar",
+        rulerAr: "السلطان إبراهيم بن السلطان إسكندر",
+        muslimPopulation: "approx. 20 million (63%)",
+        muslimPopulationAr: "حوالي 20 مليون (63%)",
         muslimSafetyPercentage: 100,
-        location: "North Africa, Maghreb",
-        locationAr: "شمال أفريقيا، المغرب العربي"
+        location: "Southeast Asia",
+        locationAr: "جنوب شرق آسيا",
+        features: ["Petronas Twin Towers", "Multiculturalism", "Tropical Rainforests", "Advanced Tech Sector"],
+        featuresAr: ["برجا بتروناس التوأم", "التنوع الثقافي", "الغابات الاستوائية", "قطاع تقني متقدم"]
     },
     "Kuwait": {
         id: "Kuwait",
@@ -180,21 +172,25 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 3.5 مليون (74%)",
         muslimSafetyPercentage: 100,
         location: "Middle East, Arabian Peninsula",
-        locationAr: "الشرق الأوسط، الجزيرة العربية"
+        locationAr: "الشرق الأوسط، الجزيرة العربية",
+        features: ["Kuwait Towers", "Old Souq Sharq", "Traditional Maritime Heritage", "Rich Oil Industry"],
+        featuresAr: ["أبراج الكويت", "سوق شرق القديم", "التراث البحري العريق", "صناعة النفط المزدهرة"]
     },
-    "Oman": {
-        id: "Oman",
-        cities: ["Muscat", "Salalah", "Sohar", "Nizwa", "Sur"],
-        citiesAr: ["مسقط", "صلالة", "صحار", "نزوى", "صور"],
-        governance: "Absolute Monarchy",
-        governanceAr: "ملكية مطلقة",
-        ruler: "Haitham bin Tariq",
-        rulerAr: "هيثم بن طارق",
-        muslimPopulation: "approx. 4.5 million (86%)",
-        muslimPopulationAr: "حوالي 4.5 مليون (86%)",
+    "Qatar": {
+        id: "Qatar",
+        cities: ["Doha", "Al Wakrah", "Al Khor", "Al Rayyan", "Madinat ash Shamal"],
+        citiesAr: ["الدوحة", "الوكرة", "الخور", "الريان", "مدينة الشمال"],
+        governance: "Semi-constitutional Monarchy",
+        governanceAr: "ملكية شبه دستورية",
+        ruler: "Sheikh Tamim bin Hamad Al Thani",
+        rulerAr: "الشيخ تميم بن حمد آل ثاني",
+        muslimPopulation: "approx. 2.1 million (67%)",
+        muslimPopulationAr: "حوالي 2.1 مليون (67%)",
         muslimSafetyPercentage: 100,
         location: "Middle East, Arabian Peninsula",
-        locationAr: "الشرق الأوسط، الجزيرة العربية"
+        locationAr: "الشرق الأوسط، الجزيرة العربية",
+        features: ["2022 FIFA World Cup Host", "Modern Skyline", "Museum of Islamic Art", "High GDP per Capita"],
+        featuresAr: ["استضافة مونديال 2022", "أفق الدوحة الحديث", "متحف الفن الإسلامي", "أعلى دخل للفرد"]
     },
     "Jordan": {
         id: "Jordan",
@@ -208,7 +204,56 @@ export const COUNTRY_DETAILS: Record<string, CountryDetail> = {
         muslimPopulationAr: "حوالي 10 مليون (97%)",
         muslimSafetyPercentage: 100,
         location: "Middle East, Levant",
-        locationAr: "الشرق الأوسط، بلاد الشام"
+        locationAr: "الشرق الأوسط، بلاد الشام",
+        features: ["Petra (World Wonder)", "Wadi Rum", "Dead Sea", "Roman Ruins"],
+        featuresAr: ["مدينة البتراء (من العجائب)", "وادي رم", "البحر الميت", "الآثار الرومانية"]
+    },
+    "USA (NY)": {
+        id: "USA (NY)",
+        cities: ["New York City", "Buffalo", "Rochester", "Yonkers", "Syracuse"],
+        citiesAr: ["مدينة نيويورك", "بافالو", "روتشستر", "يونكيرس", "سيراكيوز"],
+        governance: "Federal Presidential Republic",
+        governanceAr: "جمهورية رئاسية اتحادية",
+        ruler: "Executive Leadership",
+        rulerAr: "القيادة التنفيذية",
+        muslimPopulation: "approx. 1 million in NY",
+        muslimPopulationAr: "حوالي مليون نسمة في نيويورك",
+        muslimSafetyPercentage: 95,
+        location: "North America, East Coast",
+        locationAr: "أمريكا الشمالية، الساحل الشرقي",
+        features: ["Statue of Liberty", "Financial District (Wall St)", "Times Square", "Cultural Diversity"],
+        featuresAr: ["تمثال الحرية", "الحي المالي (وول ستريت)", "تايمز سكوير", "التنوع الثقافي"]
+    },
+    "UK": {
+        id: "UK",
+        cities: ["London", "Manchester", "Birmingham", "Leeds", "Glasgow"],
+        citiesAr: ["لندن", "مانشستر", "برمنغهام", "ليدز", "غلاسكو"],
+        governance: "Parliamentary Monarchy",
+        governanceAr: "ملكية برلمانية",
+        ruler: "King Charles III",
+        rulerAr: "الملك تشارلز الثالث",
+        muslimPopulation: "approx. 4 million (6%)",
+        muslimPopulationAr: "حوالي 4 مليون (6%)",
+        muslimSafetyPercentage: 94,
+        location: "Western Europe, Island",
+        locationAr: "أوروبا الغربية، جزيرة",
+        features: ["Big Ben", "London Eye", "Premier League", "Historical Landmarks"],
+        featuresAr: ["ساعة بيغ بن", "لندن آي", "الدوري الإنجليزي الممتاز", "المعالم التاريخية"]
+    },
+    "France": {
+        id: "France",
+        cities: ["Paris", "Lyon", "Marseille", "Toulouse", "Nice"],
+        citiesAr: ["باريس", "ليون", "مارسيليا", "تولوز", "نيس"],
+        governance: "Semi-presidential Republic",
+        governanceAr: "جمهورية شبه رئاسية",
+        ruler: "Emmanuel Macron",
+        rulerAr: "إيمانويل ماكرون",
+        muslimPopulation: "approx. 5.7 million (9%)",
+        muslimPopulationAr: "حوالي 5.7 مليون (9%)",
+        muslimSafetyPercentage: 90,
+        location: "Western Europe",
+        locationAr: "أوروبا الغربية",
+        features: ["Eiffel Tower", "Louvre Museum", "World-class Gastronomy", "Fashion Capitals"],
+        featuresAr: ["برج إيفل", "متحف اللوفر", "المطبخ العالمي", "عواصم الموضة"]
     }
-    // More can be added as needed
 };

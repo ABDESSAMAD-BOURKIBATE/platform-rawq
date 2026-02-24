@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe, MagnifyingGlass, GlobeHemisphereWest, GlobeHemisphereEast, MapTrifold, MapPin, Compass } from '@phosphor-icons/react';
-import { CountryDetailModal } from '../components/ui/CountryDetailModal';
+import { Globe, MagnifyingGlass, GlobeHemisphereWest, GlobeHemisphereEast, MapTrifold, MapPin, Compass, Users, ShieldCheck, Crown, Clock, Buildings } from '@phosphor-icons/react';
 import { COUNTRY_DETAILS } from '../data/worldTimesData';
 
 interface CountryTime {
@@ -248,7 +247,7 @@ export function WorldClockPage() {
     const [currentTick, setCurrentTick] = useState(0);
     const [continent, setContinent] = useState('all');
     const [search, setSearch] = useState('');
-    const [selectedCountry, setSelectedCountry] = useState<any>(null);
+    const [expandedCountryId, setExpandedCountryId] = useState<string | null>(null);
 
     // Tick every second
     useEffect(() => {
@@ -345,6 +344,24 @@ export function WorldClockPage() {
                     const fullTime = new Date().toLocaleTimeString('en-US', {
                         timeZone: country.timezone, hour: '2-digit', minute: '2-digit', hour12: true,
                     });
+                    const isExpanded = expandedCountryId === country.name;
+                    const detail = COUNTRY_DETAILS[country.name];
+                    const isAr = i18n.language === 'ar';
+
+                    let diffText = '---';
+                    try {
+                        const now = new Date();
+                        const targetTimeStr = now.toLocaleTimeString('en-US', { timeZone: country.timezone, hour12: false });
+                        const localHour = now.getHours();
+                        const targetHour = parseInt(targetTimeStr.split(':')[0]);
+                        const diff = targetHour - localHour;
+                        diffText = Number.isNaN(diff) ? '---' : diff === 0 ? t('worldClock.noDiff') : diff > 0 ? `+${diff} ${t('worldClock.hours')}` : `${diff} ${t('worldClock.hours')}`;
+                    } catch (e) {
+                        console.error("Timezone error:", e);
+                    }
+
+                    const innerBg = info.isDay ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.2)';
+                    const innerBorder = info.isDay ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.1)';
 
                     return (
                         <div
@@ -352,33 +369,25 @@ export function WorldClockPage() {
                             className={`animate-scale-in stagger-${Math.min(i % 6 + 1, 6)}`}
                             style={{
                                 position: 'relative',
-                                height: 160,
+                                minHeight: 160,
+                                height: isExpanded ? 'auto' : 160,
+                                gridColumn: isExpanded ? '1 / -1' : 'auto',
                                 borderRadius: 'var(--radius-xl)',
                                 overflow: 'hidden',
                                 background: info.gradient,
-                                boxShadow: '0 10px 20px rgba(0,0,0,0.15)',
-                                color: info.isDay ? '#1a202c' : '#ffffff', // Dynamic text color
+                                boxShadow: isExpanded ? '0 15px 30px rgba(0,0,0,0.2)' : '0 10px 20px rgba(0,0,0,0.15)',
+                                color: info.isDay ? '#1a202c' : '#ffffff',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
+                                justifyContent: isExpanded ? 'flex-start' : 'space-between',
                                 padding: 'var(--space-md)',
                                 cursor: 'pointer',
-                                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             }}
-                            onClick={() => setSelectedCountry(country)}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                                e.currentTarget.style.boxShadow = '0 15px 30px rgba(0,0,0,0.25)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'none';
-                                e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)';
-                            }}
+                            onClick={() => setExpandedCountryId(isExpanded ? null : country.name)}
                         >
-                            {/* Decorative Elements */}
-
-                            {/* Sun/Moon */}
+                            {/* Decorative Sun/Moon */}
                             <div style={{
                                 position: 'absolute',
                                 top: -20,
@@ -394,94 +403,164 @@ export function WorldClockPage() {
                                 opacity: 0.9,
                             }} />
 
-                            {/* Clouds (Pure CSS) */}
-                            <div style={{
-                                position: 'absolute',
-                                bottom: -10,
-                                right: 60,
-                                width: 80,
-                                height: 40,
-                                background: 'rgba(255,255,255,0.3)',
-                                borderRadius: '40px',
-                                zIndex: 1,
-                                filter: 'blur(4px)',
-                            }} />
-                            <div style={{
-                                position: 'absolute',
-                                bottom: 20,
-                                left: -20,
-                                width: 100,
-                                height: 50,
-                                background: 'rgba(255,255,255,0.2)',
-                                borderRadius: '50px',
-                                zIndex: 1,
-                                filter: 'blur(8px)',
-                            }} />
-
-                            {/* Top Badge (Period & Flag) */}
-                            <div style={{
-                                zIndex: 10,
-                                background: info.isDay ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.2)',
-                                backdropFilter: 'blur(8px)',
-                                borderRadius: 'var(--radius-full)',
-                                padding: '4px 12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 8,
-                                alignSelf: 'center',
-                                border: info.isDay ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.1)',
-                            }}>
-                                <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{t(info.periodKey)}</span>
-                                <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{country.flag}</span>
-                            </div>
-
-                            {/* Main Content */}
-                            <div className="flex flex-col items-center text-center" style={{ zIndex: 10, marginTop: 'auto', marginBottom: 'auto' }}>
-                                <h2 style={{
-                                    fontSize: '1.4rem', // Reduced from 1.8rem
-                                    fontWeight: 700,
-                                    marginBottom: 4, // Added slight margin
-                                    textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                                    lineHeight: 1.2
+                            {/* Header Section (Always Visible) */}
+                            <div className="flex flex-col items-center w-full" style={{ zIndex: 10, height: isExpanded ? 'auto' : '100%', justifyContent: 'space-between' }}>
+                                {/* Top Badge */}
+                                <div style={{
+                                    background: info.isDay ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.2)',
+                                    backdropFilter: 'blur(8px)',
+                                    borderRadius: 'var(--radius-full)',
+                                    padding: '4px 12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    border: info.isDay ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.1)',
+                                    marginBottom: isExpanded ? 'var(--space-md)' : 0
                                 }}>
-                                    {/* @ts-ignore */}
-                                    {country[nameField]}
-                                </h2>
-                                <span style={{
-                                    fontSize: '0.65rem', // Reduced from 0.75rem
-                                    letterSpacing: 1.5, // Reduced letter spacing
-                                    textTransform: 'uppercase',
-                                    opacity: 0.9,
-                                    fontFamily: 'sans-serif'
+                                    <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>{t(info.periodKey)}</span>
+                                    <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{country.flag}</span>
+                                </div>
+
+                                {/* Main Title */}
+                                <div className="flex flex-col items-center text-center">
+                                    <h2 style={{
+                                        fontSize: '1.4rem',
+                                        fontWeight: 700,
+                                        marginBottom: 4,
+                                        textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                        lineHeight: 1.2
+                                    }}>
+                                        {/* @ts-ignore */}
+                                        {country[nameField]}
+                                    </h2>
+                                    <span style={{
+                                        fontSize: '0.65rem',
+                                        letterSpacing: 1.5,
+                                        textTransform: 'uppercase',
+                                        opacity: 0.9,
+                                        fontFamily: 'sans-serif',
+                                        marginBottom: isExpanded ? 'var(--space-md)' : 0
+                                    }}>
+                                        {/* @ts-ignore */}
+                                        {country[cityField]}
+                                    </span>
+                                </div>
+
+                                {/* Time Display */}
+                                <div style={{
+                                    fontSize: '0.9rem',
+                                    fontWeight: 500,
+                                    background: innerBg,
+                                    padding: '2px 8px',
+                                    borderRadius: 'var(--radius-sm)'
                                 }}>
-                                    {/* @ts-ignore */}
-                                    {country[cityField]}
-                                </span>
+                                    {fullTime}
+                                </div>
                             </div>
 
-                            {/* Time Display (Optional, can be added if needed, user didn't explicitly ask for time digits but usually expected) */}
-                            <div style={{
-                                zIndex: 10,
-                                fontSize: '0.9rem',
-                                fontWeight: 500,
-                                background: info.isDay ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.2)',
-                                padding: '2px 8px',
-                                borderRadius: 'var(--radius-sm)'
-                            }}>
-                                {fullTime}
-                            </div>
+                            {/* Expanded Details Section */}
+                            {isExpanded && (
+                                <div className="animate-fade-in w-full text-left" style={{
+                                    zIndex: 10,
+                                    marginTop: 'var(--space-lg)',
+                                    paddingTop: 'var(--space-md)',
+                                    borderTop: `1px solid ${innerBorder}`
+                                }} dir={isAr ? 'rtl' : 'ltr'}>
 
+                                    {/* Quick Stats Grid */}
+                                    <div className="grid grid-2 gap-sm mb-md">
+                                        <div className="p-sm flex flex-col justify-center text-center" style={{ background: innerBg, borderRadius: 'var(--radius-lg)', minHeight: '60px' }}>
+                                            <div className="flex items-center justify-center gap-xs mb-xs" style={{ opacity: 0.8 }}>
+                                                <Clock size={14} weight="duotone" />
+                                                <span style={{ fontSize: '0.7rem' }}>{t('worldClock.timeDiff')}</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{diffText}</div>
+                                        </div>
+                                        <div className="p-sm flex flex-col justify-center text-center" style={{ background: innerBg, borderRadius: 'var(--radius-lg)', minHeight: '60px' }}>
+                                            <div className="flex items-center justify-center gap-xs mb-xs" style={{ opacity: 0.8 }}>
+                                                <Globe size={14} weight="duotone" />
+                                                <span style={{ fontSize: '0.7rem' }}>{t('worldClock.location')}</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.8rem', fontWeight: 700, lineHeight: 1.2 }}>{detail ? (isAr ? detail.locationAr : detail.location) : country.continent}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Muslim Population & Safety */}
+                                    <div className="flex flex-col gap-xs mb-md">
+                                        <h3 className="flex items-center gap-sm" style={{ fontSize: '0.9rem', fontWeight: 700 }}>
+                                            <Users size={16} weight="duotone" />
+                                            {t('worldClock.modal.community')}
+                                        </h3>
+                                        <div className="p-sm" style={{ background: innerBg, borderRadius: 'var(--radius-lg)' }}>
+                                            <div className="flex justify-between items-start mb-sm">
+                                                <span style={{ fontSize: '0.75rem', opacity: 0.8 }}>{t('worldClock.modal.approxPopulation')}</span>
+                                                <span style={{ fontWeight: 700, fontSize: '0.85rem' }}>{detail ? (isAr ? detail.muslimPopulationAr : detail.muslimPopulation) : '---'}</span>
+                                            </div>
+                                            <div className="flex flex-col gap-xs">
+                                                <div className="flex justify-between" style={{ fontSize: '0.75rem', opacity: 0.9 }}>
+                                                    <div className="flex items-center gap-xs">
+                                                        <ShieldCheck size={14} weight="fill" color={info.isDay ? "#059669" : "#34d399"} />
+                                                        <span>{t('worldClock.modal.safetyLevel')}</span>
+                                                    </div>
+                                                    <span style={{ fontWeight: 700 }}>{detail ? detail.muslimSafetyPercentage : 0}%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Governance & Ruler */}
+                                    <div className="flex flex-col gap-xs mb-md">
+                                        <h3 className="flex items-center gap-sm" style={{ fontSize: '0.9rem', fontWeight: 700 }}>
+                                            <Crown size={16} weight="duotone" />
+                                            {t('worldClock.modal.governance')}
+                                        </h3>
+                                        <div className="flex flex-col gap-sm p-sm" style={{ background: innerBg, borderRadius: 'var(--radius-lg)' }}>
+                                            <div className="flex items-center gap-sm">
+                                                <Buildings size={18} weight="duotone" style={{ opacity: 0.8 }} />
+                                                <div className="flex-1">
+                                                    <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>{t('worldClock.modal.governanceType')}</div>
+                                                    <div style={{ fontWeight: 700, fontSize: '0.85rem', lineHeight: 1.3 }}>{detail ? (isAr ? detail.governanceAr : detail.governance) : '---'}</div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-sm mt-xs">
+                                                <Crown size={18} weight="duotone" style={{ opacity: 0.8 }} />
+                                                <div className="flex-1">
+                                                    <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>{t('worldClock.modal.ruler')}</div>
+                                                    <div style={{ fontWeight: 700, fontSize: '0.85rem', lineHeight: 1.3 }}>{detail ? (isAr ? detail.rulerAr : detail.ruler) : '---'}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Notable Features */}
+                                    <div className="flex flex-col gap-xs">
+                                        <h3 className="flex items-center gap-sm" style={{ fontSize: '0.9rem', fontWeight: 700 }}>
+                                            <MapPin size={16} weight="duotone" />
+                                            {isAr ? 'بماذا تتميز هذه الدولة؟' : 'Notable Features'}
+                                        </h3>
+                                        <div className="flex flex-wrap gap-xs">
+                                            {detail?.features ? (isAr ? detail.featuresAr : detail.features).map(feature => (
+                                                <span key={feature} style={{
+                                                    fontSize: '0.75rem',
+                                                    padding: '4px 10px',
+                                                    background: 'rgba(0,0,0,0.1)',
+                                                    border: `1px solid ${innerBorder}`,
+                                                    borderRadius: 'var(--radius-full)',
+                                                    whiteSpace: 'nowrap',
+                                                    fontWeight: 600
+                                                }}>
+                                                    {feature}
+                                                </span>
+                                            )) : <span style={{ opacity: 0.8, fontSize: '0.8rem' }}>{t('worldClock.modal.noData')}</span>}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            )}
                         </div>
                     );
                 })}
             </div>
-
-            {/* Country Detail Modal */}
-            <CountryDetailModal
-                country={selectedCountry}
-                detail={selectedCountry ? COUNTRY_DETAILS[selectedCountry.name] : undefined}
-                onClose={() => setSelectedCountry(null)}
-            />
         </div>
     );
 }

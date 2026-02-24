@@ -34,14 +34,14 @@ export function CountryDetailModal({ country, detail, onClose }: CountryDetailMo
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-lg overflow-hidden animate-scale-in"
+                className="relative w-[92%] max-w-[380px] overflow-hidden animate-scale-in"
                 style={{
                     background: 'var(--bg-glass)',
                     backdropFilter: 'blur(16px)',
-                    borderRadius: 'var(--radius-2xl)',
+                    borderRadius: 'var(--radius-xl)',
                     border: '1px solid var(--glass-border)',
                     boxShadow: 'var(--shadow-lg)',
-                    maxHeight: '90vh',
+                    maxHeight: '85vh',
                     display: 'flex',
                     flexDirection: 'column'
                 }}
@@ -49,8 +49,8 @@ export function CountryDetailModal({ country, detail, onClose }: CountryDetailMo
             >
                 {/* Header with Background */}
                 <div style={{
-                    height: '140px',
-                    background: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('https://source.unsplash.com/featured/?${country.name},landscape')`,
+                    height: '110px',
+                    background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('https://source.unsplash.com/featured/?${country.name},landscape')`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     position: 'relative',
@@ -64,61 +64,61 @@ export function CountryDetailModal({ country, detail, onClose }: CountryDetailMo
                         <X size={20} weight="bold" />
                     </button>
 
-                    <div className="absolute bottom-md left-md right-md flex items-end gap-md">
-                        <span style={{ fontSize: '3rem', lineHeight: 1 }}>{country.flag}</span>
-                        <div>
-                            <h2 style={{ color: 'white', margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>
+                    <div className="absolute bottom-sm left-sm right-sm flex items-end justify-between gap-sm">
+                        <div style={{ flex: 1 }}>
+                            <h2 style={{ color: 'white', margin: 0, fontSize: '1.25rem', fontWeight: 800, lineHeight: 1.2 }}>
                                 {isAr ? country.nameAr : country.name}
                             </h2>
-                            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1 }}>
+                            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                                 {isAr ? country.cityAr : country.city}
                             </span>
                         </div>
+                        <span style={{ fontSize: '2.5rem', lineHeight: 1, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}>{country.flag}</span>
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-lg overflow-y-auto" style={{ flex: 1 }}>
-                    <div className="flex flex-col gap-lg">
+                <div className="p-md overflow-y-auto" style={{ flex: 1 }}>
+                    <div className="flex flex-col gap-md">
 
                         {/* Quick Stats Grid */}
-                        <div className="grid grid-2 gap-md">
-                            <div className="p-md" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)' }}>
-                                <div className="flex items-center gap-sm mb-xs text-muted">
-                                    <Clock size={16} weight="duotone" />
-                                    <span style={{ fontSize: '0.75rem' }}>{t('worldClock.timeDiff')}</span>
+                        <div className="grid grid-2 gap-xs">
+                            <div className="p-sm flex flex-col justify-center text-center" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', minHeight: '70px' }}>
+                                <div className="flex items-center justify-center gap-xs mb-xs text-muted">
+                                    <Clock size={14} weight="duotone" />
+                                    <span style={{ fontSize: '0.7rem' }}>{t('worldClock.timeDiff')}</span>
                                 </div>
-                                <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--accent-gold)' }}>{diffText}</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent-gold)' }}>{diffText}</div>
                             </div>
-                            <div className="p-md" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)' }}>
-                                <div className="flex items-center gap-sm mb-xs text-muted">
-                                    <Globe size={16} weight="duotone" />
-                                    <span style={{ fontSize: '0.75rem' }}>{t('worldClock.location')}</span>
+                            <div className="p-sm flex flex-col justify-center text-center" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)', minHeight: '70px' }}>
+                                <div className="flex items-center justify-center gap-xs mb-xs text-muted">
+                                    <Globe size={14} weight="duotone" />
+                                    <span style={{ fontSize: '0.7rem' }}>{t('worldClock.location')}</span>
                                 </div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{detail ? (isAr ? detail.locationAr : detail.location) : country.continent}</div>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 600, lineHeight: 1.2 }}>{detail ? (isAr ? detail.locationAr : detail.location) : country.continent}</div>
                             </div>
                         </div>
 
                         {/* Muslim Population & Safety */}
-                        <div className="flex flex-col gap-sm">
-                            <h3 className="flex items-center gap-sm" style={{ fontSize: '1rem', fontWeight: 700 }}>
-                                <Users size={20} weight="duotone" color="var(--accent-gold)" />
+                        <div className="flex flex-col gap-xs">
+                            <h3 className="flex items-center gap-sm" style={{ fontSize: '0.9rem', fontWeight: 700 }}>
+                                <Users size={18} weight="duotone" color="var(--accent-gold)" />
                                 {t('worldClock.modal.community')}
                             </h3>
-                            <div className="p-md" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--glass-border)' }}>
-                                <div className="flex justify-between items-center mb-sm">
-                                    <span className="text-muted" style={{ fontSize: '0.85rem' }}>{t('worldClock.modal.approxPopulation')}</span>
-                                    <span style={{ fontWeight: 600 }}>{detail ? (isAr ? detail.muslimPopulationAr : detail.muslimPopulation) : '---'}</span>
+                            <div className="p-sm" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)' }}>
+                                <div className="flex justify-between items-start mb-sm mt-xs">
+                                    <span className="text-muted" style={{ fontSize: '0.75rem', lineHeight: 1.2 }}>{t('worldClock.modal.approxPopulation')}</span>
+                                    <span style={{ fontWeight: 600, fontSize: '0.85rem', textAlign: isAr ? 'left' : 'right' }}>{detail ? (isAr ? detail.muslimPopulationAr : detail.muslimPopulation) : '---'}</span>
                                 </div>
                                 <div className="flex flex-col gap-xs">
-                                    <div className="flex justify-between text-muted" style={{ fontSize: '0.8rem' }}>
+                                    <div className="flex justify-between text-muted" style={{ fontSize: '0.75rem' }}>
                                         <div className="flex items-center gap-xs">
                                             <ShieldCheck size={14} weight="fill" color="#10b981" />
                                             <span>{t('worldClock.modal.safetyLevel')}</span>
                                         </div>
                                         <span style={{ color: '#10b981', fontWeight: 600 }}>{detail ? detail.muslimSafetyPercentage : 0}%</span>
                                     </div>
-                                    <div style={{ height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3, overflow: 'hidden' }}>
+                                    <div style={{ height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 2, overflow: 'hidden' }}>
                                         <div style={{
                                             height: '100%',
                                             width: `${detail ? detail.muslimSafetyPercentage : 0}%`,
@@ -131,61 +131,76 @@ export function CountryDetailModal({ country, detail, onClose }: CountryDetailMo
                         </div>
 
                         {/* Governance & Ruler */}
-                        <div className="flex flex-col gap-sm">
-                            <h3 className="flex items-center gap-sm" style={{ fontSize: '1rem', fontWeight: 700 }}>
-                                <Crown size={20} weight="duotone" color="var(--accent-gold)" />
+                        <div className="flex flex-col gap-xs">
+                            <h3 className="flex items-center gap-sm" style={{ fontSize: '0.9rem', fontWeight: 700 }}>
+                                <Crown size={18} weight="duotone" color="var(--accent-gold)" />
                                 {t('worldClock.modal.governance')}
                             </h3>
-                            <div className="flex flex-col gap-md p-md" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--glass-border)' }}>
-                                <div className="flex items-start gap-md">
+                            <div className="flex flex-col gap-sm p-sm" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--glass-border)' }}>
+                                <div className="flex items-center gap-sm">
                                     <div className="p-xs" style={{ background: 'rgba(var(--accent-gold-rgb), 0.1)', borderRadius: 'var(--radius-md)' }}>
-                                        <Buildings size={24} weight="duotone" color="var(--accent-gold)" />
+                                        <Buildings size={20} weight="duotone" color="var(--accent-gold)" />
                                     </div>
-                                    <div>
-                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>{t('worldClock.modal.governanceType')}</div>
-                                        <div style={{ fontWeight: 600 }}>{detail ? (isAr ? detail.governanceAr : detail.governance) : '---'}</div>
+                                    <div className="flex-1">
+                                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>{t('worldClock.modal.governanceType')}</div>
+                                        <div style={{ fontWeight: 600, fontSize: '0.85rem', lineHeight: 1.3 }}>{detail ? (isAr ? detail.governanceAr : detail.governance) : '---'}</div>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-md">
+                                <div className="flex items-center gap-sm">
                                     <div className="p-xs" style={{ background: 'rgba(var(--accent-gold-rgb), 0.1)', borderRadius: 'var(--radius-md)' }}>
-                                        <Globe size={24} weight="duotone" color="var(--accent-gold)" />
+                                        <Crown size={20} weight="duotone" color="var(--accent-gold)" />
                                     </div>
-                                    <div>
-                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>{t('worldClock.modal.ruler')}</div>
-                                        <div style={{ fontWeight: 600 }}>{detail ? (isAr ? detail.rulerAr : detail.ruler) : '---'}</div>
+                                    <div className="flex-1">
+                                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>{t('worldClock.modal.ruler')}</div>
+                                        <div style={{ fontWeight: 600, fontSize: '0.85rem', lineHeight: 1.3 }}>{detail ? (isAr ? detail.rulerAr : detail.ruler) : '---'}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Cities */}
-                        <div className="flex flex-col gap-sm">
-                            <h3 className="flex items-center gap-sm" style={{ fontSize: '1rem', fontWeight: 700 }}>
-                                <MapPin size={20} weight="duotone" color="var(--accent-gold)" />
-                                {t('worldClock.modal.majorCities')}
-                            </h3>
-                            <div className="flex flex-wrap gap-xs">
-                                {detail ? (isAr ? detail.citiesAr : detail.cities).map(city => (
-                                    <span key={city} className="chip" style={{ fontSize: '0.75rem', padding: '4px 12px' }}>
-                                        {city}
-                                    </span>
-                                )) : <span className="text-muted">{t('worldClock.modal.noData')}</span>}
-                            </div>
+                        <div className="flex flex-wrap gap-xs">
+                            {detail ? (isAr ? detail.citiesAr : detail.cities).map(city => (
+                                <span key={city} className="chip" style={{ fontSize: '0.75rem', padding: '4px 12px' }}>
+                                    {city}
+                                </span>
+                            )) : <span className="text-muted">{t('worldClock.modal.noData')}</span>}
                         </div>
-
                     </div>
-                </div>
 
-                {/* Footer */}
-                <div className="p-md text-center" style={{ borderTop: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.02)' }}>
-                    <button
-                        onClick={onClose}
-                        className="btn btn-primary w-full"
-                        style={{ borderRadius: 'var(--radius-lg)' }}
-                    >
-                        {t('worldClock.modal.close')}
-                    </button>
+                    {/* Notable Features */}
+                    <div className="flex flex-col gap-sm">
+                        <h3 className="flex items-center gap-sm" style={{ fontSize: '1rem', fontWeight: 700 }}>
+                            <Globe size={20} weight="duotone" color="var(--accent-gold)" />
+                            {isAr ? 'بماذا تتميز هذه الدولة؟' : 'Notable Features'}
+                        </h3>
+                        <div className="flex flex-wrap gap-xs">
+                            {detail?.features ? (isAr ? detail.featuresAr : detail.features).map(feature => (
+                                <span key={feature} className="chip" style={{
+                                    fontSize: '0.75rem',
+                                    padding: '4px 10px',
+                                    background: 'rgba(var(--accent-gold-rgb), 0.1)',
+                                    borderColor: 'var(--accent-gold-soft)',
+                                    color: 'var(--accent-gold)',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    {feature}
+                                </span>
+                            )) : <span className="text-muted">{t('worldClock.modal.noData')}</span>}
+                        </div>
+                    </div>
+
                 </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-md text-center" style={{ borderTop: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.02)' }}>
+                <button
+                    onClick={onClose}
+                    className="btn btn-primary w-full"
+                    style={{ borderRadius: 'var(--radius-lg)' }}
+                >
+                    {t('worldClock.modal.close')}
+                </button>
             </div>
         </div>
     );
