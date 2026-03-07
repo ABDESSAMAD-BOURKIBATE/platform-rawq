@@ -96,8 +96,15 @@
             "amiri": "Amiri",
             "katibeh": "Katibeh",
             "cairo": "Le Caire",
-            "tajawal": "Tajawal"
-        }
+            "tajawal": "Tajawal",
+            "kfgqpc": "Écriture Othmani du Complexe Roi Fahd"
+        },
+        "notifications": "Notifications et Alertes",
+        "adhanAlerts": "Alertes Adhan",
+        "adhanDesc": "Jouer le son de l'adhan en arrière-plan à l'heure de la prière",
+        "adhanAudio": "Son de l'Adhan",
+        "adhanAudioDesc": "Sélectionnez le son de l'adhan pour les alertes",
+        "adhanDefault": "Adhan 1"
     },
     "waqf": {
         "text": "Dotation coranique en mémoire du Cheikh Abdelhafid Bourkibat, qu'Allah lui fasse miséricorde"
@@ -144,7 +151,9 @@
         "asr": "Asr",
         "maghrib": "Maghrib",
         "isha": "Isha",
-        "in": "à"
+        "in": "à",
+        "remaining": "Restant",
+        "nextPrayerLabel": "Prière Suivante"
     },
     "adhkar": {
         "title": "Adhkar & Tasbeeh",
@@ -202,5 +211,45 @@
         "devName": "L'ingénieur Abdessamad Bourkibat (petit-fils du Cheikh).",
         "prayer": "Nous demandons à Allah d'en faire une action pure pour Son visage noble.",
         "copyright": "© 2026 Tous droits réservés"
+    },
+    "khatma": {
+        "title": "Khatma",
+        "subtitle": "Fixez votre objectif, suivez votre wird quotidien et terminez le Coran à temps.",
+        "notStarted": "Aucune Khatma commencée",
+        "setTargetPrompt": "Définissez le nombre de jours pour terminer le Coran.",
+        "startNew": "Commencer une nouvelle Khatma",
+        "setupTitle": "Configuration Khatma",
+        "setupDesc": "Combien de jours voulez-vous prendre pour lire tout le Coran ?",
+        "days": "Jours",
+        "estimatedWird": "Wird quotidien estimé:",
+        "pages": "Pages",
+        "start": "Commencer",
+        "overallProgress": "Progression globale",
+        "dailyWird": "Wird Quotidien",
+        "remainingDays": "Jours restants",
+        "behindSchedule": "Vous êtes en retard. Essayez de rattraper votre retard.",
+        "continueReading": "Continuer la lecture",
+        "reset": "Annuler la Khatma"
+    },
+    "habits": {
+        "title": "Suivi des habitudes",
+        "subtitle": "Maintenez vos prières, votre wird et votre jeûne pour gagner l'agrément d'Allah.",
+        "today": "Aujourd'hui",
+        "dailyScore": "Score du jour",
+        "prayers": "Les Cinq Prières",
+        "wird": "Wird Coranique",
+        "fasting": "Jeûne",
+        "morningAdhkar": "Adhkar du Matin",
+        "eveningAdhkar": "Adhkar du Soir",
+        "charity": "Charité",
+        "goodDeed": "Bonne Action",
+        "dailyNote": "Note Quotidienne / Événement Spécial",
+        "notePlaceholder": "Écrivez ici ce dont vous voulez vous souvenir aujourd'hui...",
+        "download": "Enregistrer l'image"
+    },
+    "ramadan": {
+        "title": "Ramadan",
+        "day": "Jour {{day}}",
+        "progress": "{{count}} jours passés"
     }
 }

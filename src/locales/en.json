@@ -96,8 +96,15 @@
             "amiri": "Amiri",
             "katibeh": "Katibeh",
             "cairo": "Cairo",
-            "tajawal": "Tajawal"
-        }
+            "tajawal": "Tajawal",
+            "kfgqpc": "King Fahd Complex Uthmani Script"
+        },
+        "notifications": "Notifications & Alerts",
+        "adhanAlerts": "Adhan Alerts",
+        "adhanDesc": "Play adhan sound in the background when prayer time starts",
+        "adhanAudio": "Adhan Sound",
+        "adhanAudioDesc": "Select the adhan sound for alerts",
+        "adhanDefault": "Adhan 1"
     },
     "waqf": {
         "text": "A Quranic endowment in memory of Sheikh Abdelhafid Bourkibat, may Allah have mercy on him"
@@ -144,7 +151,9 @@
         "asr": "Asr",
         "maghrib": "Maghrib",
         "isha": "Isha",
-        "in": "in"
+        "in": "in",
+        "remaining": "Remaining",
+        "nextPrayerLabel": "Next Prayer"
     },
     "adhkar": {
         "title": "Adhkar & Tasbeeh",
@@ -202,5 +211,59 @@
         "devName": "Engineer Abdessamad Bourkibat (the Sheikh's grandson).",
         "prayer": "We ask Allah to make it a pure deed for His honorable face.",
         "copyright": "© 2026 All rights reserved"
+    },
+    "schedule": {
+        "title": "Personal Schedule",
+        "description": "Plan your day and track your worships easily",
+        "addTask": "Add Task",
+        "taskTitle": "Task Name",
+        "taskTime": "Time (Optional)",
+        "save": "Save",
+        "cancel": "Cancel",
+        "empty": "No tasks currently. Click 'Add Task' to start your schedule.",
+        "delete": "Delete",
+        "edit": "Edit",
+        "completed": "Done",
+        "clearCompleted": "Clear Completed"
+    },
+    "khatma": {
+        "title": "Khatma",
+        "subtitle": "Set your target, track your daily wird, and finish the Quran on time.",
+        "notStarted": "No Khatma started yet",
+        "setTargetPrompt": "Set the number of days you want to finish the Quran in.",
+        "startNew": "Start New Khatma",
+        "setupTitle": "Setup Khatma",
+        "setupDesc": "How many days do you want to take to read the whole Quran?",
+        "days": "Days",
+        "estimatedWird": "Estimated Daily Wird:",
+        "pages": "Pages",
+        "start": "Start",
+        "overallProgress": "Overall Progress",
+        "dailyWird": "Daily Wird",
+        "remainingDays": "Remaining Days",
+        "behindSchedule": "You are behind schedule. Try to catch up.",
+        "continueReading": "Continue Reading",
+        "reset": "Cancel Khatma"
+    },
+    "habits": {
+        "title": "Habit Tracker",
+        "subtitle": "Maintain your prayers, wird, and fasting to earn Allah's pleasure.",
+        "today": "Today",
+        "dailyScore": "Today's Score",
+        "prayers": "The Five Prayers",
+        "wird": "Quranic Wird",
+        "fasting": "Fasting",
+        "morningAdhkar": "Morning Adhkar",
+        "eveningAdhkar": "Evening Adhkar",
+        "charity": "Daily Charity",
+        "goodDeed": "Good Deed",
+        "dailyNote": "Daily Note / Special Event",
+        "notePlaceholder": "Write down what you want to remember from today...",
+        "download": "Save as Image"
+    },
+    "ramadan": {
+        "title": "Ramadan",
+        "day": "Day {{day}}",
+        "progress": "{{count}} days passed"
     }
 }

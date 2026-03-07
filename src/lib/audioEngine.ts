@@ -1,5 +1,6 @@
 import { getAyahAudioUrl, DEFAULT_RECITER_FOLDER } from '../api/everyayah';
 import { useAudioStore } from '../store/useAudioStore';
+import { useQuranStore } from '../store/useQuranStore';
 import type { RadioStation } from '../lib/types';
 
 class AudioEngine {
@@ -85,6 +86,7 @@ class AudioEngine {
             // useAudioStore.getState().stop();
         });
         useAudioStore.getState().play(surahNumber, ayahNumber);
+        useQuranStore.getState().saveLastPlayed(surahNumber, ayahNumber);
     }
 
     playSurah(surahNumber: number, moshaf?: { server: string; name: string } | null, reciter?: { name: string; id: string; image?: string } | null) {

@@ -1,7 +1,9 @@
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Moon, Sun, Monitor, Globe, Info, Heart, TextAa, Plus, Minus } from '@phosphor-icons/react';
+import { Moon, Sun, Monitor, Globe, Info, Heart, TextAa, Plus, Minus, Bell, BellSlash, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react';
 import { useThemeStore } from '../store/useThemeStore';
 import { useQuranStore } from '../store/useQuranStore';
+import { useSettingsStore } from '../store/useSettingsStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import type { ThemeMode } from '../lib/types';
 
@@ -22,12 +24,34 @@ const fontFamilies = [
     { id: 'Katibeh', nameKey: 'settings.fonts.katibeh', style: 'Katibeh, serif' },
     { id: 'Cairo', nameKey: 'settings.fonts.cairo', style: 'Cairo, sans-serif' },
     { id: 'Tajawal', nameKey: 'settings.fonts.tajawal', style: 'Tajawal, sans-serif' },
+    { id: 'KFGQPC', nameKey: 'settings.fonts.kfgqpc', style: 'Amiri, serif' }, // fallback styling, logic will handle text
 ];
 
 export function SettingsPage() {
     const { t, i18n } = useTranslation();
     const { mode, setMode } = useThemeStore();
     const { fontSize, fontFamily, setFontSize, setFontFamily } = useQuranStore();
+    const { adhanEnabled, setAdhanEnabled, adhanAudio, setAdhanAudio } = useSettingsStore();
+
+    const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+    const previewAudioRef = useRef<HTMLAudioElement | null>(null);
+
+    const togglePreview = () => {
+        if (isPlayingPreview && previewAudioRef.current) {
+            previewAudioRef.current.pause();
+            previewAudioRef.current.currentTime = 0;
+            setIsPlayingPreview(false);
+        } else {
+            if (!previewAudioRef.current) {
+                previewAudioRef.current = new Audio(adhanAudio);
+                previewAudioRef.current.onended = () => setIsPlayingPreview(false);
+            } else {
+                previewAudioRef.current.src = adhanAudio;
+            }
+            previewAudioRef.current.play().catch(e => console.error(e));
+            setIsPlayingPreview(true);
+        }
+    };
 
     const changeLanguage = (lang: string) => {
         i18n.changeLanguage(lang);
@@ -107,6 +131,93 @@ export function SettingsPage() {
                             )}
                         </button>
                     ))}
+                </div>
+            </section>
+
+            {/* Notifications / Adhan */}
+            <section className="animate-slide-up stagger-1">
+                <h3 className="flex items-center gap-sm" style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)' }}>
+                    <Bell size={24} color="var(--accent-gold)" weight="duotone" />
+                    {t('settings.notifications')}
+                </h3>
+                <div className="card flex flex-col gap-md" style={{ padding: 'var(--space-md)' }}>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-sm">
+                            {adhanEnabled ? (
+                                <Bell size={24} color="var(--accent-gold)" />
+                            ) : (
+                                <BellSlash size={24} color="var(--text-muted)" />
+                            )}
+                            <div>
+                                <p style={{ fontWeight: 600, fontSize: '0.95rem' }}>{t('settings.adhanAlerts')}</p>
+                                <p className="text-muted" style={{ fontSize: '0.75rem' }}>{t('settings.adhanDesc')}</p>
+                            </div>
+                        </div>
+                        {/* Toggle Switch styling */}
+                        <button
+                            onClick={() => setAdhanEnabled(!adhanEnabled)}
+                            style={{
+                                width: '48px',
+                                height: '24px',
+                                borderRadius: '12px',
+                                background: adhanEnabled ? 'var(--accent-gold)' : 'var(--bg-tertiary)',
+                                position: 'relative',
+                                transition: 'all 0.3s ease',
+                            }}
+                        >
+                            <div style={{
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '50%',
+                                background: '#fff',
+                                position: 'absolute',
+                                top: '2px',
+                                left: adhanEnabled ? '26px' : '2px',
+                                transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                            }} />
+                        </button>
+                    </div>
+
+                    {adhanEnabled && (
+                        <>
+                            <div style={{ height: '1px', background: 'var(--border)' }} />
+                            <div className="flex flex-wrap items-center justify-between gap-md">
+                                <div style={{ flex: '1 1 auto', minWidth: '150px' }}>
+                                    <p style={{ fontSize: '0.85rem', fontWeight: 500 }}>{t('settings.adhanAudio')}</p>
+                                    <p className="text-muted" style={{ fontSize: '0.75rem' }}>{t('settings.adhanAudioDesc')}</p>
+                                </div>
+                                <div className="flex items-center gap-sm shrink-0">
+                                    <select
+                                        value={adhanAudio}
+                                        onChange={(e) => {
+                                            const newAudio = e.target.value;
+                                            setAdhanAudio(newAudio);
+                                            if (previewAudioRef.current) {
+                                                previewAudioRef.current.pause();
+                                                previewAudioRef.current.currentTime = 0;
+                                            }
+                                            previewAudioRef.current = new Audio(newAudio);
+                                            previewAudioRef.current.onended = () => setIsPlayingPreview(false);
+                                            previewAudioRef.current.play().catch(err => console.error(err));
+                                            setIsPlayingPreview(true);
+                                        }}
+                                        className="card"
+                                        style={{ padding: 'var(--space-xs) var(--space-sm)', fontSize: '0.8rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}
+                                    >
+                                        <option value="/audio/019--1.mp3">{t('settings.adhanDefault')}</option>
+                                    </select>
+                                    <button
+                                        className="btn btn-secondary btn-icon"
+                                        onClick={togglePreview}
+                                        style={{ width: '36px', height: '36px' }}
+                                    >
+                                        {isPlayingPreview ? <SpeakerSlash size={20} /> : <SpeakerHigh size={20} />}
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
 

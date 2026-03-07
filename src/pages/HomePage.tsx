@@ -1,45 +1,60 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise, HandHeart, Brain } from '@phosphor-icons/react';
+import { BookOpenText, MicrophoneStage, MagnifyingGlass, Radio, List, Compass, Clock, Globe, CalendarCheck, ClockClockwise, HandHeart, Brain, Sun, MoonStars, Info, SunHorizon, CloudSun, SunDim, Moon, PlayCircle, Target, Checks } from '@phosphor-icons/react';
+import type { Icon } from '@phosphor-icons/react';
 import { useQuranStore } from '../store/useQuranStore';
+import { useThemeStore } from '../store/useThemeStore';
 import { WaqfBanner } from '../components/layout/WaqfBanner';
 import { DynamicCard } from '../components/ui/DynamicCard';
-import { Sun, MoonStars, Info } from '@phosphor-icons/react';
 import { AboutModal } from '../components/layout/AboutModal';
 import { useState } from 'react';
-import rawqLogo from '../assets/rawq_logo.jpg';
+import rawqLogo from '../assets/rawq_logo.png';
+import { SURAH_NAMES } from '../lib/surahData';
+import { audioEngine } from '../lib/audioEngine';
 
-function getTimeOfDay(): { key: string; gradient: string; emoji: string } {
+function getTimeOfDay(): { key: string; darkGradient: string; lightGradient: string; icon: Icon; iconColor: string } {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 7) return {
         key: 'home.greeting.morning',
-        gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #e94560 100%)',
-        emoji: '🌅'
+        darkGradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #e94560 100%)',
+        lightGradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%)',
+        icon: SunHorizon,
+        iconColor: '#FF8C42'
     };
     if (hour >= 7 && hour < 12) return {
         key: 'home.greeting.morning',
-        gradient: 'linear-gradient(135deg, #89CFF0 0%, #A7D8FF 40%, #FFF4CC 100%)',
-        emoji: '☀️'
+        darkGradient: 'linear-gradient(135deg, #89CFF0 0%, #A7D8FF 40%, #FFF4CC 100%)',
+        lightGradient: 'linear-gradient(135deg, #a8edea 0%, #b8f0e8 40%, #fed6e3 100%)',
+        icon: Sun,
+        iconColor: '#F6A623'
     };
     if (hour >= 12 && hour < 15) return {
         key: 'home.greeting.afternoon',
-        gradient: 'linear-gradient(135deg, #2193b0 0%, #6dd5ed 50%, #F6D365 100%)',
-        emoji: '🌤️'
+        darkGradient: 'linear-gradient(135deg, #2193b0 0%, #6dd5ed 50%, #F6D365 100%)',
+        lightGradient: 'linear-gradient(135deg, #c3f0dc 0%, #d4fc79 40%, #96e6a1 100%)',
+        icon: CloudSun,
+        iconColor: '#E8A55A'
     };
     if (hour >= 15 && hour < 17) return {
         key: 'home.greeting.afternoon',
-        gradient: 'linear-gradient(135deg, #E6984A 0%, #E87D3E 40%, #C66B3D 100%)',
-        emoji: '🌇'
+        darkGradient: 'linear-gradient(135deg, #E6984A 0%, #E87D3E 40%, #C66B3D 100%)',
+        lightGradient: 'linear-gradient(135deg, #fbc2eb 0%, #e8b4d0 40%, #a6c1ee 100%)',
+        icon: SunDim,
+        iconColor: '#E87D3E'
     };
     if (hour >= 17 && hour < 20) return {
         key: 'home.greeting.evening',
-        gradient: 'linear-gradient(135deg, #141E30 0%, #243B55 40%, #E8724A 80%, #FFB03B 100%)',
-        emoji: '🌆'
+        darkGradient: 'linear-gradient(135deg, #141E30 0%, #243B55 40%, #E8724A 80%, #FFB03B 100%)',
+        lightGradient: 'linear-gradient(135deg, #fad0c4 0%, #ffd1ff 50%, #e8b4d0 100%)',
+        icon: MoonStars,
+        iconColor: '#FFB03B'
     };
     return {
         key: 'home.greeting.night',
-        gradient: 'linear-gradient(135deg, #0B1C1A 0%, #0D2137 40%, #1a1a3e 80%, #2d1b54 100%)',
-        emoji: '🌙'
+        darkGradient: 'linear-gradient(135deg, #0B1C1A 0%, #0D2137 40%, #1a1a3e 80%, #2d1b54 100%)',
+        lightGradient: 'linear-gradient(135deg, #667eea 0%, #9b8ec4 40%, #764ba2 100%)',
+        icon: Moon,
+        iconColor: '#A7D8FF'
     };
 }
 
@@ -76,13 +91,21 @@ const quickAccessItems = [
     { path: '/radio', icon: Radio, labelKey: 'home.radios', color: '#C66B3D' },
     { path: '/world-clock', icon: Globe, labelKey: 'home.worldClocks', color: '#58A89B' },
     { path: '/azkar', icon: HandHeart, labelKey: 'adhkar.title', color: '#E94560' },
+    { path: '/schedule', icon: CalendarCheck, labelKey: 'schedule.title', color: '#38A169' },
+    { path: '/khatma', icon: Target, labelKey: 'khatma.title', color: '#D4AF37' },
+    { path: '/tracker', icon: Checks, labelKey: 'habits.title', color: '#58A89B' },
 ];
 
 export function HomePage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { lastReadPage, lastReadSurah, dailyReadPages, lastLoginDate } = useQuranStore();
+    const { lastReadPage, lastReadSurah, dailyReadPages, lastLoginDate, lastPlayedSurahNum, lastPlayedAyahNum } = useQuranStore();
+    const { mode } = useThemeStore();
     const timeInfo = getTimeOfDay();
+
+    // Determine effective theme and select gradient
+    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const heroGradient = isDark ? timeInfo.darkGradient : timeInfo.lightGradient;
 
     const formatLastLogin = () => {
         if (!lastLoginDate) return t('home.never') || 'الآن';
@@ -107,174 +130,325 @@ export function HomePage() {
     const currentDhikr = getDailyDhikr();
     const [isAboutOpen, setIsAboutOpen] = useState(false);
 
+    const getRamadanData = () => {
+        try {
+            const date = new Date();
+            const mStr = date.toLocaleDateString('en-u-ca-islamic-nu-latn', { month: 'numeric' });
+            const dStr = date.toLocaleDateString('en-u-ca-islamic-nu-latn', { day: 'numeric' });
+
+            let dayNum = parseInt(dStr, 10);
+            if (!isNaN(dayNum)) {
+                dayNum -= 1;
+                if (dayNum <= 0) dayNum = 30; // Basic underflow protection
+            }
+
+            return {
+                isRamadan: mStr === '9',
+                hijriDay: dayNum.toString()
+            };
+        } catch (e) {
+            return { isRamadan: false, hijriDay: '' };
+        }
+    };
+    const { isRamadan, hijriDay } = getRamadanData();
+
     return (
         <div className="flex flex-col gap-xl">
-            {/* Dynamic Time-of-Day Hero */}
+            {/* Dynamic Time-of-Day Hero — Compact */}
             <div
                 className="animate-fade-in"
                 style={{
-                    background: timeInfo.gradient,
+                    background: heroGradient,
                     borderRadius: 'var(--radius-xl)',
-                    padding: 'var(--space-3xl) var(--space-xl)',
+                    padding: 'var(--space-lg) var(--space-lg)',
                     position: 'relative',
                     overflow: 'hidden',
                     marginTop: 'var(--space-sm)',
                     boxShadow: 'var(--shadow-lg)',
-                    textAlign: 'center'
+                    border: '1px solid var(--hero-border)',
+                    transition: 'background 0.6s ease, border-color 0.6s ease'
                 }}
             >
-                {/* Refined subtle overlay */}
+                {/* Overlay */}
                 <div style={{
                     position: 'absolute', inset: 0,
-                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4))',
+                    background: 'var(--hero-overlay)',
                     pointerEvents: 'none',
                 }} />
 
-                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
-                    {/* Dynamic Greeting Capsule */}
+                {/* Greeting & Ramadan Capsules — Top Right */}
+                <div style={{
+                    position: 'relative', zIndex: 1,
+                    display: 'flex', justifyContent: 'space-between',
+                    marginBottom: 'var(--space-md)',
+                    flexWrap: 'nowrap',
+                    overflow: 'hidden'
+                }}>
+                    {/* Time Greeting */}
                     <div style={{
-                        background: 'rgba(255,255,255,0.1)',
-                        backdropFilter: 'blur(8px)',
-                        padding: '4px 16px',
+                        background: 'rgba(0, 0, 0, 0.35)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        padding: '4px 10px',
                         borderRadius: 'var(--radius-full)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        marginBottom: 'var(--space-lg)',
-                        display: 'flex',
+                        border: '1px solid var(--hero-capsule-border)',
+                        display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '8px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                        gap: '5px',
+                        fontSize: '0.72rem',
+                        whiteSpace: 'nowrap',
                     }}>
-                        <span style={{ fontSize: '0.85rem', color: '#fff', fontWeight: 500 }}>
+                        <div style={{
+                            width: '24px', height: '24px',
+                            borderRadius: '50%',
+                            background: `${timeInfo.iconColor}30`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            animation: 'iconFloat 3s ease-in-out infinite, iconGlow 2s ease-in-out infinite alternate',
+                        }}>
+                            <timeInfo.icon size={14} weight="fill" color={timeInfo.iconColor} />
+                        </div>
+                        <span style={{
+                            color: 'white',
+                            fontWeight: 800,
+                        }}>
                             {t(timeInfo.key)}
                         </span>
-                        <span>{timeInfo.emoji}</span>
                     </div>
 
-                    {/* Official Logo Integration */}
+                    {/* Ramadan Badge */}
+                    {isRamadan && (
+                        <div style={{
+                            background: 'rgba(0, 0, 0, 0.45)',
+                            backdropFilter: 'blur(12px)',
+                            WebkitBackdropFilter: 'blur(12px)',
+                            padding: '4px 10px',
+                            borderRadius: 'var(--radius-full)',
+                            border: '1px solid var(--accent-gold)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            fontSize: '0.72rem',
+                            animation: 'iconGlow 2s ease-in-out infinite alternate',
+                            whiteSpace: 'nowrap',
+                        }}>
+                            <div style={{
+                                width: '24px', height: '24px',
+                                borderRadius: '50%',
+                                background: 'rgba(212, 175, 55, 0.3)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                <MoonStars size={14} weight="fill" color="var(--accent-gold)" />
+                            </div>
+                            <span style={{
+                                color: 'var(--accent-gold)',
+                                fontWeight: 800,
+                            }}>
+                                {t('ramadan.title')} : {t('ramadan.day', { day: hijriDay })}
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Main Content — Horizontal */}
+                <div style={{
+                    position: 'relative', zIndex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-lg)',
+                    direction: 'rtl'
+                }}>
+                    {/* Logo */}
                     <div style={{
-                        width: '90px',
-                        height: '90px',
-                        marginBottom: 'var(--space-xl)',
-                        borderRadius: 'var(--radius-lg)',
-                        background: '#fff',
-                        border: '1px solid rgba(255,255,255,0.2)',
+                        width: '68px', height: '68px',
+                        minWidth: '68px',
+                        borderRadius: '50%',
+                        background: 'var(--hero-logo-bg)',
+                        border: '2px solid var(--accent-gold)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                        overflow: 'hidden'
+                        boxShadow: `var(--hero-logo-shadow), 0 0 18px var(--accent-gold-glow)`,
+                        overflow: 'hidden',
+                        animation: 'logoPulse 4s ease-in-out infinite',
                     }}>
-                        <img
-                            src={rawqLogo}
-                            alt="RAWQ Logo"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'contain'
-                            }}
-                        />
+                        <img src={rawqLogo} alt="RAWQ" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     </div>
 
-                    <div style={{ marginBottom: 'var(--space-md)', width: '100%' }}>
-                        <span style={{
-                            color: '#fff',
-                            fontSize: '0.75rem',
+                    {/* Text Block */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{
+                            color: 'var(--hero-text-sub)',
+                            fontSize: '0.68rem',
                             fontWeight: 600,
+                            letterSpacing: '1.5px',
+                            marginBottom: '2px',
                             textTransform: 'uppercase',
-                            letterSpacing: '2px',
-                            display: 'block',
-                            marginBottom: '4px',
-                            textShadow: '0 1px 4px rgba(0,0,0,0.4)',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
                         }}>
-                            الْمَجْمَعُ الْقُرْآنِيُّ لِلشَّيْخِ
-                        </span>
-
+                            الْمَجْمَعُ الْقُرْآنِيُّ لِلشَّيْخِ
+                        </p>
                         <h1 style={{
-                            fontSize: '1.4rem',
+                            fontSize: '1.15rem',
                             fontFamily: 'var(--font-heading)',
                             fontWeight: 800,
-                            color: '#fff',
-                            lineHeight: 1.2,
-                            letterSpacing: '0.5px',
-                            textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                            whiteSpace: 'nowrap'
+                            color: 'var(--hero-text)',
+                            lineHeight: 1.3,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            margin: 0,
                         }}>
                             عَبْدِ الْحَفِيظِ بُورْكِيبَات
                         </h1>
                     </div>
+                </div>
 
+                {/* Brand Name + Tagline — Bottom */}
+                <div style={{
+                    position: 'relative', zIndex: 1,
+                    marginTop: 'var(--space-md)',
+                    textAlign: 'center'
+                }}>
+                    {/* Gold Divider + Brand */}
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '20px',
-                        margin: 'var(--space-md) 0 var(--space-xl)'
+                        justifyContent: 'center',
+                        gap: '12px',
+                        marginBottom: '6px'
                     }}>
-                        <div style={{ width: '50px', height: '2px', background: 'linear-gradient(to left, transparent, #D4AF37)' }} />
+                        <div style={{ flex: 1, maxWidth: '60px', height: '1px', background: 'linear-gradient(to left, var(--accent-gold), transparent)' }} />
                         <span style={{
-                            fontSize: '3.5rem',
-                            color: '#D4AF37',
+                            fontSize: '1.8rem',
+                            color: 'var(--accent-gold)',
                             fontWeight: 900,
                             fontFamily: 'var(--font-quran)',
                             lineHeight: 1,
-                            textShadow: '0 0 25px rgba(212, 175, 55, 0.6)'
+                            textShadow: '0 0 20px var(--accent-gold-glow)',
                         }}>
                             رَوْقٌ
                         </span>
-                        <div style={{ width: '50px', height: '2px', background: 'linear-gradient(to right, transparent, #D4AF37)' }} />
+                        <div style={{ flex: 1, maxWidth: '60px', height: '1px', background: 'linear-gradient(to right, var(--accent-gold), transparent)' }} />
                     </div>
 
                     <p style={{
-                        color: '#fff',
-                        fontSize: '1rem',
+                        color: 'var(--hero-text-sub)',
+                        fontSize: '0.82rem',
                         fontWeight: 500,
-                        lineHeight: 1.6,
-                        maxWidth: '350px',
+                        lineHeight: 1.5,
                         fontFamily: 'var(--font-ui)',
-                        letterSpacing: '0.2px',
-                        textShadow: '0 2px 8px rgba(0,0,0,0.5)'
+                        margin: 0,
                     }}>
                         {t('app.tagline')}
                     </p>
                 </div>
             </div>
 
+            {/* Continue Listening Card (if available) */}
+            {lastPlayedSurahNum && lastPlayedAyahNum && (
+                <div
+                    className="animate-slide-up"
+                    style={{
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--space-md)',
+                        borderRadius: 'var(--radius-xl)',
+                        padding: 'var(--space-lg)',
+                        background: 'linear-gradient(135deg, #16213e 0%, #0f3460 100%)',
+                        boxShadow: 'var(--shadow-md)',
+                        border: '1px solid rgba(88, 168, 155, 0.3)',
+                        color: '#ffffff',
+                    }}
+                    onClick={() => audioEngine.playAyah(lastPlayedSurahNum, lastPlayedAyahNum)}
+                >
+                    <div className="flex items-center justify-between" style={{ position: 'relative', zIndex: 1 }}>
+                        <div className="flex items-center gap-sm">
+                            <div style={{
+                                width: '48px', height: '48px', borderRadius: 'var(--radius-lg)',
+                                background: 'rgba(88, 168, 155, 0.2)',
+                                backdropFilter: 'blur(5px)',
+                                WebkitBackdropFilter: 'blur(5px)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                border: '1px solid rgba(88, 168, 155, 0.3)',
+                            }}>
+                                <PlayCircle size={24} color="#58A89B" weight="duotone" />
+                            </div>
+                            <div>
+                                <p style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                                    سورة {SURAH_NAMES[lastPlayedSurahNum]}
+                                </p>
+                                <p style={{ fontSize: '0.85rem', color: '#a7d8ff', marginTop: '6px', fontWeight: 500 }}>
+                                    الآية {lastPlayedAyahNum}
+                                </p>
+                            </div>
+                        </div>
+                        {/* Badge */}
+                        <div style={{
+                            padding: 'var(--space-xs) var(--space-sm)',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'rgba(88, 168, 155, 0.2)',
+                            backdropFilter: 'blur(4px)',
+                            WebkitBackdropFilter: 'blur(4px)',
+                            color: '#a7d8ff',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            border: '1px solid rgba(88, 168, 155, 0.3)',
+                            textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                        }}>
+                            مواصلة الاستماع
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Continue Reading Card */}
             <div
-                className="card-gold animate-slide-up"
+                className="animate-slide-up"
                 style={{
                     cursor: 'pointer',
                     position: 'relative',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 'var(--space-md)'
+                    gap: 'var(--space-md)',
+                    borderRadius: 'var(--radius-xl)',
+                    padding: 'var(--space-lg)',
+                    backgroundImage: `linear-gradient(rgba(10, 25, 15, 0.5), rgba(10, 25, 15, 0.7)), url('/images/quran_tracker_bg.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    boxShadow: 'var(--shadow-md)',
+                    border: '1px solid rgba(212, 175, 55, 0.3)',
+                    color: '#ffffff',
                 }}
                 onClick={() => navigate('/mushaf')}
             >
-                <div style={{
-                    position: 'absolute', top: 0, right: 0, width: '150px', height: '150px',
-                    background: 'radial-gradient(circle at top right, var(--accent-gold-soft), transparent 70%)',
-                    borderRadius: '0 var(--radius-lg) 0 0',
-                    pointerEvents: 'none'
-                }} />
-
                 {/* Top Section: Where stopped */}
                 <div className="flex items-center justify-between" style={{ position: 'relative', zIndex: 1 }}>
                     <div className="flex items-center gap-sm">
                         <div style={{
                             width: '48px', height: '48px', borderRadius: 'var(--radius-lg)',
-                            background: 'var(--accent-gold-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            background: 'rgba(212, 175, 55, 0.2)',
+                            backdropFilter: 'blur(5px)',
+                            WebkitBackdropFilter: 'blur(5px)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            border: '1px solid rgba(212, 175, 55, 0.3)',
                         }}>
-                            <BookOpenText size={24} color="var(--accent-gold)" weight="duotone" />
+                            <BookOpenText size={24} color="#D4AF37" weight="duotone" />
                         </div>
                         <div>
-                            {/* Removed text */}
-                            <p style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1 }}>
+                            <p style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                                 {lastReadSurah}
                             </p>
-                            <p style={{ fontSize: '0.8rem', color: 'var(--accent-gold)', marginTop: '4px' }}>
+                            <p style={{ fontSize: '0.85rem', color: '#e8d595', marginTop: '6px', fontWeight: 500 }}>
                                 {t('home.page')} {lastReadPage}
                             </p>
                         </div>
@@ -283,33 +457,38 @@ export function HomePage() {
                     <div style={{
                         padding: 'var(--space-xs) var(--space-sm)',
                         borderRadius: 'var(--radius-full)',
-                        background: 'rgba(212, 175, 55, 0.1)',
-                        color: 'var(--accent-gold)',
+                        background: 'rgba(212, 175, 55, 0.2)',
+                        backdropFilter: 'blur(4px)',
+                        WebkitBackdropFilter: 'blur(4px)',
+                        color: '#D4AF37',
                         fontSize: '0.75rem',
-                        fontWeight: 600
+                        fontWeight: 600,
+                        border: '1px solid rgba(212, 175, 55, 0.3)',
+                        textShadow: '0 2px 4px rgba(0,0,0,0.5)'
                     }}>
                         {t('home.continueReading')}
                     </div>
                 </div>
 
                 {/* Middle Section: Khatmah Progress */}
-                <div style={{ padding: 'var(--space-sm) 0', position: 'relative', zIndex: 1 }}>
+                <div style={{ padding: 'var(--space-sm) 0', position: 'relative', zIndex: 1, marginTop: 'var(--space-sm)' }}>
                     <div className="flex items-center justify-between mb-xs">
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('home.khatmahProgress')}</span>
-                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-gold)' }}>{khatmahProgress}%</span>
+                        <span style={{ fontSize: '0.8rem', color: '#e8d595', fontWeight: 500 }}>{t('home.khatmahProgress')}</span>
+                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff' }}>{khatmahProgress}%</span>
                     </div>
                     <div style={{
                         height: '6px',
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'rgba(255, 255, 255, 0.15)',
                         borderRadius: 'var(--radius-full)',
                         overflow: 'hidden'
                     }}>
                         <div style={{
                             height: '100%',
                             width: `${khatmahProgress}%`,
-                            background: 'var(--accent-gold)',
+                            background: 'linear-gradient(90deg, #D4AF37, #F3E5AB)',
                             borderRadius: 'var(--radius-full)',
-                            transition: 'width 0.5s ease'
+                            transition: 'width 0.5s ease',
+                            boxShadow: '0 0 10px rgba(212, 175, 55, 0.5)'
                         }} />
                     </div>
                 </div>
@@ -320,22 +499,23 @@ export function HomePage() {
                     gridTemplateColumns: '1fr 1fr',
                     gap: 'var(--space-sm)',
                     paddingTop: 'var(--space-md)',
-                    borderTop: '1px solid rgba(255,255,255,0.05)',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
                     position: 'relative',
-                    zIndex: 1
+                    zIndex: 1,
+                    marginTop: 'var(--space-xs)'
                 }}>
                     <div className="flex items-center gap-sm">
-                        <CalendarCheck size={20} color="var(--accent-gold)" weight="duotone" />
+                        <CalendarCheck size={20} color="#D4AF37" weight="duotone" />
                         <div>
-                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('home.dailyWird')}</p>
-                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }}>{t('home.pagesCount', { count: dailyWirdCount })}</p>
+                            <p style={{ fontSize: '0.75rem', color: '#e8d595', marginBottom: '2px' }}>{t('home.dailyWird')}</p>
+                            <p style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>{t('home.pagesCount', { count: dailyWirdCount })}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-sm">
-                        <ClockClockwise size={20} color="var(--accent-gold)" weight="duotone" />
+                        <ClockClockwise size={20} color="#D4AF37" weight="duotone" />
                         <div>
-                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('home.lastLogin')}</p>
-                            <p style={{ fontSize: '0.9rem', fontWeight: 600 }} dir="ltr">{formatLastLogin()}</p>
+                            <p style={{ fontSize: '0.75rem', color: '#e8d595', marginBottom: '2px' }}>{t('home.lastLogin')}</p>
+                            <p style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }} dir="ltr">{formatLastLogin()}</p>
                         </div>
                     </div>
                 </div>
@@ -344,6 +524,7 @@ export function HomePage() {
             {/* Daily Adhkar Card */}
             <div
                 className="animate-slide-up stagger-1"
+                onClick={() => navigate('/azkar')}
                 style={{
                     background: adhkarGradient,
                     borderRadius: 'var(--radius-xl)',
@@ -351,7 +532,7 @@ export function HomePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border)',
                     cursor: 'pointer'
                 }}
             >

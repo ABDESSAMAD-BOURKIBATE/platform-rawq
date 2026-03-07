@@ -46,7 +46,7 @@ export function DynamicCard({ children, onClick, className = '', style = {}, gra
             />
 
             {/* Content Container (Glassmorphism) */}
-            <div className="absolute inset-[1px] rounded-2xl bg-[#0F2B27]/90 backdrop-blur-md z-10" />
+            <div className="absolute inset-[1px] rounded-2xl backdrop-blur-md z-10" style={{ background: 'var(--bg-card-glass)' }} />
 
             {/* Content */}
             <div className="relative z-20 h-full">

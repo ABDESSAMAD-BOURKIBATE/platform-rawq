@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Play, Pause, MusicNote, User } from '@phosphor-icons/react';
+import { ArrowRight, Play, Pause, MusicNote, User, Heart } from '@phosphor-icons/react';
 import { fetchReciters } from '../api/mp3quran';
 import type { Reciter, Moshaf } from '../lib/types';
 import { useAudioStore } from '../store/useAudioStore';
@@ -43,6 +43,8 @@ export function ReciterDetailPage() {
         isPlaying, currentSurah,
         reciter: currentReciter,
     } = useAudioStore();
+
+    const { toggleFavoriteReciter, isFavoriteReciter, toggleFavoriteSurah, isFavoriteSurah } = useRecitersStore();
 
     useEffect(() => {
         let isMounted = true;
@@ -159,6 +161,13 @@ export function ReciterDetailPage() {
                 </div>
                 <h1 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: 'var(--space-xs)' }}>
                     {reciter.name}
+                    <button
+                        className="btn btn-icon btn-ghost"
+                        onClick={() => toggleFavoriteReciter(reciter.id)}
+                        style={{ color: isFavoriteReciter(reciter.id) ? '#EF4444' : 'var(--text-muted)', display: 'inline-flex', verticalAlign: 'middle', marginRight: 'var(--space-xs)' }}
+                    >
+                        <Heart size={24} weight={isFavoriteReciter(reciter.id) ? 'fill' : 'regular'} />
+                    </button>
                 </h1>
                 <p className="text-muted" style={{ fontSize: '0.85rem' }}>
                     {t('reciters.availableRiwayat', { count: reciter.moshaf.length })}
@@ -234,6 +243,18 @@ export function ReciterDetailPage() {
                                     {SURAH_NAMES[surahNum] || `${t('reciters.surahLabel')} ${surahNum}`}
                                 </p>
                             </div>
+
+                            {/* Favorite Button */}
+                            <button
+                                className="btn btn-icon btn-ghost"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFavoriteSurah(reciter.id, surahNum);
+                                }}
+                                style={{ color: isFavoriteSurah(reciter.id, surahNum) ? '#EF4444' : 'var(--text-muted)' }}
+                            >
+                                <Heart size={20} weight={isFavoriteSurah(reciter.id, surahNum) ? 'fill' : 'regular'} />
+                            </button>
 
                             {/* Play Button */}
                             <button

@@ -55,7 +55,7 @@ import { ghana } from './ghana';
 import { senegal } from './senegal';
 import { mali } from './mali';
 import { niger } from './niger';
-import { cTeDIvoire } from './c-te-d-ivoire';
+import { coteDivoire } from './c-te-d-ivoire';
 import { burkinaFaso } from './burkina-faso';
 import { guinea } from './guinea';
 import { benin } from './benin';
@@ -123,8 +123,28 @@ import { hungary } from './hungary';
 import { serbia } from './serbia';
 import { bulgaria } from './bulgaria';
 import { croatia } from './croatia';
-import { bosnia } from './bosnia';
+import { bosniaAndHerzegovina } from './bosnia-and-herzegovina';
 import { albania } from './albania';
+import { slovakia } from './slovakia';
+import { moldova } from './moldova';
+import { lithuania } from './lithuania';
+import { northMacedonia } from './north-macedonia';
+import { slovenia } from './slovenia';
+import { latvia } from './latvia';
+import { estonia } from './estonia';
+import { montenegro } from './montenegro';
+import { luxembourg } from './luxembourg';
+import { malta } from './malta';
+import { cyprus } from './cyprus';
+import { andorra } from './andorra';
+import { monaco } from './monaco';
+import { liechtenstein } from './liechtenstein';
+import { sanMarino } from './san-marino';
+import { vaticanCity } from './vatican-city';
+import { kosovo } from './kosovo';
+import { belarus } from './belarus';
+import { unitedKingdom } from './united-kingdom';
+
 import { usaNy } from './usa-ny';
 import { usaLa } from './usa-la';
 import { usaChicago } from './usa-chicago';
@@ -213,7 +233,7 @@ export const COUNTRY_DETAILS_REFACTORED = {
     "Senegal": senegal,
     "Mali": mali,
     "Niger": niger,
-    "Côte d'Ivoire": cTeDIvoire,
+    "Côte d'Ivoire": coteDivoire,
     "Burkina Faso": burkinaFaso,
     "Guinea": guinea,
     "Benin": benin,
@@ -281,8 +301,27 @@ export const COUNTRY_DETAILS_REFACTORED = {
     "Serbia": serbia,
     "Bulgaria": bulgaria,
     "Croatia": croatia,
-    "Bosnia": bosnia,
+    "Bosnia and Herzegovina": bosniaAndHerzegovina,
     "Albania": albania,
+    "Slovakia": slovakia,
+    "Moldova": moldova,
+    "Lithuania": lithuania,
+    "North Macedonia": northMacedonia,
+    "Slovenia": slovenia,
+    "Latvia": latvia,
+    "Estonia": estonia,
+    "Montenegro": montenegro,
+    "Luxembourg": luxembourg,
+    "Malta": malta,
+    "Cyprus": cyprus,
+    "Andorra": andorra,
+    "Monaco": monaco,
+    "Liechtenstein": liechtenstein,
+    "San Marino": sanMarino,
+    "Vatican City": vaticanCity,
+    "Kosovo": kosovo,
+    "Belarus": belarus,
+    "United Kingdom": unitedKingdom,
     "USA (NY)": usaNy,
     "USA (LA)": usaLa,
     "USA (Chicago)": usaChicago,

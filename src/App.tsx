@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { HomePage } from './pages/HomePage';
@@ -13,10 +14,24 @@ import { RadioPage } from './pages/RadioPage';
 import { WorldClockPage } from './pages/WorldClockPage';
 import { QuranCulturePage } from './pages/QuranCulturePage';
 import { AzkarPage } from './pages/AzkarPage';
+import { SchedulePage } from './pages/SchedulePage';
+import { KhatmaPage } from './pages/KhatmaPage';
+import { HabitTrackerPage } from './pages/HabitTrackerPage';
+import { SplashScreen, wasSplashSeen } from './components/ui/SplashScreen';
+import { NotificationManager } from './components/ui/NotificationManager';
+import { AdhanManager } from './components/ui/AdhanManager';
 
 export default function App() {
+    const [showSplash, setShowSplash] = useState(!wasSplashSeen());
+
+    if (showSplash) {
+        return <SplashScreen onComplete={() => setShowSplash(false)} />;
+    }
+
     return (
         <HashRouter>
+            <NotificationManager />
+            <AdhanManager />
             <Routes>
                 <Route element={<AppLayout />}>
                     <Route path="/" element={<HomePage />} />
@@ -32,6 +47,9 @@ export default function App() {
                     <Route path="/world-clock" element={<WorldClockPage />} />
                     <Route path="/quran-culture" element={<QuranCulturePage />} />
                     <Route path="/azkar" element={<AzkarPage />} />
+                    <Route path="/schedule" element={<SchedulePage />} />
+                    <Route path="/khatma" element={<KhatmaPage />} />
+                    <Route path="/tracker" element={<HabitTrackerPage />} />
                 </Route>
             </Routes>
         </HashRouter>

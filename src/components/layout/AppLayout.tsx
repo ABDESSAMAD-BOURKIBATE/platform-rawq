@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 import { DesktopNav } from './DesktopNav';
 import { PageLoader } from '../ui/PageLoader';
-import { InstallPWA } from '../ui/InstallPWA';
 import { AudioPlayer } from '../audio/AudioPlayer';
 import { useAudioStore } from '../../store/useAudioStore';
 import { useQuranStore } from '../../store/useQuranStore';
@@ -14,19 +13,19 @@ export function AppLayout() {
     const isPlayerMinimized = useAudioStore((s) => s.isPlayerMinimized);
     const setIsPlayerMinimized = useAudioStore((s) => s.setIsPlayerMinimized);
     const updateLastLogin = useQuranStore((s) => s.updateLastLogin);
+    const isModalOpen = useQuranStore((s) => s.isModalOpen);
 
     useEffect(() => {
         updateLastLogin();
     }, [updateLastLogin]);
 
-    // Logic for showing components
+    // Logic for showing components. Hide all nav/players if a fullscreen modal is open
     const hasActiveAudio = currentSurah !== null || radioStation !== null;
-    const showPlayer = hasActiveAudio && !isPlayerMinimized;
-    const showNav = !hasActiveAudio || isPlayerMinimized;
+    const showPlayer = !isModalOpen && hasActiveAudio && !isPlayerMinimized;
+    const showNav = !isModalOpen && (!hasActiveAudio || isPlayerMinimized);
 
     return (
         <div className="app-layout">
-            <InstallPWA />
             <PageLoader />
             <DesktopNav />
             <div className="pattern-bg" />
@@ -35,7 +34,7 @@ export function AppLayout() {
             </main>
 
             {/* Floating Restore Button when minimized */}
-            {hasActiveAudio && isPlayerMinimized && (
+            {!isModalOpen && hasActiveAudio && isPlayerMinimized && (
                 <button
                     onClick={() => setIsPlayerMinimized(false)}
                     className="glass"

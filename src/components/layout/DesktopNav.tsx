@@ -1,12 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { House, BookOpenText, MicrophoneStage, MagnifyingGlass, Gear, Radio } from '@phosphor-icons/react';
+import { House, BookOpenText, MicrophoneStage, MagnifyingGlass, Gear, Radio, HandHeart } from '@phosphor-icons/react';
 import rawqLogo from '../../assets/rawq_logo.jpg';
 
 const navItems = [
     { path: '/', icon: House, labelKey: 'nav.home' },
     { path: '/mushaf', icon: BookOpenText, labelKey: 'nav.mushaf' },
     { path: '/reciters', icon: MicrophoneStage, labelKey: 'nav.reciters' },
+    { path: '/azkar', icon: HandHeart, labelKey: 'adhkar.title' },
     { path: '/radio', icon: Radio, labelKey: 'home.radios' },
     { path: '/search', icon: MagnifyingGlass, labelKey: 'nav.search' },
     { path: '/settings', icon: Gear, labelKey: 'nav.settings' },

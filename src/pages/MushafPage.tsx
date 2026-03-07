@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CaretLeft, CaretRight, BookmarkSimple, List, X } from '@phosphor-icons/react';
-import { fetchPage, fetchAllSurahs } from '../api/alquran';
+import { CaretLeft, CaretRight, BookmarkSimple, List, X, Spinner, Play, Translate, BookOpenText, SpeakerHigh } from '@phosphor-icons/react';
+import { fetchPage, fetchAllSurahs, fetchSurah, fetchAyahTafsirAndTranslation } from '../api/alquran';
 import { useQuranStore } from '../store/useQuranStore';
 import { useAudioStore } from '../store/useAudioStore';
+import { useKhatmaStore } from '../store/useKhatmaStore';
 import { audioEngine } from '../lib/audioEngine';
 import type { MushafPage, Surah } from '../lib/types';
 
@@ -15,6 +16,7 @@ export function MushafPage() {
     const { t } = useTranslation();
     const { currentPage, setCurrentPage, saveLastRead, toggleBookmark, isBookmarked, fontSize, fontFamily } = useQuranStore();
     const { currentAyah: playingAyah, currentSurah: playingSurah } = useAudioStore();
+    const { targetDays, markPageRead } = useKhatmaStore();
 
     const [pageData, setPageData] = useState<MushafPage | null>(null);
     const [loading, setLoading] = useState(true);
@@ -25,7 +27,53 @@ export function MushafPage() {
     const [pickerTab, setPickerTab] = useState<'surah' | 'ayah'>('surah');
     const [goToSurahNum, setGoToSurahNum] = useState('');
     const [goToAyahNum, setGoToAyahNum] = useState('');
+    const [ayahNavLoading, setAyahNavLoading] = useState(false);
+    const [ayahNavError, setAyahNavError] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const [showTafsirModal, setShowTafsirModal] = useState(false);
+    const [tafsirData, setTafsirData] = useState<any>(null);
+    const [tafsirLoading, setTafsirLoading] = useState(false);
+    const [activeTafsirAyah, setActiveTafsirAyah] = useState<{ surah: number, ayah: number } | null>(null);
+    const [activeTafsirTab, setActiveTafsirTab] = useState<string>('');
+    const [isTTSPlaying, setIsTTSPlaying] = useState<boolean>(false);
+    const pressTimer = useRef<NodeJS.Timeout | null>(null);
+    const isLongPressing = useRef(false);
+    const hasScrolled = useRef(false);
+
+    // Auto-scroll sync with audio
+    useEffect(() => {
+        let isMounted = true;
+        const syncPageWithAudio = async () => {
+            if (playingSurah && playingAyah && pageData) {
+                const isAyahOnPage = pageData.ayahs.some(
+                    a => a.surah.number === playingSurah && a.numberInSurah === playingAyah
+                );
+
+                if (!isAyahOnPage) {
+                    try {
+                        const edition = fontFamily === 'KFGQPC' ? 'quran-simple-clean' : 'quran-uthmani';
+                        const surahData = await fetchSurah(playingSurah, edition);
+                        const ayah = surahData.ayahs.find((a: any) => a.numberInSurah === playingAyah);
+                        if (ayah && ayah.page !== currentPage && isMounted) {
+                            goToPage(ayah.page);
+                        }
+                    } catch (e) {
+                        console.error("Failed to sync page", e);
+                    }
+                } else {
+                    setTimeout(() => {
+                        const activeEl = document.querySelector('.ayah.active');
+                        if (activeEl) {
+                            activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            }
+        };
+        syncPageWithAudio();
+        return () => { isMounted = false; };
+    }, [playingSurah, playingAyah, pageData, currentPage]);
 
     // Touch swipe state
     const touchStartX = useRef(0);
@@ -35,10 +83,15 @@ export function MushafPage() {
         setLoading(true);
         setError(null);
         try {
-            const data = await fetchPage(page);
+            const edition = fontFamily === 'KFGQPC' ? 'quran-simple-clean' : 'quran-uthmani';
+            const data = await fetchPage(page, edition);
             setPageData(data);
             if (data.ayahs.length > 0) {
                 saveLastRead(page, data.ayahs[0].surah.name);
+                // If a Khatma is active, mark the page as read
+                if (targetDays !== null) {
+                    markPageRead(page);
+                }
             }
         } catch (err) {
             setError(t('mushaf.error'));
@@ -76,14 +129,93 @@ export function MushafPage() {
         touchEndX.current = e.changedTouches[0].clientX;
         const diff = touchStartX.current - touchEndX.current;
         if (Math.abs(diff) > 60) {
+            // Reversed swipe direction
             if (diff > 0) goToPage(currentPage - 1);
             else goToPage(currentPage + 1);
         }
     };
 
-    const handleAyahClick = (surahNum: number, ayahNum: number) => {
+    const handleAyahPressStart = (surahNum: number, ayahNum: number) => {
+        isLongPressing.current = false;
+        hasScrolled.current = false;
+        pressTimer.current = setTimeout(() => {
+            if (!hasScrolled.current) {
+                isLongPressing.current = true;
+                openTafsirModal(surahNum, ayahNum);
+            }
+        }, 2000); // 2 seconds wait for TTS / Tafsir
+    };
+
+    const handleAyahPressEnd = (surahNum: number, ayahNum: number) => {
+        if (pressTimer.current) {
+            clearTimeout(pressTimer.current);
+        }
+        if (hasScrolled.current) {
+            return;
+        }
+        if (!isLongPressing.current) {
+            // Short click
+            setSelectedAyah(ayahNum);
+            audioEngine.playAyah(surahNum, ayahNum);
+        }
+        isLongPressing.current = false;
+    };
+
+    const openTafsirModal = async (surahNum: number, ayahNum: number) => {
         setSelectedAyah(ayahNum);
-        audioEngine.playAyah(surahNum, ayahNum);
+        setActiveTafsirAyah({ surah: surahNum, ayah: ayahNum });
+        useQuranStore.getState().setIsModalOpen(true);
+        setShowTafsirModal(true);
+        setTafsirLoading(true);
+        setTafsirData(null);
+        setActiveTafsirTab('');
+        setIsTTSPlaying(false);
+        try {
+            const data = await fetchAyahTafsirAndTranslation(surahNum, ayahNum);
+            // Filter to only include quran text (ar.quran-uthmani), muyassar, en, fr
+            const filteredData = data.filter((e: any) => e.edition.identifier !== 'quran-uthmani');
+            setTafsirData(filteredData);
+            if (filteredData.length > 0) {
+                setActiveTafsirTab(filteredData[0].edition.identifier);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setTafsirLoading(false);
+        }
+    };
+
+    const closeTafsirModal = () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+        setIsTTSPlaying(false);
+        setShowTafsirModal(false);
+        useQuranStore.getState().setIsModalOpen(false);
+    };
+
+    const handleSpeakText = (text: string, lang: string) => {
+        if ('speechSynthesis' in window) {
+            if (isTTSPlaying) {
+                window.speechSynthesis.cancel();
+                setIsTTSPlaying(false);
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            let ttsLang = lang;
+            if (lang === 'ar') ttsLang = 'ar-SA';
+            else if (lang === 'en') ttsLang = 'en-US';
+            else if (lang === 'fr') ttsLang = 'fr-FR';
+            utterance.lang = ttsLang;
+
+            utterance.onend = () => setIsTTSPlaying(false);
+            utterance.onerror = () => setIsTTSPlaying(false);
+
+            window.speechSynthesis.speak(utterance);
+            setIsTTSPlaying(true);
+        }
     };
 
     // Group ayahs by surah for headers
@@ -143,20 +275,20 @@ export function MushafPage() {
             <div className="flex items-center justify-between" style={{ fontSize: '0.85rem' }}>
                 <button
                     className="btn btn-ghost"
-                    onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage >= TOTAL_PAGES}
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage <= 1}
                 >
-                    <CaretRight size={22} />
+                    <CaretLeft size={22} />
                 </button>
                 <span className="text-muted">
                     {t('mushaf.pageOf', { current: currentPage, total: TOTAL_PAGES })}
                 </span>
                 <button
                     className="btn btn-ghost"
-                    onClick={() => goToPage(currentPage - 1)}
-                    disabled={currentPage <= 1}
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage >= TOTAL_PAGES}
                 >
-                    <CaretLeft size={22} />
+                    <CaretRight size={22} />
                 </button>
             </div>
 
@@ -208,7 +340,18 @@ export function MushafPage() {
                                         <span
                                             key={`${ayah.surah.number}-${ayah.numberInSurah}`}
                                             className={`ayah${isActive ? ' active' : ''}`}
-                                            onClick={() => handleAyahClick(ayah.surah.number, ayah.numberInSurah)}
+                                            onTouchStart={() => handleAyahPressStart(ayah.surah.number, ayah.numberInSurah)}
+                                            onTouchEnd={() => handleAyahPressEnd(ayah.surah.number, ayah.numberInSurah)}
+                                            onTouchMove={() => {
+                                                hasScrolled.current = true;
+                                                if (pressTimer.current) clearTimeout(pressTimer.current);
+                                            }}
+                                            onMouseDown={() => handleAyahPressStart(ayah.surah.number, ayah.numberInSurah)}
+                                            onMouseUp={() => handleAyahPressEnd(ayah.surah.number, ayah.numberInSurah)}
+                                            onMouseLeave={() => {
+                                                if (pressTimer.current) clearTimeout(pressTimer.current);
+                                            }}
+                                            style={{ cursor: 'pointer', userSelect: 'none' }}
                                         >
                                             {ayah.text}
                                             <span className="ayah-number">{ayah.numberInSurah}</span>
@@ -222,9 +365,118 @@ export function MushafPage() {
             </div>
 
             {/* Tip */}
-            <p className="text-muted text-center" style={{ fontSize: '0.75rem' }}>
-                {t('mushaf.tapToPlay')}
+            <p className="text-muted text-center" style={{ fontSize: '0.75rem', paddingBottom: 'var(--bottom-nav-height)' }}>
+                {t('mushaf.tapToPlay')} - اضغط مطولاً للتفسير
             </p>
+
+            {/* ===== Tafsir Modal ===== */}
+            {showTafsirModal && activeTafsirAyah && (
+                <div
+                    style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
+                        zIndex: 200, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                    }}
+                    onClick={(e) => { if (e.target === e.currentTarget) closeTafsirModal(); }}
+                >
+                    <div
+                        className="animate-slide-up"
+                        style={{
+                            width: '100%', maxWidth: 480, maxHeight: '80vh',
+                            background: 'var(--bg)', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+                            display: 'flex', flexDirection: 'column', overflow: 'hidden',
+                        }}
+                    >
+                        <div className="flex items-center justify-between" style={{ padding: 'var(--space-lg)', borderBottom: '1px solid var(--border)' }}>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                                سورة {SURAH_NAMES[activeTafsirAyah.surah]} - آية {activeTafsirAyah.ayah}
+                            </h3>
+                            <button
+                                className="btn btn-icon btn-ghost"
+                                onClick={closeTafsirModal}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Tafsir/Translation Tabs */}
+                        {tafsirData && tafsirData.length > 0 && (
+                            <div className="flex hide-scrollbar" style={{ overflowX: 'auto', borderBottom: '1px solid var(--border)', padding: '0 var(--space-md)' }}>
+                                {tafsirData.map((item: any) => (
+                                    <button
+                                        key={item.edition.identifier}
+                                        style={{
+                                            padding: 'var(--space-md)',
+                                            whiteSpace: 'nowrap',
+                                            fontWeight: activeTafsirTab === item.edition.identifier ? 700 : 400,
+                                            color: activeTafsirTab === item.edition.identifier ? 'var(--accent-gold)' : 'var(--text-muted)',
+                                            borderBottom: activeTafsirTab === item.edition.identifier ? '2px solid var(--accent-gold)' : '2px solid transparent',
+                                            transition: 'all 0.2s ease',
+                                        }}
+                                        onClick={() => {
+                                            setActiveTafsirTab(item.edition.identifier);
+                                            if ('speechSynthesis' in window) {
+                                                window.speechSynthesis.cancel();
+                                                setIsTTSPlaying(false);
+                                            }
+                                        }}
+                                    >
+                                        {item.edition.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Tafsir Content */}
+                        <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-lg)', maxHeight: 'calc(80vh - 140px)' }}>
+                            {tafsirLoading ? (
+                                <div className="flex flex-col items-center justify-center gap-md" style={{ padding: '2rem' }}>
+                                    <Spinner size={32} className="animate-spin text-gold" />
+                                    <p className="text-muted">جاري تحميل التفسير...</p>
+                                </div>
+                            ) : tafsirData ? (
+                                <div className="flex flex-col gap-lg">
+                                    {tafsirData.filter((e: any) => e.edition.identifier === activeTafsirTab).map((edition: any) => (
+                                        <div key={edition.edition.identifier} className="card" style={{ padding: 'var(--space-md)' }}>
+                                            <div className="flex items-center justify-between mb-sm">
+                                                <div className="flex items-center gap-sm">
+                                                    {edition.edition.type === 'tafsir' ? (
+                                                        <BookOpenText size={20} className="text-gold" />
+                                                    ) : (
+                                                        <Translate size={20} className="text-gold" />
+                                                    )}
+                                                    <h4 style={{ fontWeight: 600, fontSize: '0.95rem' }}>
+                                                        {edition.edition.name}
+                                                    </h4>
+                                                </div>
+                                                <button
+                                                    className="btn btn-icon btn-ghost"
+                                                    style={{ color: isTTSPlaying ? 'var(--error)' : 'var(--accent-gold)' }}
+                                                    onClick={() => handleSpeakText(edition.text, edition.edition.language)}
+                                                    title={isTTSPlaying ? "إيقاف الصوت" : "استمع للنص"}
+                                                >
+                                                    <SpeakerHigh size={22} weight={isTTSPlaying ? "fill" : "duotone"} className={isTTSPlaying ? "animate-pulse" : ""} />
+                                                </button>
+                                            </div>
+                                            <p style={{
+                                                fontSize: edition.edition.language === 'ar' ? '1.05rem' : '0.9rem',
+                                                lineHeight: 1.8,
+                                                color: 'var(--text-secondary)',
+                                                direction: edition.edition.language === 'ar' ? 'rtl' : 'ltr',
+                                                textAlign: edition.edition.language === 'ar' ? 'right' : 'left'
+                                            }}>
+                                                {edition.text}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-center text-muted">عذراً، لم نتمكن من جلب التفسير</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ===== Surah Picker Modal ===== */}
             {showSurahPicker && (
@@ -358,7 +610,7 @@ export function MushafPage() {
                                         max={114}
                                         placeholder="مثال: 2"
                                         value={goToSurahNum}
-                                        onChange={(e) => setGoToSurahNum(e.target.value)}
+                                        onChange={(e) => { setGoToSurahNum(e.target.value); setAyahNavError(''); }}
                                         autoFocus
                                     />
                                     {goToSurahNum && Number(goToSurahNum) >= 1 && Number(goToSurahNum) <= 114 && (
@@ -371,7 +623,7 @@ export function MushafPage() {
                                 {/* Ayah Number */}
                                 <div>
                                     <label style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: 'var(--space-xs)', display: 'block' }}>
-                                        رقم الآية
+                                        رقم الآية (اختياري)
                                     </label>
                                     <input
                                         className="input"
@@ -379,25 +631,66 @@ export function MushafPage() {
                                         min={1}
                                         placeholder="مثال: 255"
                                         value={goToAyahNum}
-                                        onChange={(e) => setGoToAyahNum(e.target.value)}
+                                        onChange={(e) => { setGoToAyahNum(e.target.value); setAyahNavError(''); }}
                                     />
                                 </div>
+
+                                {/* Error Message */}
+                                {ayahNavError && (
+                                    <p style={{ fontSize: '0.82rem', color: '#EF4444', textAlign: 'center' }}>
+                                        {ayahNavError}
+                                    </p>
+                                )}
 
                                 {/* Go Button */}
                                 <button
                                     className="btn btn-primary w-full"
-                                    style={{ padding: 'var(--space-md)', fontSize: '1rem' }}
-                                    disabled={!goToSurahNum || Number(goToSurahNum) < 1 || Number(goToSurahNum) > 114}
-                                    onClick={() => {
+                                    style={{ padding: 'var(--space-md)', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                    disabled={!goToSurahNum || Number(goToSurahNum) < 1 || Number(goToSurahNum) > 114 || ayahNavLoading}
+                                    onClick={async () => {
                                         const sNum = Number(goToSurahNum);
-                                        if (sNum >= 1 && sNum <= 114) {
+                                        const aNum = Number(goToAyahNum);
+                                        if (sNum < 1 || sNum > 114) return;
+
+                                        // If no ayah specified, just go to surah start
+                                        if (!goToAyahNum || aNum < 1) {
                                             goToSurah(sNum);
                                             setGoToSurahNum('');
                                             setGoToAyahNum('');
+                                            setAyahNavError('');
+                                            return;
+                                        }
+
+                                        // Fetch surah to find exact ayah page
+                                        try {
+                                            setAyahNavLoading(true);
+                                            setAyahNavError('');
+                                            const edition = fontFamily === 'KFGQPC' ? 'quran-simple-clean' : 'quran-uthmani';
+                                            const surahData = await fetchSurah(sNum, edition);
+                                            const ayah = surahData.ayahs.find((a: any) => a.numberInSurah === aNum);
+                                            if (ayah) {
+                                                goToPage(ayah.page);
+                                                setShowSurahPicker(false);
+                                                setGoToSurahNum('');
+                                                setGoToAyahNum('');
+                                            } else {
+                                                setAyahNavError(`الآية ${aNum} غير موجودة في هذه السورة`);
+                                            }
+                                        } catch (err) {
+                                            // Fallback: go to surah start page
+                                            goToSurah(sNum);
+                                            setGoToSurahNum('');
+                                            setGoToAyahNum('');
+                                        } finally {
+                                            setAyahNavLoading(false);
                                         }
                                     }}
                                 >
-                                    انتقل
+                                    {ayahNavLoading ? (
+                                        <><Spinner size={18} className="animate-spin" /> جاري البحث...</>
+                                    ) : (
+                                        'انتقل'
+                                    )}
                                 </button>
                             </div>
                         )}

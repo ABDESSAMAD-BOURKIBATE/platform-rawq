@@ -11,7 +11,12 @@ interface QuranState {
     lastReadDate: string | null;
     fontSize: number;
     fontFamily: string;
+    lastPlayedSurahNum: number | null;
+    lastPlayedAyahNum: number | null;
+    isModalOpen: boolean;
     setCurrentPage: (page: number) => void;
+    setIsModalOpen: (isOpen: boolean) => void;
+    saveLastPlayed: (surah: number, ayah: number) => void;
     saveLastRead: (page: number, surahName: string) => void;
     toggleBookmark: (page: number) => void;
     isBookmarked: (page: number) => boolean;
@@ -32,8 +37,13 @@ export const useQuranStore = create<QuranState>()(
             lastReadDate: null,
             fontSize: 28, // Default font size in px
             fontFamily: 'Amiri', // Default font family
+            lastPlayedSurahNum: null,
+            lastPlayedAyahNum: null,
+            isModalOpen: false,
 
             setCurrentPage: (page) => set({ currentPage: page }),
+            setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
+            saveLastPlayed: (surah, ayah) => set({ lastPlayedSurahNum: surah, lastPlayedAyahNum: ayah }),
 
             saveLastRead: (page, surahName) => {
                 const state = get();

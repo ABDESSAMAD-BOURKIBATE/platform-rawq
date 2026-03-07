@@ -55,6 +55,7 @@
         "title": "القرّاء",
         "searchPlaceholder": "ابحث عن قارئ...",
         "allRiwayat": "جميع الروايات",
+        "favorites": "المفضلة",
         "allCountries": "جميع الدول",
         "surahCount": "{{count}} سورة",
         "noResults": "لا توجد نتائج",
@@ -96,8 +97,15 @@
             "amiri": "الأميري",
             "katibeh": "الكاتبة",
             "cairo": "القاهرة",
-            "tajawal": "تجوال"
-        }
+            "tajawal": "تجوال",
+            "kfgqpc": "الرسم العثماني بمجمع الملك فهد"
+        },
+        "notifications": "الإشعارات والتنبيهات",
+        "adhanAlerts": "تنبيهات الأذان",
+        "adhanDesc": "تشغيل صوت الأذان في الخلفية عند دخول وقت الصلاة",
+        "adhanAudio": "صوت الأذان",
+        "adhanAudioDesc": "اختر صوت الأذان للتنبيهات",
+        "adhanDefault": "الأذان 1"
     },
     "waqf": {
         "text": "وقفٌ قرآنيٌّ على أسرةِ الشيخِ عبدِ الحفيظ بوركيبات رحمه الله تعالى"
@@ -144,7 +152,9 @@
         "asr": "العصر",
         "maghrib": "المغرب",
         "isha": "العشاء",
-        "in": "في"
+        "in": "في",
+        "remaining": "متبقي",
+        "nextPrayerLabel": "الصلاة القادمة"
     },
     "adhkar": {
         "title": "الأذكار والتسبيح",
@@ -154,7 +164,15 @@
         "reached": "تم الوصول للهدف!",
         "custom": "تخصيص",
         "daily": "أذكار يومية",
-        "clickToCount": "اضغط للتسبيح"
+        "clickToCount": "اضغط للتسبيح",
+        "morningAzkar": "أذكار الصباح",
+        "morningDesc": "حصّن يومك بأذكار الصباح",
+        "eveningAzkar": "أذكار المساء",
+        "eveningDesc": "اختم يومك بأذكار المساء",
+        "tasbih": "التسبيح",
+        "tasbihDesc": "سبّح واذكر الله",
+        "itemsCount": "{{count}} ذكر",
+        "backToMenu": "العودة"
     },
     "worldClock": {
         "title": "ساعات العالم",
@@ -230,5 +248,59 @@
         "nextLevel": "المستوى التالي",
         "backToModes": "العودة للأنماط",
         "requiredScore": "تحتاج {{score}}% للنجاح"
+    },
+    "schedule": {
+        "title": "الجدول الزمني",
+        "description": "خطط يومك وتابع أورادك وعباداتك بكل سهولة",
+        "addTask": "إضافة مهمة",
+        "taskTitle": "اسم المهمة",
+        "taskTime": "الوقت (اختياري)",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "empty": "لا توجد مهام حالياً. اضغط على \"إضافة مهمة\" لبدء جدولك.",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "completed": "تم",
+        "clearCompleted": "مسح المكتمل"
+    },
+    "khatma": {
+        "title": "ختمة القرآن",
+        "subtitle": "حدد هدفك، تتبع وردك اليومي، واختم القرآن في الوقت المحدد.",
+        "notStarted": "لم تبدأ ختمة بعد",
+        "setTargetPrompt": "حدد عدد الأيام التي تريد أن تختم القرآن فيها.",
+        "startNew": "ابدأ ختمة جديدة",
+        "setupTitle": "إعداد الختمة",
+        "setupDesc": "كم يوماً تريد أن تستغرق في ختم القرآن الكريم؟",
+        "days": "يوم",
+        "estimatedWird": "الورد اليومي المقدر:",
+        "pages": "صفحة",
+        "start": "بدء",
+        "overallProgress": "التقدم الكلي",
+        "dailyWird": "الورد اليومي",
+        "remainingDays": "الأيام المتبقية",
+        "behindSchedule": "أنت متأخر عن الورد المحدد. حاول تعويض ما فاتك.",
+        "continueReading": "مواصلة القراءة",
+        "reset": "إلغاء الختمة"
+    },
+    "habits": {
+        "title": "متعقب العادات",
+        "subtitle": "حافظ على صلاتك، وردك، وصيامك، لتنل رضى الرحمن.",
+        "today": "اليوم",
+        "dailyScore": "إنجاز اليوم",
+        "prayers": "الصلوات الخمس",
+        "wird": "الورد القرآني",
+        "fasting": "الصيام",
+        "morningAdhkar": "أذكار الصباح",
+        "eveningAdhkar": "أذكار المساء",
+        "charity": "صدقة اليوم",
+        "goodDeed": "فعل الخير",
+        "dailyNote": "ملاحظة اليوم / حدث مميز",
+        "notePlaceholder": "اكتب هنا ما تود تذكره من أحداث هذا اليوم...",
+        "download": "حفظ كصورة"
+    },
+    "ramadan": {
+        "title": "رمضان",
+        "day": "اليوم {{day}}",
+        "progress": "مر من الشهر {{count}} أيام"
     }
 }

@@ -79,6 +79,20 @@ ol {
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
   --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.15);
 
+  /* Hero Card */
+  --hero-overlay: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.45));
+  --hero-text: #FFFFFF;
+  --hero-text-sub: rgba(255, 255, 255, 0.9);
+  --hero-border: rgba(255, 255, 255, 0.08);
+  --hero-capsule-bg: rgba(255, 255, 255, 0.12);
+  --hero-capsule-border: rgba(255, 255, 255, 0.15);
+  --hero-logo-bg: rgba(255, 255, 255, 0.95);
+  --hero-logo-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --hero-divider: rgba(255, 255, 255, 0.08);
+
+  /* Glassmorphism Card */
+  --bg-card-glass: rgba(15, 43, 39, 0.90);
+
   /* Typography */
   --font-quran: 'Amiri', serif;
   --font-ui: 'IBM Plex Sans Arabic', sans-serif;
@@ -134,6 +148,20 @@ ol {
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
   --shadow-gold: 0 0 20px rgba(176, 137, 46, 0.1);
+
+  /* Hero Card — Light */
+  --hero-overlay: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.25));
+  --hero-text: #1A332E;
+  --hero-text-sub: #3A554E;
+  --hero-border: rgba(0, 0, 0, 0.06);
+  --hero-capsule-bg: rgba(0, 0, 0, 0.06);
+  --hero-capsule-border: rgba(0, 0, 0, 0.08);
+  --hero-logo-bg: #FFFFFF;
+  --hero-logo-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --hero-divider: rgba(0, 0, 0, 0.06);
+
+  /* Glassmorphism Card — Light */
+  --bg-card-glass: rgba(255, 255, 255, 0.88);
 }
 
 /* ---------- Base Styles ---------- */
@@ -543,6 +571,42 @@ h3 {
   }
 }
 
+@keyframes iconFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes iconGlow {
+  0% {
+    opacity: 0.7;
+    filter: brightness(1);
+  }
+
+  100% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes logoPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 18px var(--accent-gold-glow);
+  }
+
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 28px var(--accent-gold-glow);
+  }
+}
+
 @keyframes pulse-gold {
 
   0%,
@@ -709,6 +773,170 @@ h3 {
   background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Mosque Animated Background (Now Static Full Fill) */
+.mosque-bg-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-image: url('/mosque-city-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;
+  /* Fully opaque fill */
+  pointer-events: none;
+  z-index: 0;
+  transform: scale(1.15);
+  /* Crop AI borders */
+}
+
+/* Overlay for text readability on the main card */
+.mosque-bg-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+[data-theme="light"] .mosque-bg-container::after {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Ensure text in the top main card is extremely readable against the background */
+.card-gold .text-muted,
+.card-gold p,
+.card-gold span,
+.card-gold svg {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 1), 0 0 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.card-gold .text-gold {
+  color: var(--accent-gold) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 1), 0 0 15px rgba(212, 175, 55, 0.6) !important;
+}
+
+[data-theme="light"] .card-gold .text-muted,
+[data-theme="light"] .card-gold p,
+[data-theme="light"] .card-gold span,
+[data-theme="light"] .card-gold svg {
+  color: #1a1a1a !important;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 1), 0 0 10px rgba(255, 255, 255, 0.9) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .card-gold .text-gold {
+  color: #c98b0a !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Prayer Card Backgrounds */
+.prayer-card-bg {
+  position: relative;
+  overflow: hidden;
+  background-color: transparent !important;
+  /* Let image fill completely */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prayer-card-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  /* Fully opaque */
+  z-index: 0;
+  pointer-events: none;
+  transform: scale(1.15);
+  /* Scale to crop out AI borders */
+}
+
+/* Overlay to make text readable */
+.prayer-card-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.4) 100%);
+  /* Very subtle edge darkening, mostly transparent so no film effect */
+  z-index: 1;
+  pointer-events: none;
+}
+
+[data-theme="light"] .prayer-card-bg::after {
+  /* Using the exact same dark subtle gradient for daytime to make the white text readable without creating a 'white fog' effect */
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Force text colors inside the prayer card to be high contrast */
+.prayer-card-bg p,
+.prayer-card-bg span,
+.prayer-card-bg svg {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 0 12px rgba(0, 0, 0, 0.9), 0 0 24px rgba(0, 0, 0, 0.8) !important;
+  /* Add strong drop shadow for readability */
+}
+
+/* Specific override for the 'next' prayer highlight to keep it distinct */
+.prayer-card-bg[style*="var(--accent-gold-soft)"] p,
+.prayer-card-bg[style*="var(--accent-gold-soft)"] span,
+.prayer-card-bg[style*="var(--accent-gold-soft)"] svg {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 0 12px rgba(0, 0, 0, 0.9), 0 0 20px var(--accent-gold) !important;
+}
+
+[data-theme="light"] .prayer-card-bg p,
+[data-theme="light"] .prayer-card-bg span,
+[data-theme="light"] .prayer-card-bg svg {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 0 12px rgba(0, 0, 0, 0.9), 0 0 24px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="light"] .prayer-card-bg[style*="var(--accent-gold-soft)"] p,
+[data-theme="light"] .prayer-card-bg[style*="var(--accent-gold-soft)"] span,
+[data-theme="light"] .prayer-card-bg[style*="var(--accent-gold-soft)"] svg {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 0 12px rgba(0, 0, 0, 0.9), 0 0 20px var(--accent-gold) !important;
+}
+
+.prayer-bg-fajr::before {
+  background-image: url('/prayer-fajr-bg.png');
+}
+
+.prayer-bg-sunrise::before {
+  background-image: url('/prayer-sunrise-bg.png');
+}
+
+.prayer-bg-dhuhr::before {
+  background-image: url('/prayer-dhuhr-bg.png');
+}
+
+.prayer-bg-asr::before {
+  background-image: url('/prayer-asr-bg.png');
+}
+
+.prayer-bg-maghrib::before {
+  background-image: url('/prayer-maghrib-bg.png');
+}
+
+.prayer-bg-isha::before {
+  background-image: url('/prayer-isha-bg.png');
 }
 
 /* Glass panel variants for game */
@@ -914,22 +1142,61 @@ h3 {
   z-index: 100;
 }
 
-.p-xs { padding: var(--space-xs); }
-.p-sm { padding: var(--space-sm); }
-.p-md { padding: var(--space-md); }
-.p-lg { padding: var(--space-lg); }
-.p-xl { padding: var(--space-xl); }
+.p-xs {
+  padding: var(--space-xs);
+}
 
-.mb-xs { margin-bottom: var(--space-xs); }
-.mb-sm { margin-bottom: var(--space-sm); }
-.mb-md { margin-bottom: var(--space-md); }
-.mb-lg { margin-bottom: var(--space-lg); }
-.mb-xl { margin-bottom: var(--space-xl); }
+.p-sm {
+  padding: var(--space-sm);
+}
 
-.max-w-sm { max-width: 24rem; }
-.max-w-md { max-width: 28rem; }
-.max-w-lg { max-width: 32rem; }
-.max-w-xl { max-width: 36rem; }
+.p-md {
+  padding: var(--space-md);
+}
+
+.p-lg {
+  padding: var(--space-lg);
+}
+
+.p-xl {
+  padding: var(--space-xl);
+}
+
+.mb-xs {
+  margin-bottom: var(--space-xs);
+}
+
+.mb-sm {
+  margin-bottom: var(--space-sm);
+}
+
+.mb-md {
+  margin-bottom: var(--space-md);
+}
+
+.mb-lg {
+  margin-bottom: var(--space-lg);
+}
+
+.mb-xl {
+  margin-bottom: var(--space-xl);
+}
+
+.max-w-sm {
+  max-width: 24rem;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
+}
 
 .rounded-full {
   border-radius: var(--radius-full);
@@ -945,7 +1212,6 @@ h3 {
   padding-bottom: env(safe-area-inset-bottom, 0px);
   display: flex;
   align-items: center;
-  justify-content: space-around;
   background: var(--bg);
   border: none !important;
   border-top: 1px solid var(--border) !important;
@@ -953,6 +1219,23 @@ h3 {
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+
+  /* Scrollable setup */
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Firefox */
+  justify-content: flex-start;
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.bottom-nav::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
 }
 
 [data-theme="light"] .bottom-nav {
@@ -970,7 +1253,9 @@ h3 {
   font-weight: 500;
   transition: all var(--transition-base);
   border-radius: var(--radius-md);
-  min-width: 56px;
+  min-width: 60px;
+  flex-shrink: 0;
+  /* Prevent shrinking */
   position: relative;
 }
 
@@ -1314,5 +1599,1744 @@ h3 {
     /* Space for sidebar */
     margin-left: auto;
     max-width: calc(100% - 340px);
+  }
+}
+
+/* =============================================
+   PWA Install Notification — Premium Design
+   ============================================= */
+
+/* Wrapper: positions the banner */
+.pwa-install-wrapper {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-height) + 16px);
+  left: var(--space-md);
+  right: var(--space-md);
+  z-index: 100;
+  animation: pwaSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@media (min-width: 768px) {
+  .pwa-install-wrapper {
+    left: auto;
+    right: var(--space-xl);
+    max-width: 440px;
+  }
+}
+
+/* Ambient glow behind the card */
+.pwa-install-glow {
+  position: absolute;
+  inset: -8px;
+  background: radial-gradient(ellipse at 50% 80%, var(--accent-gold-glow) 0%, transparent 70%);
+  border-radius: var(--radius-xl);
+  filter: blur(20px);
+  opacity: 0.6;
+  animation: pwaGlowPulse 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Main card */
+.pwa-install-banner {
+  position: relative;
+  background: var(--bg-card-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg) var(--space-lg);
+  box-shadow:
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 30px rgba(212, 175, 55, 0.08);
+  overflow: hidden;
+}
+
+/* Shimmering gold top accent line */
+.pwa-top-accent {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  animation: pwaAccentShimmer 3s ease-in-out infinite;
+}
+
+/* Decorative corner ornaments */
+.pwa-ornament {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.pwa-ornament-tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid var(--accent-gold);
+  border-left: 2px solid var(--accent-gold);
+  border-top-left-radius: 8px;
+}
+
+.pwa-ornament-br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid var(--accent-gold);
+  border-right: 2px solid var(--accent-gold);
+  border-bottom-right-radius: 8px;
+}
+
+/* Content layout */
+.pwa-install-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  position: relative;
+  z-index: 1;
+}
+
+/* Icon area with ring */
+.pwa-install-icon-area {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pwa-install-icon-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-gold-soft), rgba(212, 175, 55, 0.08));
+  border: 1.5px solid rgba(var(--accent-gold-rgb), 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pwaIconRingPulse 2.5s ease-in-out infinite;
+  position: relative;
+}
+
+.pwa-install-icon-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pwa-icon-device {
+  width: 28px;
+  height: 28px;
+  color: var(--accent-gold);
+}
+
+.pwa-icon-download {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  color: var(--accent-gold);
+  bottom: -2px;
+  right: -6px;
+  animation: pwaDownloadBounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px var(--accent-gold-glow));
+}
+
+/* Floating mini stars around icon */
+.pwa-star {
+  position: absolute;
+  color: var(--accent-gold);
+  opacity: 0.5;
+  animation: pwaStarFloat 3s ease-in-out infinite;
+}
+
+.pwa-star-1 {
+  width: 8px;
+  height: 8px;
+  top: -4px;
+  right: -2px;
+  animation-delay: 0s;
+}
+
+.pwa-star-2 {
+  width: 6px;
+  height: 6px;
+  bottom: 2px;
+  left: -4px;
+  animation-delay: 1s;
+}
+
+.pwa-star-3 {
+  width: 5px;
+  height: 5px;
+  top: 6px;
+  left: -6px;
+  animation-delay: 2s;
+}
+
+/* Text styles */
+.pwa-install-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-install-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.pwa-title-icon {
+  color: var(--accent-gold);
+  font-size: 0.7em;
+  animation: pwaStarSpin 4s linear infinite;
+}
+
+.pwa-install-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.pwa-brand-name {
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-family: var(--font-heading);
+}
+
+/* Action buttons */
+.pwa-install-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.pwa-install-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--accent-gold), #c9a22e);
+  color: #0B1C1A;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+}
+
+.pwa-install-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4);
+}
+
+.pwa-install-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+}
+
+.pwa-btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Shine sweep on hover */
+.pwa-btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.pwa-btn-shine.active {
+  left: 100%;
+}
+
+/* Dismiss button */
+.pwa-dismiss-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.pwa-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.pwa-dismiss-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---- PWA Animations ---- */
+@keyframes pwaSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pwaGlowPulse {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes pwaAccentShimmer {
+
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pwaIconRingPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-gold-rgb), 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--accent-gold-rgb), 0);
+  }
+}
+
+@keyframes pwaDownloadBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes pwaStarFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.2);
+    opacity: 0.9;
+  }
+}
+
+@keyframes pwaStarSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* ---- Light theme overrides ---- */
+[data-theme="light"] .pwa-install-banner {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(176, 137, 46, 0.2);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(176, 137, 46, 0.06);
+}
+
+[data-theme="light"] .pwa-install-glow {
+  background: radial-gradient(ellipse at 50% 80%, rgba(176, 137, 46, 0.15) 0%, transparent 70%);
+}
+
+[data-theme="light"] .pwa-dismiss-btn {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .pwa-dismiss-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* =============================================
+   Splash Screen
+   ============================================= */
+
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0B1C1A;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(15, 43, 39, 0.8) 0%, transparent 60%);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  cursor: default;
+}
+
+[data-theme="light"] .splash-overlay {
+  background-color: #F8F5EE;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(176, 137, 46, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
+}
+
+.splash-overlay.enter {
+  opacity: 0;
+}
+
+.splash-overlay.show {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.splash-overlay.exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Animated Rings Background */
+.splash-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.05);
+  pointer-events: none;
+}
+
+[data-theme="light"] .splash-ring {
+  border-color: rgba(176, 137, 46, 0.08);
+}
+
+.splash-ring-1 {
+  width: 300px;
+  height: 300px;
+  animation: splashRingPulse 4s ease-in-out infinite alternate;
+}
+
+.splash-ring-2 {
+  width: 450px;
+  height: 450px;
+  border-style: dashed;
+  animation: splashRingSpin 30s linear infinite;
+}
+
+.splash-ring-3 {
+  width: 600px;
+  height: 600px;
+  opacity: 0.5;
+  animation: splashRingPulse 6s ease-in-out infinite alternate-reverse;
+}
+
+/* Floating Particles Container */
+.splash-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.splash-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-gold);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: splashParticleFloat 3s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+/* Content Layout */
+.splash-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-xl);
+  max-width: 600px;
+  margin-top: -5vh;
+  /* visually centered slightly above mathematical center */
+}
+
+/* Logo Area */
+.splash-logo-wrap {
+  position: relative;
+  margin-bottom: var(--space-xl);
+  transform: scale(0.9);
+  opacity: 0;
+  filter: blur(10px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 0.2s;
+}
+
+.splash-overlay.show .splash-logo-wrap {
+  transform: scale(1);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.splash-logo-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, var(--accent-gold-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: splashGlowPulse 4s ease-in-out infinite;
+  filter: blur(10px);
+}
+
+.splash-logo-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  padding: 6px;
+  background: linear-gradient(135deg, var(--accent-gold) 0%, transparent 50%, var(--accent-gold) 100%);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+}
+
+.splash-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--bg);
+}
+
+/* Typography */
+.splash-bismillah {
+  font-family: var(--font-quran);
+  font-size: 1.8rem;
+  color: var(--accent-gold);
+  margin-bottom: var(--space-md);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 0.6s;
+}
+
+.splash-title {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: var(--space-md);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 0.8s;
+  letter-spacing: -1px;
+}
+
+/* Divider Ornament */
+.splash-divider {
+  position: relative;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  margin: var(--space-md) 0 var(--space-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  width: 0;
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 1s;
+}
+
+.splash-overlay.show .splash-divider {
+  width: 120px;
+  opacity: 1;
+}
+
+.splash-divider-ornament {
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+  background: var(--bg);
+  padding: 0 8px;
+  animation: splashStarSpin 6s linear infinite;
+}
+
+[data-theme="light"] .splash-divider-ornament {
+  background: #F8F5EE;
+}
+
+/* Subtitle and Quote */
+.splash-subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 1.2s;
+}
+
+.splash-quote {
+  font-size: 1rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 1.4s;
+}
+
+/* Skip Hint */
+.splash-skip {
+  position: absolute;
+  bottom: calc(var(--space-3xl) * -1);
+  /* relative to content block */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 1s ease;
+  transition-delay: 3s;
+  /* shows up late as a hint */
+  animation: splashPulse 2s ease-in-out infinite;
+}
+
+.splash-overlay.show .splash-bismillah,
+.splash-overlay.show .splash-title,
+.splash-overlay.show .splash-subtitle,
+.splash-overlay.show .splash-quote {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.splash-overlay.show .splash-skip {
+  opacity: 0.6;
+}
+
+/* ---- Splash Animations ---- */
+@keyframes splashRingPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.7;
+  }
+}
+
+@keyframes splashRingSpin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes splashGlowPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes splashStarSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes splashPulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes splashParticleFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0);
+  }
+
+  30% {
+    opacity: 0.8;
+  }
+
+  70% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.5);
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   SCHEDULE PAGE – Premium Redesign v2
+   ══════════════════════════════════════════════════ */
+
+/* ── Keyframes ───────────────────────── */
+@keyframes schedFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes schedScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes schedRingGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--accent-gold-rgb), 0.25);
+  }
+
+  100% {
+    box-shadow: 0 0 20px 4px rgba(var(--accent-gold-rgb), 0.10);
+  }
+}
+
+@keyframes schedBarFill {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes schedShine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes schedPulse {
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes schedSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes schedCheckPop {
+  0% {
+    transform: scale(0);
+  }
+
+  60% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.schedule-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 0 0 6rem;
+  animation: schedFadeUp 0.5s ease-out both;
+  isolation: isolate;
+}
+
+/* ── Header ────────────────────────────── */
+.schedule-header {
+  background: linear-gradient(145deg, rgba(var(--accent-gold-rgb), 0.05) 0%, rgba(var(--accent-gold-rgb), 0.02) 40%, transparent 100%);
+  border: 1px solid rgba(var(--accent-gold-rgb), 0.08);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.15rem;
+  position: relative;
+  overflow: hidden;
+  animation: schedFadeUp 0.4s ease-out both;
+}
+
+.schedule-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, var(--accent-gold) 50%, transparent 90%);
+  opacity: 0.4;
+}
+
+.schedule-header__top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.schedule-header__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.schedule-header__icon-ring {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(var(--accent-gold-rgb), 0.10);
+  border: 1.5px solid rgba(var(--accent-gold-rgb), 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+  animation: schedRingGlow 2.5s ease-in-out infinite alternate;
+}
+
+.schedule-header__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-heading);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.schedule-header__sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* ── Stats Row ────────────────────────── */
+.schedule-stats-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.schedule-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(var(--accent-gold-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-gold-rgb), 0.10);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Progress Bar ─────────────────────── */
+.schedule-progress {
+  margin-top: 0.15rem;
+}
+
+.schedule-progress__bar {
+  height: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.schedule-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), #e6c84a);
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  animation: schedBarFill 1s ease-out both;
+}
+
+.schedule-progress__shine {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: schedShine 2.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.schedule-progress__celebrate {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin-top: 0.5rem;
+  animation: schedScaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Filters ──────────────────────────── */
+.schedule-filters {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  animation: schedFadeUp 0.5s ease-out 0.1s both;
+}
+
+.schedule-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.schedule-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.schedule-filter-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+
+.schedule-filter-chip.active {
+  background: rgba(var(--accent-gold-rgb), 0.12);
+  border-color: rgba(var(--accent-gold-rgb), 0.25);
+  color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(var(--accent-gold-rgb), 0.08);
+}
+
+/* ── Add Button ───────────────────────── */
+.schedule-add-btn {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent-gold), #c9a22e);
+  color: #0B1C1A;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: var(--font-heading);
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(var(--accent-gold-rgb), 0.20);
+  animation: schedFadeUp 0.5s ease-out 0.15s both;
+}
+
+.schedule-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(var(--accent-gold-rgb), 0.30);
+}
+
+.schedule-add-btn:active {
+  transform: scale(0.97);
+}
+
+.schedule-add-btn__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.20) 50%, transparent 60%);
+  animation: schedShine 3s ease-in-out infinite;
+}
+
+/* ── Form ─────────────────────────────── */
+.schedule-form {
+  position: relative;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(var(--accent-gold-rgb), 0.15);
+  background: rgba(15, 43, 39, 0.95);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  animation: schedSlideDown 0.35s ease-out both;
+}
+
+.schedule-form__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(var(--accent-gold-rgb), 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.schedule-form__inner {
+  position: relative;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.schedule-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.schedule-input:focus {
+  border-color: rgba(var(--accent-gold-rgb), 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 2px rgba(var(--accent-gold-rgb), 0.06);
+}
+
+.schedule-input.sm {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.schedule-form__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.schedule-form__label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.schedule-form__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.schedule-form__chips.compact {
+  gap: 0.2rem;
+}
+
+.schedule-cat-chip {
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schedule-cat-chip:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.schedule-cat-chip.selected {
+  background: color-mix(in srgb, var(--chip-color, var(--accent-gold)) 15%, transparent);
+  border-color: color-mix(in srgb, var(--chip-color, var(--accent-gold)) 35%, transparent);
+  color: var(--chip-color, var(--accent-gold));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--chip-color, var(--accent-gold)) 12%, transparent);
+}
+
+.schedule-cat-chip.sm {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.68rem;
+}
+
+.schedule-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.schedule-form__actions.compact {
+  margin-top: 0;
+}
+
+.schedule-form__cancel {
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schedule-form__cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.schedule-form__cancel.sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+}
+
+.schedule-form__save {
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--accent-gold), #c9a22e);
+  color: #0B1C1A;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.schedule-form__save:hover {
+  box-shadow: 0 0 16px rgba(var(--accent-gold-rgb), 0.25);
+}
+
+.schedule-form__save:disabled {
+  opacity: 0.35;
+  cursor: default;
+  box-shadow: none;
+}
+
+.schedule-form__save.sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+}
+
+/* ── Category Breakdown ───────────────── */
+.schedule-breakdown {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1.1rem;
+  animation: schedFadeUp 0.5s ease-out 0.2s both;
+}
+
+.schedule-breakdown__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.schedule-breakdown__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.schedule-breakdown__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.schedule-breakdown__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.schedule-breakdown__pct {
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-breakdown__track {
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.schedule-breakdown__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0.8;
+  animation: schedBarFill 0.8s ease-out 0.3s both;
+}
+
+/* ── Clear Button ─────────────────────── */
+.schedule-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.05);
+  color: #EF4444;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  align-self: flex-end;
+}
+
+.schedule-clear-btn:hover {
+  background: rgba(239, 68, 68, 0.10);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.08);
+}
+
+/* ── Empty State ──────────────────────── */
+.schedule-empty {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border: 1.5px dashed rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.01);
+  animation: schedFadeUp 0.5s ease-out both;
+}
+
+.schedule-empty__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(var(--accent-gold-rgb), 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  color: var(--accent-gold);
+  opacity: 0.5;
+  animation: schedPulse 3s ease-in-out infinite;
+}
+
+.schedule-empty p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ── Task List ────────────────────────── */
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ── Single Task Card ─────────────────── */
+.schedule-task {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  /* staggered entrance via inline style animationDelay */
+  opacity: 0;
+  animation: schedFadeUp 0.4s ease-out both;
+}
+
+.schedule-task:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(var(--accent-gold-rgb), 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-task.completed {
+  opacity: 0.55;
+}
+
+.schedule-task.completed:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Left accent bar */
+.schedule-task__accent {
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--task-accent, var(--accent-gold));
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.schedule-task:hover .schedule-task__accent {
+  opacity: 1;
+}
+
+.schedule-task.completed .schedule-task__accent {
+  opacity: 0.25;
+}
+
+/* Checkbox */
+.schedule-task__check {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+
+.schedule-task__check:hover {
+  transform: scale(1.08);
+}
+
+.schedule-task__check:active {
+  transform: scale(0.9);
+}
+
+.schedule-task__check-ring {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.25s ease;
+}
+
+.schedule-task:hover .schedule-task__check-ring {
+  border-color: rgba(var(--accent-gold-rgb), 0.4);
+}
+
+.schedule-task__check-done {
+  color: var(--accent-gold);
+  filter: drop-shadow(0 0 6px rgba(var(--accent-gold-rgb), 0.4));
+  animation: schedCheckPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Body */
+.schedule-task__body {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.schedule-task__top-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.schedule-task__title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  font-family: var(--font-heading);
+}
+
+.schedule-task.completed .schedule-task__title {
+  color: var(--text-muted);
+}
+
+.schedule-task__pri-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 5px currentColor;
+}
+
+.schedule-task__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.schedule-task__cat-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  opacity: 0.8;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.schedule-task__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Task edit form */
+.schedule-task__edit-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: schedScaleIn 0.25s ease-out both;
+}
+
+/* Task actions */
+.schedule-task__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.25s ease;
+}
+
+.schedule-task:hover .schedule-task__actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.schedule-task__actions.hidden-actions {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.schedule-task__actions button {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.schedule-task__actions button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--accent-gold);
+  transform: scale(1.08);
+}
+
+.schedule-task__actions button.danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: #EF4444;
+}
+
+/* ── Mobile touch: show actions always ── */
+@media (hover: none),
+(max-width: 480px) {
+  .schedule-task__actions {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Light Theme Overrides ────────────── */
+[data-theme="light"] .schedule-header {
+  background: linear-gradient(145deg, rgba(var(--accent-gold-rgb), 0.06) 0%, rgba(255, 248, 220, 0.2) 100%);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-stat-chip {
+  background: rgba(var(--accent-gold-rgb), 0.08);
+  border-color: rgba(var(--accent-gold-rgb), 0.12);
+}
+
+[data-theme="light"] .schedule-filter-chip {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-filter-chip.active {
+  background: rgba(var(--accent-gold-rgb), 0.10);
+  border-color: rgba(var(--accent-gold-rgb), 0.20);
+}
+
+[data-theme="light"] .schedule-task {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-task:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(var(--accent-gold-rgb), 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-task__check-ring {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .schedule-form {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(var(--accent-gold-rgb), 0.15);
+}
+
+[data-theme="light"] .schedule-input {
+  background: rgba(0, 0, 0, 0.025);
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .schedule-input:focus {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+[data-theme="light"] .schedule-cat-chip {
+  background: rgba(0, 0, 0, 0.025);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-breakdown {
+  background: rgba(0, 0, 0, 0.015);
+  border-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .schedule-progress__bar {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-breakdown__track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .schedule-empty {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+[data-theme="light"] .schedule-task__actions button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ── Quran Culture Cards Responsiveness ────────────── */
+.culture-card-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg) var(--space-xl);
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+.culture-text-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.culture-progress-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .culture-card-content {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--space-lg) var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .culture-text-header {
+    justify-content: center;
+  }
+
+  .culture-progress-info {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
