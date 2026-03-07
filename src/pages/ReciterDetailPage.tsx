@@ -90,6 +90,15 @@ export function ReciterDetailPage() {
         ? selectedMoshaf.surah_list.split(',').map(Number).filter(Boolean)
         : [];
 
+    // Sort surahList to show favorites first
+    const sortedSurahList = [...surahList].sort((a, b) => {
+        const isAFav = isFavoriteSurah(Number(id), a);
+        const isBFav = isFavoriteSurah(Number(id), b);
+        if (isAFav && !isBFav) return -1;
+        if (!isAFav && isBFav) return 1;
+        return a - b; // Sort by number if both are favorites or both are not
+    });
+
     const handlePlay = (surahNum: number) => {
         if (!reciter || !selectedMoshaf) return;
 
@@ -211,16 +220,17 @@ export function ReciterDetailPage() {
 
             {/* Surah List */}
             <div className="flex flex-col gap-xs">
-                {surahList.map((surahNum, i) => {
+                {sortedSurahList.map((surahNum, i) => {
                     const isCurrentPlaying = currentSurah === surahNum && currentReciter?.id === String(reciter.id);
+                    const isFav = isFavoriteSurah(reciter.id, surahNum);
                     return (
                         <div
                             key={surahNum}
                             className={`card flex items-center gap-md animate-slide-up stagger-${Math.min(i % 6 + 1, 6)}`}
                             style={{
                                 padding: 'var(--space-sm) var(--space-md)',
-                                border: isCurrentPlaying ? '1.5px solid var(--accent-gold)' : undefined,
-                                background: isCurrentPlaying ? 'var(--accent-gold-soft)' : undefined,
+                                border: isCurrentPlaying ? '1.5px solid var(--accent-gold)' : (isFav ? '1px solid #EF4444' : undefined),
+                                background: isCurrentPlaying ? 'var(--accent-gold-soft)' : (isFav ? 'rgba(239, 68, 68, 0.05)' : undefined),
                             }}
                         >
                             {/* Number */}
@@ -251,9 +261,13 @@ export function ReciterDetailPage() {
                                     e.stopPropagation();
                                     toggleFavoriteSurah(reciter.id, surahNum);
                                 }}
-                                style={{ color: isFavoriteSurah(reciter.id, surahNum) ? '#EF4444' : 'var(--text-muted)' }}
+                                style={{
+                                    color: isFav ? '#EF4444' : 'var(--text-muted)',
+                                    background: isFav ? 'rgba(239, 68, 68, 0.1)' : 'transparent',
+                                }}
+                                title={isFav ? "إزالة من المفضلة" : "إضافة للمفضلة"}
                             >
-                                <Heart size={20} weight={isFavoriteSurah(reciter.id, surahNum) ? 'fill' : 'regular'} />
+                                <Heart size={20} weight={isFav ? 'fill' : 'regular'} />
                             </button>
 
                             {/* Play Button */}
